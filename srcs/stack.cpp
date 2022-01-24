@@ -1,30 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   stack.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/01/24 17:33:45 by abonnel          ###   ########.fr       */
+/*   Created: 2022/01/24 14:57:40 by abonnel           #+#    #+#             */
+/*   Updated: 2022/01/24 15:16:59 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vector.hpp"
-#include <iostream>
+#include "stack.hpp"  
 
+using namespace ft;
 
-#include <vector> //A ENLEVER
-
-int main()
+stack::stack()
 {
-	ft::vector<int>	haha;
+	
+}
 
-	std::vector<int> real_stuff;
-
-	std::cout << real_stuff.max_size() << std::endl;
-	std::cout << std::numeric_limits<difference_type>::max() << std::endl;
-
-
-	return 0;
+stack::~stack()
+{
+	
 }
