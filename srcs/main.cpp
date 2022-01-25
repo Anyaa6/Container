@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/01/24 17:33:45 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/01/25 17:56:01 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,18 @@
 
 
 #include <vector> //A ENLEVER
+#include <iterator> //A ENLEVER
 
 int main()
 {
-	ft::vector<int>	haha;
+	ft::vector<int>	haha(5, 12);
 
-	std::vector<int> real_stuff;
+	for (int i = 0; i < 5; i++)
+		std::cout << haha[0] << std::endl;
 
-	std::cout << real_stuff.max_size() << std::endl;
-	std::cout << std::numeric_limits<difference_type>::max() << std::endl;
+	// std::vector<int> real_stuff;
+// 
+	// std::cout << real_stuff.max_size() << std::endl;
 
 
 	return 0;
