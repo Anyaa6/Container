@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/01/25 17:56:01 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/01/26 09:05:49 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,18 @@ int main()
 	for (int i = 0; i < 5; i++)
 		std::cout << haha[0] << std::endl;
 
-	// std::vector<int> real_stuff;
-// 
-	// std::cout << real_stuff.max_size() << std::endl;
+	std::vector<int> real_stuff(52,12);
 
+	std::cout << "first" << std::endl;
+	std::cout << real_stuff.size() << std::endl;
+	std::cout << real_stuff.capacity() << std::endl;
 
+	std::cout << "Push backs" << std::endl;
+	for (int i = 0; i < 13 ; i++)
+	{
+		real_stuff.push_back(42);
+		std::cout << "size : " << real_stuff.size() << std::endl;
+		std::cout << "capacity : " << real_stuff.capacity() << std::endl;
+	}
 	return 0;
 }

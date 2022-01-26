@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/01/25 18:00:13 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/01/26 09:07:56 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 #include <memory>
 //# il faudra include reverse_iterator que je dois creer
+
+#include <iostream>//a enlever?
 
 namespace ft
 {
@@ -39,20 +41,39 @@ namespace ft
 		// reverse_iterator	reverse_iterator<iterator>	
 		// const_reverse_iterator	reverse_iterator<const_iterator>	
 		
+		/*
+		at first capacity matches the first size given but then everytime it reallocates memory then it doubles its capacity
+		So at first push_back its absolutely sure that it will double its size since size and capacity matches
+		
+		!! be careful about max size and bad_alloc when not possible to allocate more
+		
+		size_t 	capacity(size_t n) const {
+			return (n * static_cast<size_t>(roundf(static_cast<float>(2 + (n * 0.1)))));
+		}
+		capacity doubles each time it is exceeded : 2^N
+		la facon dont ca grow est implementation dependant
+		*/
 
 
 		//Constructor
 		explicit vector (const allocator_type& alloc = allocator_type()) : _array(NULL), _size(0), _capacity(0), _alloc(alloc) {};
 		explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _size(n), _alloc(alloc)
 		{
-			_array = _alloc.allocate(_size);
+			_array = _alloc.allocate(_size); 
+			_capacity = _size; //at creation of vector, size matches capacity
 			_alloc.construct(_array, val);
 		};	
-		// template <class InputIterator> //bc it could be a pointer
-		// vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type());// range (3)
+		/*
+		template <class InputIterator> //bc it could be a pointer
+		vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type())
+		{
+			//find distance between iterators (ptrdiff ?) -> set _size
+			//alloc corresponding capacity and set _capacity
+			//iterate over first++ until last not included 
+		};// range (3)
 		// 
 		// vector (const vector& x);// copy (4)
-
+*/
 		//Destructor
 		~vector()
 		{
