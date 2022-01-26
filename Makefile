@@ -3,17 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+         #
+#    By: ariane <ariane@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/10 12:12:46 by ariane            #+#    #+#              #
-#    Updated: 2022/01/24 15:01:36 by abonnel          ###   ########.fr        #
+#    Updated: 2022/01/26 14:30:06 by ariane           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		=	Container
 
 HEADER		=	srcs/vector.hpp
-SRCS		=	srcs/vector.cpp srcs/main.cpp
+SRCS		=	srcs/main.cpp
 
 CC			=	clang++
 CFLAGS		=	-Wall -Werror -Wextra -std=c++98
