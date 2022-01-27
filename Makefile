@@ -6,13 +6,13 @@
 #    By: ariane <ariane@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/10 12:12:46 by ariane            #+#    #+#              #
-#    Updated: 2022/01/26 14:30:06 by ariane           ###   ########.fr        #
+#    Updated: 2022/01/27 12:06:11 by ariane           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		=	Container
 
-HEADER		=	srcs/vector.hpp
+HEADER		=	srcs/vector.hpp srcs/stack.hpp srcs/map.hpp srcs/iterator.hpp
 SRCS		=	srcs/main.cpp
 
 CC			=	clang++

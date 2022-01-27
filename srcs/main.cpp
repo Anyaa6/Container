@@ -6,7 +6,7 @@
 /*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/01/26 17:33:29 by ariane           ###   ########.fr       */
+/*   Updated: 2022/01/27 18:17:40 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@ class A{
 
 int main()
 {
+	ft::iterator_traits<ft::iterator<int, int> >	trait_int;
+
+	
 	ft::vector<int>	haha(4, 12);
 	haha[2] = 66;
 	haha[3] = 226;
@@ -93,7 +96,7 @@ int main()
 	// std::cout << "index_test begin " << *(++ft_value_test.begin()) << std::endl;
 	ft_first++;
 	std::cout << "index_test begin " << *ft_first << std::endl;
-
+*/
 	/*
 	//testing [] operator
 	std::vector<int> index(3, 5);

@@ -6,7 +6,7 @@
 /*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/01/26 17:35:40 by ariane           ###   ########.fr       */
+/*   Updated: 2022/01/27 12:05:49 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <limits>
 // #include <exception>
 #include <stdexcept>
+#include "iterator.hpp"
 //# il faudra include reverse_iterator que je dois creer
 
 #include <iostream>//a enlever?
@@ -34,13 +35,13 @@ namespace ft
 		typedef typename allocator_type::const_reference 	const_reference;
 		typedef typename allocator_type::pointer			pointer;
 		typedef typename allocator_type::const_pointer 		const_pointer;
+		typedef ptrdiff_t	difference_type;
+		typedef size_t 		size_type;
 
 		//iterator et const_iterator a cree moi-meme, doivent etre des classes et pas juste
 		//des pointeurs
 		typedef value_type* 		iterator;
 		typedef const value_type*	const_iterator;
-		typedef ptrdiff_t			difference_type;
-		typedef size_t 				size_type;
 		
 		//below a creer moi meme, reverse iterator est une classe qui contient pointeur
 		//et qd on incremente iterateur alors on decremente ce pointeur
