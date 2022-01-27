@@ -6,7 +6,7 @@
 /*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/01/27 18:17:40 by ariane           ###   ########.fr       */
+/*   Updated: 2022/01/27 18:19:10 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ class A{
 
 int main()
 {
-	ft::iterator_traits<ft::iterator<int, int> >	trait_int;
+	//!! premier param c'est random access qu'il faut creer
+	ft::iterator_traits<ft::iterator<ft::random_access_iterator_tag, int> >	trait_int;
 
 	
 	ft::vector<int>	haha(4, 12);
