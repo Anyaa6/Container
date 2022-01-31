@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/01/27 12:05:49 by ariane           ###   ########.fr       */
+/*   Updated: 2022/01/31 17:30:42 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,86 @@ namespace ft
 	template < class T, class Alloc = std::allocator<T> >
 	class vector
 	{
+		
 	public:
+		//There is not a single type of random-access iterator: Each container may define its own 
+		//--> quand on le declare, dépend du type de container : std::vector<int>::iterator
+		class random_access_iterator : public ft::iterator_traits<T *>
+		{
+			//pour reverse_iterator, heriter de random_ et override increment/decrement operations?
+			public : 
+				typedef typename ft::iterator_traits<T *>::difference_type		difference_type;
+				typedef typename ft::iterator_traits<T *>::value_type			value_type;
+				typedef typename ft::iterator_traits<T *>::pointer				pointer;
+				typedef typename ft::iterator_traits<T *>::reference			reference;
+				typedef typename ft::iterator_traits<T *>::iterator_category	iterator_category;
+				
+				random_access_iterator(){
+					_p = NULL;};
+				random_access_iterator(T* ptr){
+					_p = ptr;};
+				random_access_iterator(random_access_iterator const &rhs){
+					_p = rhs._p; //ok bc rhs is of the same type and it is done inside that type
+					};
+				random_access_iterator & operator=(random_access_iterator const &rhs){
+					_p = rhs._p;
+					return *this;	
+				};
+				~random_access_iterator(){};
+				
+				//Equality && inequality && compare
+				bool operator==(random_access_iterator const &rhs) const {return ((_p == rhs._p) ? true : false);};
+				bool operator!=(random_access_iterator const &rhs) const {return ((_p != rhs._p) ? true : false);};
+				bool operator<(random_access_iterator const &rhs) const {return ((_p < rhs._p) ? true : false);};
+				bool operator<=(random_access_iterator const &rhs) const {return ((_p <= rhs._p) ? true : false);};
+				bool operator>=(random_access_iterator const &rhs) const {return ((_p >= rhs._p) ? true : false);};
+				bool operator>(random_access_iterator const &rhs) const {return ((_p > rhs._p) ? true : false);};
+
+				//Arithmetic operations
+				random_access_iterator& operator+(difference_type offset){
+					_p += offset;
+					return (*this);};
+				random_access_iterator& operator-(difference_type offset){
+					_p -= offset;
+					return (*this);};
+				random_access_iterator& operator+=(difference_type offset){
+					_p += offset;
+					return (*this);};
+				random_access_iterator& operator-=(difference_type offset){
+					_p -= offset;
+					return (*this);};
+				
+				//Dereference
+				value_type &operator*(void){return *_p;};
+				// value_type *operator->(void){return _p;}; //A REVOIR ->
+				
+				//Increment && decrement
+				random_access_iterator &operator++(){
+					_p++;
+					return (*this);};
+				
+				random_access_iterator operator++(int){
+					pointer tmp(_p++);
+					return (tmp);};
+
+				random_access_iterator &operator--(){
+					_p--;
+					return (*this);};
+				
+				random_access_iterator operator--(int){
+					pointer tmp(_p--);
+					return (tmp);};
+
+				//operator []
+				value_type operator[](int index) const {return _p[index];};
+
+			private :
+				pointer		_p;
+		};
+		
 		//Members
-		typedef T 			value_type;
-		typedef Alloc 		allocator_type;
+		typedef T 											value_type;
+		typedef Alloc 										allocator_type;
 		typedef typename allocator_type::reference 			reference;
 		typedef typename allocator_type::const_reference 	const_reference;
 		typedef typename allocator_type::pointer			pointer;
@@ -38,10 +114,11 @@ namespace ft
 		typedef ptrdiff_t	difference_type;
 		typedef size_t 		size_type;
 
-		//iterator et const_iterator a cree moi-meme, doivent etre des classes et pas juste
-		//des pointeurs
-		typedef value_type* 		iterator;
-		typedef const value_type*	const_iterator;
+		//random_access_iterator class a creer
+		typedef random_access_iterator						iterator;
+		typedef const random_access_iterator				const_iterator;
+		// typedef value_type* 								iterator;
+		// typedef const value_type*							const_iterator;
 		
 		//below a creer moi meme, reverse iterator est une classe qui contient pointeur
 		//et qd on incremente iterateur alors on decremente ce pointeur
@@ -49,10 +126,14 @@ namespace ft
 		// const_reverse_iterator	reverse_iterator<const_iterator>	
 		
 		/*
-		at first capacity matches the first size given but then everytime it reallocates memory then it doubles its capacity
-		So at first push_back its absolutely sure that it will double its size since size and capacity matches
+		Capacity and Allocator
+		at first capacity matches the first size given but then everytime it reallocates memory 
+		then it doubles its capacity
+		So at first push_back its absolutely sure that it will double its size since size and 
+		capacity matches
 
-		la capacity est un multiple de la capacity de depart ! A chaque fois qu'il faut l'augmenter on fait capacity *2
+		la capacity est un multiple de la capacity de depart ! A chaque fois qu'il faut 
+		l'augmenter on fait capacity *2
 		!! si capacity de depart = 0 alors special case qu'il faudra hard coder car 2 * 0 = 0
 
 		!! implementation dependant donc peut etre que sur ordi de l'ecole ca ne marchera pas
@@ -105,11 +186,6 @@ namespace ft
 		// vector& operator= (const vector& x);
 		
 		// Iterators
-		//Probleme pour std::cout << "index_test begin " << *(++ft_value_test.begin()) << std::endl;
-		//error: expression is not assignable
-		//alors que vrai vector pas de soucis
-		//to fix it iterator must be a CLASS, not a primitive type like pointer to value_type
-		//so I need to implement the random_access_iterator class and iterator_traits
 		iterator begin(){
 			return _array;
 		};
@@ -146,7 +222,7 @@ namespace ft
 		// void 		reserve(size_type n);
 
 		//Element access:
-		//Does segfault in real vector if out of bound, whereas at() checks if in the range
+		//[] Does segfault in real vector if out of bound, whereas at() checks if in the range
 		reference operator[] (size_type n) {
 			return _array[n];
 		};

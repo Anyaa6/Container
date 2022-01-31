@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/01/27 18:19:10 by ariane           ###   ########.fr       */
+/*   Updated: 2022/01/31 17:29:30 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,27 +25,63 @@ class A{
 
 int main()
 {
-	//!! premier param c'est random access qu'il faut creer
-	ft::iterator_traits<ft::iterator<ft::random_access_iterator_tag, int> >	trait_int;
+	//Testing iterators
+	ft::vector<int>	hehe(4, 12);
+
+	ft::vector<int>::iterator it = hehe.begin();
+	ft::vector<int>::iterator it2 = hehe.begin();
+	ft::vector<int>::iterator it3 = ++hehe.begin();
+	ft::vector<int>::iterator it4 = hehe.begin()++;
+	
+	std::cout << "The different iterators are equal to :\nit == it2\nit3 = ++begin()\nit4 = begin()++\n" << std::endl;
+	std::cout << std::boolalpha << "(it == it2) :" << (it == it2) << std::endl;
+	std::cout << "(it != it2) :" << (it != it2) << std::endl;
+	std::cout << "(it <= it2) :"<< (it <= it2) << std::endl;
+	std::cout << "(it >= it2) :" << (it >= it2) << std::endl;
+	std::cout << "it < it2 :" << (it < it2) << std::endl;
+	std::cout << "it < it3 :" << (it < it3) << std::endl;
+	std::cout << "(it > it2) :" << (it > it2) << std::endl;
+	std::cout << std::noboolalpha << std::endl; //stop printing as bool
+	std::cout << "Printing values with index []: " << std::endl;
+	for (size_t i = 0; i < hehe.size(); i++)
+		std::cout << "it[" << i << "] = " << it[i] << std::endl;
+
+	std::cout << "changing second value to 52 from iterator *it3 = 52" << std::endl;
+	*it3 = 52;	
+	std::cout << "Printing values with iterators *it : " << std::endl;
+	for (ft::vector<int>::iterator it = hehe.begin(); it < hehe.end(); it++)
+		std::cout << "it = " << *it << std::endl;
+
+	std::cout << "Printing values with iterators *it from the end : " << std::endl;
+	for (ft::vector<int>::iterator it = --hehe.end(); it >= hehe.begin(); --it)
+		std::cout << "it = " << *it << std::endl;
+
+	ft::vector<int>::iterator fifty_two = it + 1;
+	std::cout << "it + 1 = " << *fifty_two << std::endl;
+	std::cout << "it + 1 + 1 = " << *(fifty_two -= 1) << std::endl;
+	//END of Testing iterators
+
 
 	
-	ft::vector<int>	haha(4, 12);
-	haha[2] = 66;
-	haha[3] = 226;
-	ft::vector<int> hoho(haha); //par copy
 
-	ft::vector<int>::iterator	last = haha.end();
-	
-	std::cout << "last - 1 : " << *(last--) << std::endl;
-	
-	std::cout << "haha size " << haha.size() << " haha capacity : " << haha.capacity() << std::endl;
-	std::cout << "hoho size " << hoho.size() << " hoho capacity : " << hoho.capacity() << std::endl;
-	for (size_t i = 0; i < haha.size(); i++)
-	{
-		std::cout << "haha["<< i << "] " << haha[i] << std::endl;
-		std::cout << "hoho["<< i << "] " << hoho[i] << std::endl;
+	//Basic tests, creating vector etc
+	// ft::vector<int>	haha(4, 12);
+	// haha[2] = 66;
+	// haha[3] = 226;
+	// ft::vector<int> hoho(haha); //par copy
 
-	}
+	// ft::vector<int>::iterator	last = haha.end();
+	// 
+	// std::cout << "last - 1 : " << *(last--) << std::endl;
+
+	// std::cout << "haha size " << haha.size() << " haha capacity : " << haha.capacity() << std::endl;
+	// std::cout << "hoho size " << hoho.size() << " hoho capacity : " << hoho.capacity() << std::endl;
+	// for (size_t i = 0; i < haha.size(); i++)
+	// {
+		// std::cout << "haha["<< i << "] " << haha[i] << std::endl;
+		// std::cout << "hoho["<< i << "] " << hoho[i] << std::endl;
+// 
+	// }
 
 /*
 	std::vector<int> value_test(12,42);
@@ -55,12 +91,11 @@ int main()
 	std::cout << "index_test begin " << *(++ft_value_test.begin()) << std::endl;
 */
 
-
 	//testing begin, front, end, back
-	std::vector<int> index_test;
-	ft::vector<int> ft_index_test;
-	std::vector<int> value_test(12,42);
-	ft::vector<int> ft_value_test(12,42);
+	// std::vector<int> index_test;
+	// ft::vector<int> ft_index_test;
+	// std::vector<int> value_test(12,42);
+	// ft::vector<int> ft_value_test(12,42);
 
 /*
 	//Testing front on empty container
