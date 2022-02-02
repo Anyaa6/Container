@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/01/31 17:29:30 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/02 11:18:05 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,11 @@ int main()
 	ft::vector<int>::iterator fifty_two = it + 1;
 	std::cout << "it + 1 = " << *fifty_two << std::endl;
 	std::cout << "it + 1 + 1 = " << *(fifty_two -= 1) << std::endl;
+	
+	ft::vector<int>::iterator itbegin = hehe.begin();
+	ft::vector<int>::iterator itoffset = 1 + itbegin; //hehe.begin();
+	
+	std::cout << "itoffset = 1 + hehe.begin() = " << *itoffset << std::endl;
 	//END of Testing iterators
 
 

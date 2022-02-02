@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/01/31 17:30:42 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/02 11:25:57 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,25 +15,18 @@
 
 #include <memory>
 #include <limits>
-// #include <exception>
 #include <stdexcept>
 #include "iterator.hpp"
-//# il faudra include reverse_iterator que je dois creer
-
-#include <iostream>//a enlever?
 
 namespace ft
 {
 	template < class T, class Alloc = std::allocator<T> >
 	class vector
 	{
-		
 	public:
-		//There is not a single type of random-access iterator: Each container may define its own 
-		//--> quand on le declare, dépend du type de container : std::vector<int>::iterator
 		class random_access_iterator : public ft::iterator_traits<T *>
 		{
-			//pour reverse_iterator, heriter de random_ et override increment/decrement operations?
+			//pour reverse_iterator, heriter de random_ et override increment/decrement operations? !! arithmetics aussi
 			public : 
 				typedef typename ft::iterator_traits<T *>::difference_type		difference_type;
 				typedef typename ft::iterator_traits<T *>::value_type			value_type;
@@ -63,12 +56,16 @@ namespace ft
 				bool operator>(random_access_iterator const &rhs) const {return ((_p > rhs._p) ? true : false);};
 
 				//Arithmetic operations
-				random_access_iterator& operator+(difference_type offset){
-					_p += offset;
-					return (*this);};
+				random_access_iterator operator+(difference_type offset){
+					return (_p + offset);};
+				friend random_access_iterator operator+(difference_type offset, random_access_iterator &it){
+					return (it._p + offset);};
 				random_access_iterator& operator-(difference_type offset){
-					_p -= offset;
-					return (*this);};
+					return (_p - offset);};
+				difference_type& operator-(random_access_iterator const &it){
+					return (_p - it._p);};
+					
+				//Compound assignement
 				random_access_iterator& operator+=(difference_type offset){
 					_p += offset;
 					return (*this);};
@@ -78,6 +75,7 @@ namespace ft
 				
 				//Dereference
 				value_type &operator*(void){return *_p;};
+				//RESTE SEULEMENT DEREFERENCE
 				// value_type *operator->(void){return _p;}; //A REVOIR ->
 				
 				//Increment && decrement
@@ -111,14 +109,10 @@ namespace ft
 		typedef typename allocator_type::const_reference 	const_reference;
 		typedef typename allocator_type::pointer			pointer;
 		typedef typename allocator_type::const_pointer 		const_pointer;
-		typedef ptrdiff_t	difference_type;
-		typedef size_t 		size_type;
-
-		//random_access_iterator class a creer
+		typedef ptrdiff_t									difference_type;
+		typedef size_t 										size_type;
 		typedef random_access_iterator						iterator;
 		typedef const random_access_iterator				const_iterator;
-		// typedef value_type* 								iterator;
-		// typedef const value_type*							const_iterator;
 		
 		//below a creer moi meme, reverse iterator est une classe qui contient pointeur
 		//et qd on incremente iterateur alors on decremente ce pointeur
