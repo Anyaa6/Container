@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/02/02 11:25:57 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/02 15:49:42 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,19 +24,20 @@ namespace ft
 	class vector
 	{
 	public:
-		class random_access_iterator : public ft::iterator_traits<T *>
+		//idee : Le random_access_iterateur pourrait juste etre une specialisation de la struct iterator
+		class random_access_iterator : public ft::iterator<ft::random_access_iterator_tag, T>
 		{
-			//pour reverse_iterator, heriter de random_ et override increment/decrement operations? !! arithmetics aussi
 			public : 
-				typedef typename ft::iterator_traits<T *>::difference_type		difference_type;
-				typedef typename ft::iterator_traits<T *>::value_type			value_type;
-				typedef typename ft::iterator_traits<T *>::pointer				pointer;
-				typedef typename ft::iterator_traits<T *>::reference			reference;
-				typedef typename ft::iterator_traits<T *>::iterator_category	iterator_category;
+				typedef typename ft::iterator<ft::random_access_iterator_tag, T>::difference_type		difference_type;
+				typedef typename ft::iterator<ft::random_access_iterator_tag, T>::value_type			value_type;
+				typedef typename ft::iterator<ft::random_access_iterator_tag, T>::pointer				pointer;
+				typedef typename ft::iterator<ft::random_access_iterator_tag, T>::reference				reference;
+				typedef typename ft::iterator<ft::random_access_iterator_tag, T>::iterator_category		iterator_category;
 				
+				//Constructor / Destructor / Canonical
 				random_access_iterator(){
 					_p = NULL;};
-				random_access_iterator(T* ptr){
+				random_access_iterator(T* const ptr){
 					_p = ptr;};
 				random_access_iterator(random_access_iterator const &rhs){
 					_p = rhs._p; //ok bc rhs is of the same type and it is done inside that type
@@ -56,27 +57,27 @@ namespace ft
 				bool operator>(random_access_iterator const &rhs) const {return ((_p > rhs._p) ? true : false);};
 
 				//Arithmetic operations
-				random_access_iterator operator+(difference_type offset){
+				random_access_iterator operator+(difference_type const &offset) const {
 					return (_p + offset);};
-				friend random_access_iterator operator+(difference_type offset, random_access_iterator &it){
+				friend random_access_iterator operator+(difference_type const &offset, random_access_iterator const &it){
 					return (it._p + offset);};
-				random_access_iterator& operator-(difference_type offset){
+				random_access_iterator& operator-(difference_type const &offset) const {
 					return (_p - offset);};
-				difference_type& operator-(random_access_iterator const &it){
+				difference_type operator-(random_access_iterator const &it) const {
 					return (_p - it._p);};
 					
 				//Compound assignement
-				random_access_iterator& operator+=(difference_type offset){
+				random_access_iterator& operator+=(difference_type const &offset){
 					_p += offset;
 					return (*this);};
-				random_access_iterator& operator-=(difference_type offset){
+				random_access_iterator& operator-=(difference_type const &offset){
 					_p -= offset;
 					return (*this);};
 				
 				//Dereference
 				value_type &operator*(void){return *_p;};
-				//RESTE SEULEMENT DEREFERENCE
-				// value_type *operator->(void){return _p;}; //A REVOIR ->
+				//-> is a special case of overloading, need to return a ***real pointer*** that will be then dereferenced
+				random_access_iterator *operator->(){return this;}; 
 				
 				//Increment && decrement
 				random_access_iterator &operator++(){
@@ -96,12 +97,13 @@ namespace ft
 					return (tmp);};
 
 				//operator []
-				value_type operator[](int index) const {return _p[index];};
+				value_type operator[](int const &index) const {return _p[index];};
 
-			private :
+			protected :
 				pointer		_p;
 		};
 		
+		//VECTOR
 		//Members
 		typedef T 											value_type;
 		typedef Alloc 										allocator_type;
@@ -113,11 +115,8 @@ namespace ft
 		typedef size_t 										size_type;
 		typedef random_access_iterator						iterator;
 		typedef const random_access_iterator				const_iterator;
-		
-		//below a creer moi meme, reverse iterator est une classe qui contient pointeur
-		//et qd on incremente iterateur alors on decremente ce pointeur
-		// reverse_iterator	reverse_iterator<iterator>	
-		// const_reverse_iterator	reverse_iterator<const_iterator>	
+		typedef const reverse_iterator<iterator>			const_reverse_iterator;
+		typedef reverse_iterator<iterator>					reverse_iterator;
 		
 		/*
 		Capacity and Allocator
@@ -194,9 +193,13 @@ namespace ft
 		};
 		
 		// reverse_iterator       rbegin();
+			// return (_array + _size - 1);};
 		// const_reverse_iterator rbegin() const;
+			// return (_array + _size - 1);};
 		// reverse_iterator       rend() ;
+			// return _array - 1;};
 		// const_reverse_iterator rend() const;
+			// return _array - 1;};
 
 
 		//Capacity

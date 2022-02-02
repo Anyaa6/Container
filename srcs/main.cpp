@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/02/02 11:18:05 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/02 16:42:25 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ class A{
 
 int main()
 {
-	//Testing iterators
+	//Testing random_access_iterators
 	ft::vector<int>	hehe(4, 12);
 
 	ft::vector<int>::iterator it = hehe.begin();
@@ -64,29 +64,33 @@ int main()
 	ft::vector<int>::iterator itoffset = 1 + itbegin; //hehe.begin();
 	
 	std::cout << "itoffset = 1 + hehe.begin() = " << *itoffset << std::endl;
-	//END of Testing iterators
-
-
 	
+	ft::vector<int>::iterator::difference_type diff_btw_ptr = itoffset - itbegin; //hehe.begin();
+	std::cout << "diff between itoffset - begin() = " << diff_btw_ptr << std::endl;
 
-	//Basic tests, creating vector etc
-	// ft::vector<int>	haha(4, 12);
-	// haha[2] = 66;
-	// haha[3] = 226;
-	// ft::vector<int> hoho(haha); //par copy
+	ft::vector<int>::random_access_iterator itft = hehe.begin();
+	std::vector<int>::iterator itstd;
+	std::cout << "itft = " << *itft << std::endl;
+	// ft::iterator_traits<ft::iterator<std::random_access_iterator_tag, int> > haha;
+	//END of Testing random_access_iterators
 
-	// ft::vector<int>::iterator	last = haha.end();
-	// 
-	// std::cout << "last - 1 : " << *(last--) << std::endl;
+	// Basic tests, creating vector etc
+	ft::vector<int>	haha(4, 12);
+	haha[2] = 66;
+	haha[3] = 226;
+	ft::vector<int> hoho(haha); //par copy
+	
+	ft::vector<int>::iterator	last = haha.end();
+	
+	std::cout << "last - 1 : " << *(last--) << std::endl;
+	std::cout << "haha size " << haha.size() << " haha capacity : " << haha.capacity() << std::endl;
+	std::cout << "hoho size " << hoho.size() << " hoho capacity : " << hoho.capacity() << std::endl;
+	for (size_t i = 0; i < haha.size(); i++)
+	{
+		std::cout << "haha["<< i << "] " << haha[i] << std::endl;
+		std::cout << "hoho["<< i << "] " << hoho[i] << std::endl;
 
-	// std::cout << "haha size " << haha.size() << " haha capacity : " << haha.capacity() << std::endl;
-	// std::cout << "hoho size " << hoho.size() << " hoho capacity : " << hoho.capacity() << std::endl;
-	// for (size_t i = 0; i < haha.size(); i++)
-	// {
-		// std::cout << "haha["<< i << "] " << haha[i] << std::endl;
-		// std::cout << "hoho["<< i << "] " << hoho[i] << std::endl;
-// 
-	// }
+	}
 
 /*
 	std::vector<int> value_test(12,42);
