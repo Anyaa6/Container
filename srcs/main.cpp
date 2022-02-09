@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/02/09 14:05:30 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/09 14:21:04 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,13 @@ int main()
 	std::cout << (r_end != r_end) << std::endl;
 	std::cout << (r_end != r_begin) << std::endl;
 	std::cout << (r_end < r_begin) << std::endl;
-	std::cout << (r_end > r_begin) << std::endl;
+	std::cout << (r_end > r_begin) << std::noboolalpha << std::endl;
+
+	RevIt 	ending = v.rend();
+	RevIt 	beginning = v.rbegin();
+
+	for (;beginning != ending; beginning++)
+		std::cout << *beginning << std::endl;
 
 	
 	/*

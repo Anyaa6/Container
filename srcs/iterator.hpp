@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 11:36:32 by ariane            #+#    #+#             */
-/*   Updated: 2022/02/09 13:59:38 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/09 14:22:19 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,9 +108,17 @@ class reverse_iterator
 		iterator_type base() const{
 			return _base;};
 
+		//Dereference and []
 		reference operator*() const {
 			return *(_base -1);};
+
+		reference operator[] (difference_type n) const {
+			return (*(_base - n - 1));};
+
+		pointer operator->() const {
+			return &(operator*());};
 			
+		//Arithmetic
 		reverse_iterator operator+ (difference_type n) const {
 			return (reverse_iterator(_base - n));};
 
@@ -150,13 +158,6 @@ class reverse_iterator
 			reverse_iterator tmp = *this;
 			++_base;
 			return tmp;};
-
-		reference operator[] (difference_type n) const {
-			return (*(_base - n - 1));
-		};
-
-		pointer operator->() const {
-			return &(operator*());};
 
 		//Relational operator
   		friend bool operator== (const reverse_iterator& lhs, const reverse_iterator& rhs){

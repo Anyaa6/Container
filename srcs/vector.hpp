@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/02/09 13:01:57 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/09 14:21:22 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,26 +180,28 @@ namespace ft
 		
 		// Iterators
 		iterator begin(){
-			return _array;
-		};
+			return _array;};
+			
 		const_iterator begin() const {
-			return _array;
-		};
+			return _array;};
+			
 		iterator end(){
-			return (_array + _size);
-		};
+			return (_array + _size);};
+			
 		const_iterator end() const {
-			return (_array + _size);
-		};
+			return (_array + _size);};
 		
-		// reverse_iterator       rbegin();
-			// return (_array + _size - 1);};
-		// const_reverse_iterator rbegin() const;
-			// return (_array + _size - 1);};
-		// reverse_iterator       rend() ;
-			// return _array - 1;};
-		// const_reverse_iterator rend() const;
-			// return _array - 1;};
+		reverse_iterator       rbegin(){
+			return (reverse_iterator(_array + _size));};
+			
+		const_reverse_iterator rbegin() const {
+			return (reverse_iterator(_array + _size));};
+
+		reverse_iterator       rend() {
+			return (reverse_iterator(_array));};
+			
+		const_reverse_iterator rend() const {
+			return (reverse_iterator(_array));};
 
 
 		//Capacity
