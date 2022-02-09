@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 11:36:32 by ariane            #+#    #+#             */
-/*   Updated: 2022/02/02 17:10:26 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/09 13:59:38 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,19 +83,98 @@ class iterator_traits<const T*>
 };
 
 //pour reverse_iterator, heriter de random_ et override increment/decrement operations? !! arithmetics aussi
-template <class iterator> //Où, pour vector, iterator sera forcement un random_access_iterator car typedef
+template <class iterator>
 class reverse_iterator
 {
 	public : 
+		typedef iterator								iterator_type;//must be at least bidirectionnal
 		typedef typename iterator::difference_type		difference_type;
 		typedef typename iterator::value_type			value_type;
 		typedef typename iterator::pointer				pointer;
 		typedef typename iterator::reference			reference;
 		typedef typename iterator::iterator_category	iterator_category;
 
+		//Const Destructor
+		reverse_iterator(){
+			_base = iterator_type();};
+			
+		explicit reverse_iterator (iterator_type it){
+			_base = it;};
+			
+		template <class Iter>
+		reverse_iterator (const reverse_iterator<Iter>& rev_it){
+			_base = rev_it._base;};
+
+		iterator_type base() const{
+			return _base;};
+
+		reference operator*() const {
+			return *(_base -1);};
+			
+		reverse_iterator operator+ (difference_type n) const {
+			return (reverse_iterator(_base - n));};
+
+		friend reverse_iterator operator+(difference_type n, reverse_iterator &rev_it){
+			return (reverse_iterator(rev_it._base - n));};
+
+		reverse_iterator& operator+= (difference_type n) {
+			_base -= n;
+			return (*this);};
+
+		reverse_iterator operator- (difference_type n) const {
+			return (reverse_iterator(_base + n));};
+		
+		friend difference_type operator- (const reverse_iterator& lhs, const reverse_iterator& rhs) {
+			return (lhs._base - rhs._base);
+		};
+
+		reverse_iterator& operator-= (difference_type n) {
+			_base += n;
+			return (*this);};
+
+		//Increment / decrement
+		reverse_iterator& operator++() {
+			_base--;
+			return *this;};
+			
+		reverse_iterator  operator++(int) {
+			reverse_iterator tmp = *this;
+			--_base;
+			return (tmp);};
+
+		reverse_iterator& operator--(){
+			_base++;
+			return *this;};
+			
+		reverse_iterator  operator--(int){
+			reverse_iterator tmp = *this;
+			++_base;
+			return tmp;};
+
+		reference operator[] (difference_type n) const {
+			return (*(_base - n - 1));
+		};
+
+		pointer operator->() const {
+			return &(operator*());};
+
+		//Relational operator
+  		friend bool operator== (const reverse_iterator& lhs, const reverse_iterator& rhs){
+			return (lhs._base == rhs._base);};
+  		friend bool operator!= (const reverse_iterator& lhs, const reverse_iterator& rhs){
+			return (lhs._base != rhs._base);};
+  		friend bool operator<  (const reverse_iterator& lhs, const reverse_iterator& rhs){
+			return (lhs._base > rhs._base);};
+  		friend bool operator<= (const reverse_iterator& lhs, const reverse_iterator& rhs){
+			return (lhs._base >= rhs._base);};
+  		friend bool operator>  (const reverse_iterator& lhs, const reverse_iterator& rhs){
+			return (lhs._base < rhs._base);};
+  		friend bool operator>= (const reverse_iterator& lhs, const reverse_iterator& rhs){
+			return (lhs._base <= rhs._base);};
+
 	protected :
-		pointer _p;
-		iterator base;//????????
+		iterator_type _base;
+		
 };
 
 }; //namespace ft

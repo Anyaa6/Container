@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/02/02 16:42:25 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/09 14:05:30 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #include <vector> //A ENLEVER
 #include <iterator> //A ENLEVER
+#include "iterator.hpp"
 
 class A{
 	public :
@@ -25,6 +26,64 @@ class A{
 
 int main()
 {
+	/*
+	//Test operator ->
+	ft::vector<A> vclass(5, 42);
+	ft::vector<A>::iterator itvclass = vclass.begin();
+	
+	for (; itvclass < vclass.end(); itvclass++)
+		itvclass->number = 12;
+	for (itvclass = vclass.begin(); itvclass < vclass.end(); itvclass++)
+		std::cout << itvclass->number << std ::endl;
+	*/
+	
+	//Test reverse iterators
+    ft::vector<int> v(5, 0);
+	for (int i = 0; i < 5; i++)
+		v[i] = i;
+ 
+	typedef ft::reverse_iterator<ft::vector<int>::iterator> RevIt;
+    ft::vector<int>::iterator it = v.begin() + 3;
+    RevIt r_it(it);
+ 
+    std::cout << "*it == " << *it << '\n'
+			//   << "*itstd == " << *itstd << '\n'
+              << "*r_it == " << *r_it << '\n'
+              << "*r_it.base() == " << *r_it.base() << '\n'
+              << "*(r_it.base()-1) == " << *(r_it.base() - 1) << '\n';
+ 
+    RevIt r_end(v.begin());
+    RevIt r_begin(v.end());
+
+	RevIt newrev = r_end - 2;
+	std::cout << "rev_end + 2 = " << *newrev << std::endl;
+	std::cout << "++newrev = " << *++newrev << std::endl;
+	std::cout << "--newrev = " << *--newrev << std::endl;
+	std::cout << "newrev-- = " << *newrev-- << std::endl;
+	std::cout << "newrev = " << *newrev << std::endl;
+
+	std::cout << "r_begin[2] = " << r_begin[2] << std::endl;
+
+	r_begin += 2;	
+	std::cout << "r_begin += 2 = " << *r_begin << std::endl;
+	
+	r_begin -= 2;	
+	std::cout << "r_begin -= 2 = " << *r_begin << std::endl;
+
+	std::cout << "r_end - r_begin = " << r_end - r_begin << std::endl;
+
+	RevIt added = 1 + r_begin;
+	std::cout << "1 + r_begin = " << *added << std::endl;
+	
+	//Testing relationnal operators of reverse iterators
+	std::cout << std::boolalpha << (r_end == r_end) << std::endl;
+	std::cout << (r_end != r_end) << std::endl;
+	std::cout << (r_end != r_begin) << std::endl;
+	std::cout << (r_end < r_begin) << std::endl;
+	std::cout << (r_end > r_begin) << std::endl;
+
+	
+	/*
 	//Testing random_access_iterators
 	ft::vector<int>	hehe(4, 12);
 
@@ -91,6 +150,7 @@ int main()
 		std::cout << "hoho["<< i << "] " << hoho[i] << std::endl;
 
 	}
+*/
 
 /*
 	std::vector<int> value_test(12,42);

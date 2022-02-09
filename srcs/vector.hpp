@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/02/02 15:49:42 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/09 13:01:57 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ namespace ft
 					return (_p + offset);};
 				friend random_access_iterator operator+(difference_type const &offset, random_access_iterator const &it){
 					return (it._p + offset);};
-				random_access_iterator& operator-(difference_type const &offset) const {
+				random_access_iterator operator-(difference_type const &offset) const {
 					return (_p - offset);};
 				difference_type operator-(random_access_iterator const &it) const {
 					return (_p - it._p);};
@@ -75,9 +75,9 @@ namespace ft
 					return (*this);};
 				
 				//Dereference
-				value_type &operator*(void){return *_p;};
+				value_type &operator*(void) const {return *_p;};
 				//-> is a special case of overloading, need to return a ***real pointer*** that will be then dereferenced
-				random_access_iterator *operator->(){return this;}; 
+				pointer operator->() const {return &(operator*());};
 				
 				//Increment && decrement
 				random_access_iterator &operator++(){
@@ -115,7 +115,7 @@ namespace ft
 		typedef size_t 										size_type;
 		typedef random_access_iterator						iterator;
 		typedef const random_access_iterator				const_iterator;
-		typedef const reverse_iterator<iterator>			const_reverse_iterator;
+		typedef reverse_iterator<const_iterator>			const_reverse_iterator;
 		typedef reverse_iterator<iterator>					reverse_iterator;
 		
 		/*
