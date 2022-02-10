@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/02/09 14:21:22 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/10 14:45:33 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <memory>
 #include <limits>
 #include <stdexcept>
+#include <iostream> // A ENLEVER
 #include "iterator.hpp"
 
 namespace ft
@@ -122,15 +123,7 @@ namespace ft
 		Capacity and Allocator
 		at first capacity matches the first size given but then everytime it reallocates memory 
 		then it doubles its capacity
-		So at first push_back its absolutely sure that it will double its size since size and 
-		capacity matches
-
-		la capacity est un multiple de la capacity de depart ! A chaque fois qu'il faut 
-		l'augmenter on fait capacity *2
 		!! si capacity de depart = 0 alors special case qu'il faudra hard coder car 2 * 0 = 0
-
-		!! implementation dependant donc peut etre que sur ordi de l'ecole ca ne marchera pas
-		
 		!! be careful about max size and bad_alloc when not possible to allocate more 
 		--> FAIRE ALLOCATE QUI SET LA CAPACITY ET s'occupe de throw erreur??
 		*/
@@ -172,8 +165,9 @@ namespace ft
 		//Destructor
 		~vector()
 		{
+			//std::cout << "destructor callled " << std::endl;
 			_alloc.destroy(_array);
-			_alloc.deallocate(_array, _size);
+			_alloc.deallocate(_array, _capacity);
 		};
 
 		// vector& operator= (const vector& x);
@@ -256,8 +250,16 @@ namespace ft
 
 		// //Modifiers:
 		// assign
-		// push_back
+		void push_back (const value_type& val){
+			if (_size == _capacity)
+				_array = _double_alloc();
+			_alloc.construct(_array + _size - 1, val);
+			_size++;
+		};
 		// pop_back
+		void pop_back() {
+			
+		};
 		// insert
 		// erase
 		// swap
@@ -277,6 +279,23 @@ namespace ft
 		size_type	_size;
 		size_type	_capacity;
 		allocator_type	_alloc;
+
+		value_type *_double_alloc(){
+			value_type *tmp;
+
+			if (_capacity == 0)
+				_capacity = 1;
+			else 
+				_capacity *= 2;
+			if (_capacity > max_size())
+				throw (std::length_error("vector"));
+			tmp = _alloc.allocate(_capacity);
+			for (size_type i = 0; i < _size; i++) //works if value_type is a clas?
+				_alloc.construct(tmp + i, _array[i]);
+			_alloc.destroy(_array);
+			_alloc.deallocate(_array, _capacity);
+			return (tmp);
+		};
 	
 	};
 }

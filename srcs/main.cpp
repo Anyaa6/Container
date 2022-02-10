@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/02/09 14:21:04 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/10 14:53:10 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,80 @@
 class A{
 	public :
 	int		number;
-	A(int num) : number(num) {};
-	~A(){};	
+	int 	size;
+	int		*array;
+	A(int num, int size) : number(num), size(size) {
+		array = new int[12];
+		std::cout << "ICI" << std::endl;
+	};
+	A() {
+		std::cout << "LA" << std::endl;
+	}
+	~A(){
+		std::cout << "Destructor called" << std::endl;
+		delete array;
+	};	
 };
 
 int main()
 {
+	A		instance_of_a(12, 32);
+	// std::vector<A> classvec(5, instance_of_a);
+
+	// std::cout << "class vec capacity = " << classvec.capacity() << std::endl;
+
+	//NOT WORKING WITH STD CONTAINERS, WHY DOUBLE FREE??
+	//classvec SEEMS TO NOT BE USING THE class A CONSTRUCTOR so it does not use
+	//_ALLOC.construct() ?? that calls the consctructor of value_type?
+	//--> DANS classvec, instance_of_a is not DEEP COPIED
+	//QUAND JE LANCE MON CODE AVEC MON CONTAINEUR J'AI LA MEME ERREUR DONC FINALEMENT
+	//CA A L"AIR BON
+
+	
+	// classvec.push_back(instance_of_a);
+	// std::cout << "class vec capacity = " << classvec.capacity() << std::endl;
+	// classvec.push_back(instance_of_a);
+	// std::cout << "class vec capacity = " << classvec.capacity() << std::endl;
+	// classvec.push_back(instance_of_a);
+	// std::cout << "class vec capacity = " << classvec.capacity() << std::endl;
+	
+	// std::cout << classvec[2].size << std::endl;
+
+	ft::vector<A> ftdouble(5, instance_of_a);
+
+	// std::cout << "ftdouble capacity = " << ftdouble.capacity() << std::endl;
+	// ftdouble.push_back(instance_of_a);
+	// std::cout << "ftdouble capacity = " << ftdouble.capacity() << std::endl;
+	// ftdouble.push_back(instance_of_a);
+	// std::cout << "ftdouble capacity = " << ftdouble.capacity() << std::endl;
+	// ftdouble.push_back(instance_of_a);
+	// std::cout << "ftdouble capacity = " << ftdouble.capacity() << std::endl;
+	// ftdouble.push_back(instance_of_a);
+	// std::cout << "ftdouble capacity = " << ftdouble.capacity() << std::endl;
+	// std::cout << ftdouble[2].size << std::endl;
+
+	
+	/*
+	//test to determine how capacity grows with reserve function
+	std::vector<int> capacitytest(3, 42);
+
+	std::cout << "capacitytest _capacity = " << capacitytest.capacity() << std::endl;
+	capacitytest.push_back(32);
+	capacitytest.push_back(32);
+	capacitytest.push_back(32);
+	capacitytest.push_back(32);
+	std::cout << "capacitytest _capacity = " << capacitytest.capacity() << std::endl;
+	capacitytest.reserve(10);
+	std::cout << "capacitytest _capacity = " << capacitytest.capacity() << std::endl;
+	capacitytest.reserve(20);
+	std::cout << "capacitytest _capacity = " << capacitytest.capacity() << std::endl;
+	capacitytest.reserve(21);
+	std::cout << "capacitytest _capacity = " << capacitytest.capacity() << std::endl;
+	std::cout << "capacitytest size = " << capacitytest.size() << std::endl;
+	capacitytest.reserve(169);
+	std::cout << "capacitytest _capacity = " << capacitytest.capacity() << std::endl;
+	`*/
+	
 	/*
 	//Test operator ->
 	ft::vector<A> vclass(5, 42);
@@ -37,6 +105,7 @@ int main()
 		std::cout << itvclass->number << std ::endl;
 	*/
 	
+	/*
 	//Test reverse iterators
     ft::vector<int> v(5, 0);
 	for (int i = 0; i < 5; i++)
@@ -87,7 +156,7 @@ int main()
 
 	for (;beginning != ending; beginning++)
 		std::cout << *beginning << std::endl;
-
+*/
 	
 	/*
 	//Testing random_access_iterators
