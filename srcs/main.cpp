@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/02/11 09:50:08 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/11 11:37:53 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,57 +22,112 @@ class A{
 	int		number;
 	int 	size;
 	int		*array;
-	A(int num, int size) : number(num), size(size) {
+	A(int num, int size) : number(num), size(size), array(NULL) {
 		array = new int[12];
-		std::cout << "ICI" << std::endl;
+		// for (int i = 0; i < 12; i++)
+			// array[i] = i;
+		// std::cout << "ICI" << std::endl;
+	};
+	A(A const &rhs){ //with proper copy constructor they do have their own memory -> deep copy
+		array = new int[12];	
+		(void)rhs;
+		// for (int i = 0; i < 12; i++)
+		// 	array[i] = rhs.array[i];
+		// std::cout << "COPY CONSTRUCTOR OF CLASS A" << std::endl;
 	};
 	A() {
-		std::cout << "LA" << std::endl;
+		// std::cout << "LA" << std::endl;
 	}
 	~A(){
-		std::cout << "Destructor called" << std::endl;
-		delete array;
+		// std::cout << "Destructor called" << std::endl;
+		if (array)
+			delete [] array;
 	};	
 };
 
 int main()
 {
+	std::vector<int> capacitytest(3, 42);
+
+	std::cout << "capacitytest _capacity = " << capacitytest.capacity() << std::endl;
+	capacitytest.push_back(32);
+	capacitytest.push_back(32);
+	capacitytest.push_back(32);
+	capacitytest.push_back(32);
+	std::cout << "capacitytest _capacity = " << capacitytest.capacity() << std::endl;
+	capacitytest.reserve(10);
+	std::cout << "capacitytest _capacity = " << capacitytest.capacity() << std::endl;
+	capacitytest.reserve(20);
+	std::cout << "capacitytest _capacity = " << capacitytest.capacity() << std::endl;
+	capacitytest.reserve(21);
+	std::cout << "capacitytest _capacity = " << capacitytest.capacity() << std::endl;
+	std::cout << "capacitytest size = " << capacitytest.size() << std::endl;
+	capacitytest.reserve(169);
+	std::cout << "capacitytest _capacity = " << capacitytest.capacity() << std::endl;
+	/*
+	//CHECKING push et pop with zero capacity
+	ft::vector<A> zerocapacity;
+
+	zerocapacity.pop_back();
+	std::cout << "At beginning ---- size = " << zerocapacity.size() << " capacity = " << zerocapacity.capacity() << std::endl;
+	zerocapacity.push_back(A(12, 5));
+	std::cout << "After one pushback ---- size = " << zerocapacity.size() << " capacity = " << zerocapacity.capacity() << std::endl;
+	zerocapacity.push_back(A(12, 5));
+	std::cout << "After 2 pushback ---- size = " << zerocapacity.size() << " capacity = " << zerocapacity.capacity() << std::endl;
+	zerocapacity.push_back(A(12, 5));
+	zerocapacity.push_back(A(12, 5));
+	zerocapacity.push_back(A(12, 5));
+	std::cout << "After multiple pushback ---- size = " << zerocapacity.size() << " capacity = " << zerocapacity.capacity() << std::endl;
+	*/
+
+	/*
+	STD TESTS to compare destruction of objects
+	free error bc instance_of_a is destructed before the ones in classvec and they point to
+	the same memory area --> not a deep copy of instance of a they all point to the same array
 	A		instance_of_a(12, 32);
-	// std::vector<A> classvec(5, instance_of_a);
+	A 		cpy_inst_a = instance_of_a;
+	std::vector<A> classvec(5, instance_of_a);
+	classvec[3].array[0] = 1500;
+	classvec[4].array[1] = 1500;
+	// 
+	for (int i = 0; i < 12; i++)
+		std::cout << classvec[4].array[i] << " ";
+	std::cout << std::endl;
+	for (int i = 0; i < 12; i++)
+		std::cout << instance_of_a.array[i] << " ";
+	std::cout << std::endl;
+// 
+	classvec.push_back(instance_of_a);
+	std::cout << "class vec capacity = " << classvec.capacity() << std::endl;
+	classvec.push_back(instance_of_a);
+	std::cout << "class vec capacity = " << classvec.capacity() << std::endl;
+	classvec.push_back(instance_of_a);
+	std::cout << "class vec capacity = " << classvec.capacity() << std::endl;
+	// 
+	std::cout << classvec[2].size << std::endl;
+	*/
 
-	// std::cout << "class vec capacity = " << classvec.capacity() << std::endl;
+	/*
+	//CHECKS how capacity and size grows with push_backs 
+	// A		instance_of_a(12, 32);
+	ft::vector<A> ftdouble(2, instance_of_a);
+	//tester double_alloc function  -> comment capacity et size evolue et si pas de leaks --> changé destroy pr qu'il destroy chaque element
+	//tester avec capacity de 0
 
-	//NOT WORKING WITH STD CONTAINERS, WHY DOUBLE FREE??
-	//classvec SEEMS TO NOT BE USING THE class A CONSTRUCTOR so it does not use
-	//_ALLOC.construct() ?? that calls the consctructor of value_type?
-	//--> DANS classvec, instance_of_a is not DEEP COPIED
-	//QUAND JE LANCE MON CODE AVEC MON CONTAINEUR J'AI LA MEME ERREUR DONC FINALEMENT
-	//CA A L"AIR BON
+	std::cout << "Beginning ---- size = " << ftdouble.size() << " capacity = " << ftdouble.capacity() << std::endl;
+	ftdouble.push_back(instance_of_a);
+	std::cout << "After push_back ---- size = " << ftdouble.size() << " capacity = " << ftdouble.capacity() << std::endl;
+	ftdouble.push_back(instance_of_a);
+	ftdouble.push_back(instance_of_a);
+	std::cout << "After 2 push_back ---- size = " << ftdouble.size() << " capacity = " << ftdouble.capacity() << std::endl;
+	ftdouble.push_back(instance_of_a);
+	ftdouble.push_back(instance_of_a);
+	ftdouble.push_back(instance_of_a);
+	ftdouble.push_back(instance_of_a);
+	// std::cout << "size = " << ftdouble.size() << " capacity = " << ftdouble.capacity() << std::endl;
 
-	
-	// classvec.push_back(instance_of_a);
-	// std::cout << "class vec capacity = " << classvec.capacity() << std::endl;
-	// classvec.push_back(instance_of_a);
-	// std::cout << "class vec capacity = " << classvec.capacity() << std::endl;
-	// classvec.push_back(instance_of_a);
-	// std::cout << "class vec capacity = " << classvec.capacity() << std::endl;
-	
-	// std::cout << classvec[2].size << std::endl;
+	*/
 
-	ft::vector<A> ftdouble(5, instance_of_a);
-
-	// std::cout << "ftdouble capacity = " << ftdouble.capacity() << std::endl;
-	// ftdouble.push_back(instance_of_a);
-	// std::cout << "ftdouble capacity = " << ftdouble.capacity() << std::endl;
-	// ftdouble.push_back(instance_of_a);
-	// std::cout << "ftdouble capacity = " << ftdouble.capacity() << std::endl;
-	// ftdouble.push_back(instance_of_a);
-	// std::cout << "ftdouble capacity = " << ftdouble.capacity() << std::endl;
-	// ftdouble.push_back(instance_of_a);
-	// std::cout << "ftdouble capacity = " << ftdouble.capacity() << std::endl;
-	// std::cout << ftdouble[2].size << std::endl;
-
-	
 	/*
 	//test to determine how capacity grows with reserve function
 	std::vector<int> capacitytest(3, 42);
@@ -92,7 +147,7 @@ int main()
 	std::cout << "capacitytest size = " << capacitytest.size() << std::endl;
 	capacitytest.reserve(169);
 	std::cout << "capacitytest _capacity = " << capacitytest.capacity() << std::endl;
-	`*/
+	*/
 	
 	/*
 	//Test operator ->
@@ -105,6 +160,8 @@ int main()
 		std::cout << itvclass->number << std ::endl;
 	*/
 
+/*
+	//CHECKING CAPACITY and SIZE growth
     // std::vector<int> v(5, 0);
 	// for (int i = 0; i < 5; i++)
 		// v[i] = i;
@@ -133,6 +190,8 @@ int main()
 	
 	std::cout << "size of v = " << v.size() << " and size of copy = " << copy.size() << std::endl;
 	std::cout << "capacity of v = " << v.capacity() << " and capacity of copy = " << copy.capacity() << std::endl;
+*/
+	
 
 	/*
 	//Test reverse iterators

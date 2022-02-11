@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/02/11 09:51:10 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/11 11:36:46 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,7 @@ namespace ft
 			_array = _alloc.allocate(_size);
 			for (size_type i = 0; i < _size; i++)
 				_alloc.construct(_array + i, val);
+			//Here if val is an instance of a class, it will call the copy constructor of that instance
 		};
 
 		//PROBLEM --> need to use smth that shows that InputIterator is an iterator		
@@ -157,7 +158,7 @@ namespace ft
 				_alloc.construct(_array + i, x[i]);
 		};
 		
-		//verify if = for std::vector really does deep copy
+		//deep copy works, verified
 		vector& operator= (const vector& x) {
 			_size = x._size;
 			_capacity = _size;
@@ -171,8 +172,8 @@ namespace ft
 		//Destructor
 		~vector()
 		{
-			//std::cout << "destructor callled " << std::endl;
-			_alloc.destroy(_array);
+			for (size_type i = 0; i < _size; i++)
+				_alloc.destroy(_array + i);
 			_alloc.deallocate(_array, _capacity);
 		};
 		
@@ -217,7 +218,10 @@ namespace ft
 		bool 		empty() const {
 			return (_size == 0 ? true : false);	
 		};
-		// void 		reserve(size_type n);
+		void 		reserve(size_type n) {
+			if (n > _capacity)
+				_array = _realloc(n);
+		};
 
 		//Element access: [] Does segfault in real vector if out of bound, whereas at() checks if in the range
 		reference operator[] (size_type n) {
@@ -252,17 +256,21 @@ namespace ft
 			return *(_array + _size - 1);
 		};
 
-		// //Modifiers:
+		//Modifiers:
 		// assign
 		void push_back (const value_type& val){
 			if (_size == _capacity)
-				_array = _double_alloc();
-			_alloc.construct(_array + _size - 1, val);
+				_array = _realloc(_capacity * 2);
 			_size++;
+			_alloc.construct(_array + _size - 1, val);
 		};
-		// pop_back
+		
 		void pop_back() {
-			
+			if (_size > 0)
+			{
+				_alloc.destroy(_array + _size - 1);
+				_size--;
+			}
 		};
 		// insert
 		// erase
@@ -284,20 +292,20 @@ namespace ft
 		size_type	_capacity;
 		allocator_type	_alloc;
 
-		value_type *_double_alloc(){
+		value_type *_realloc(size_type n){
 			value_type *tmp;
 
-			if (_capacity == 0)
-				_capacity = 1;
-			else 
-				_capacity *= 2;
-			if (_capacity > max_size())
+			if (n == 0)
+				n = 1;
+			if (n > max_size())
 				throw (std::length_error("vector"));
-			tmp = _alloc.allocate(_capacity);
-			for (size_type i = 0; i < _size; i++) //works if value_type is a clas?
+			tmp = _alloc.allocate(n);
+			for (size_type i = 0; i < _size; i++)
 				_alloc.construct(tmp + i, _array[i]);
-			_alloc.destroy(_array);
+			for (size_type i = 0; i < _size; i++)
+				_alloc.destroy(_array + i);
 			_alloc.deallocate(_array, _capacity);
+			_capacity = n;
 			return (tmp);
 		};
 	
