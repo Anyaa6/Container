@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/02/11 11:36:46 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/11 13:51:41 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,28 +115,17 @@ namespace ft
 		typedef reverse_iterator<const_iterator>			const_reverse_iterator;
 		typedef reverse_iterator<iterator>					reverse_iterator;
 		
-		/*
-		Capacity and Allocator at first capacity matches the first size given but then it doubles its capacity
-		when there is not enough memory
-		
-		!! si capacity de depart = 0 alors special case qu'il faudra hard coder car 2 * 0 = 0
-
-		!! be careful about max size and bad_alloc when not possible to allocate more 
-		--> FAIRE ALLOCATE QUI SET LA CAPACITY ET s'occupe de throw erreur??
-		*/
-
-
 		//Constructor
 		explicit vector (const allocator_type& alloc = allocator_type()) : _array(NULL), _size(0), _capacity(0), _alloc(alloc) {};
+
+		//tested with classes as value including allocated memory -> OK
 		explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _size(n), _capacity(n), _alloc(alloc)
 		{
-			//works with vector<random_class> :  ft::vector<A>	class_vector(4, 12);
 			if (_size > max_size())
 				throw (std::length_error("vector"));
 			_array = _alloc.allocate(_size);
 			for (size_type i = 0; i < _size; i++)
 				_alloc.construct(_array + i, val);
-			//Here if val is an instance of a class, it will call the copy constructor of that instance
 		};
 
 		//PROBLEM --> need to use smth that shows that InputIterator is an iterator		
@@ -150,7 +139,6 @@ namespace ft
 		// 		_alloc.construct(first, *first);
 		// };
 
-		//Verifier une fois push_back cree que quand on construit par copy, capacity est bien set a la SIZE de la copy, la capacity n'est pas recopiee
 		vector (const vector& x) : _size(x.size()), _capacity(_size), _alloc(x.get_allocator())
 		{
 			_array = _alloc.allocate(_size);
@@ -211,7 +199,18 @@ namespace ft
 		size_type 	max_size() const {
 			return (_alloc.max_size());
 		};
-		// void 		resize (size_type n, value_type val = value_type());
+		void 		resize (size_type n, value_type val = value_type()) {
+			if (n > max_size()) //bc msg is different for resize et reserve
+				throw (std::length_error("vector"));
+			if (n < _size)
+				for (size_type i = _size; i > n; i--)
+					this->pop_back();
+			if (n > _capacity)
+				_array = _realloc(n);
+			if (n > _size)
+				for (size_type i = _size; i < n; i++)
+					this->push_back(val);
+		};
 		size_type 	capacity() const {
 			return _capacity;	
 		};
@@ -297,8 +296,9 @@ namespace ft
 
 			if (n == 0)
 				n = 1;
-			if (n > max_size())
-				throw (std::length_error("vector"));
+			//protection not usefull bc allocate() does it
+			// if (n > max_size())
+				// throw (std::length_error("vector")); //"allocator<T>::allocate(size_t n) 'n' exceeds maximum supported size"));ca c'est dans reserve
 			tmp = _alloc.allocate(n);
 			for (size_type i = 0; i < _size; i++)
 				_alloc.construct(tmp + i, _array[i]);
@@ -308,6 +308,10 @@ namespace ft
 			_capacity = n;
 			return (tmp);
 		};
+		//	std::vector<int> resize_test(3, 42);
+
+		// resize_test.reserve(-(resize_test.max_size()));
+		//gives uncaught exception of type std::length_error: allocator<T>::allocate(size_t n) 'n' exceeds maximum supported size
 	
 	};
 }

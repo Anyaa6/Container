@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/02/11 11:37:53 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/11 13:49:57 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #include <vector> //A ENLEVER
 #include <iterator> //A ENLEVER
+#include <limits>
 #include "iterator.hpp"
 
 class A{
@@ -47,23 +48,30 @@ class A{
 
 int main()
 {
-	std::vector<int> capacitytest(3, 42);
+	//TESTING RESIZE
+	ft::vector<int> resize_test(3, 42);
 
-	std::cout << "capacitytest _capacity = " << capacitytest.capacity() << std::endl;
-	capacitytest.push_back(32);
-	capacitytest.push_back(32);
-	capacitytest.push_back(32);
-	capacitytest.push_back(32);
-	std::cout << "capacitytest _capacity = " << capacitytest.capacity() << std::endl;
-	capacitytest.reserve(10);
-	std::cout << "capacitytest _capacity = " << capacitytest.capacity() << std::endl;
-	capacitytest.reserve(20);
-	std::cout << "capacitytest _capacity = " << capacitytest.capacity() << std::endl;
-	capacitytest.reserve(21);
-	std::cout << "capacitytest _capacity = " << capacitytest.capacity() << std::endl;
-	std::cout << "capacitytest size = " << capacitytest.size() << std::endl;
-	capacitytest.reserve(169);
-	std::cout << "capacitytest _capacity = " << capacitytest.capacity() << std::endl;
+	std::cout << "size = " << resize_test.size() << " capacity = " << resize_test.capacity() << std::endl;
+	resize_test.resize(12);
+	for (size_t i = 0; i < resize_test.size(); i++)
+		std::cout << resize_test[i] << " ";
+	std::cout << std::endl;
+	std::cout << "size = " << resize_test.size() << " capacity = " << resize_test.capacity() << std::endl;
+	resize_test.push_back(12);
+	std::cout << "size = " << resize_test.size() << " capacity = " << resize_test.capacity() << std::endl;
+	resize_test.resize(13);
+	for (size_t i = 0; i < resize_test.size(); i++)
+		std::cout << resize_test[i] << " ";
+	std::cout << std::endl;
+	
+	std::cout << "size = " << resize_test.size() << " capacity = " << resize_test.capacity() << std::endl;
+	resize_test.resize(2);
+	for (size_t i = 0; i < resize_test.size(); i++)
+		std::cout << resize_test[i] << " ";
+	std::cout << std::endl;
+	std::cout << "size = " << resize_test.size() << " capacity = " << resize_test.capacity() << std::endl;
+
+	
 	/*
 	//CHECKING push et pop with zero capacity
 	ft::vector<A> zerocapacity;
@@ -78,6 +86,9 @@ int main()
 	zerocapacity.push_back(A(12, 5));
 	zerocapacity.push_back(A(12, 5));
 	std::cout << "After multiple pushback ---- size = " << zerocapacity.size() << " capacity = " << zerocapacity.capacity() << std::endl;
+
+	ft::vector<A> cpy_zero(zerocapacity);
+	std::cout << "CPY : size = " << cpy_zero.size() << " capacity = " << cpy_zero.capacity() << std::endl;
 	*/
 
 	/*
