@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/02/10 14:45:33 by ariane           ###   ########.fr       */
+/*   Updated: 2022/02/11 09:51:10 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ namespace ft
 	class vector
 	{
 	public:
-		//idee : Le random_access_iterateur pourrait juste etre une specialisation de la struct iterator
 		class random_access_iterator : public ft::iterator<ft::random_access_iterator_tag, T>
 		{
 			public : 
@@ -41,12 +40,10 @@ namespace ft
 				random_access_iterator(T* const ptr){
 					_p = ptr;};
 				random_access_iterator(random_access_iterator const &rhs){
-					_p = rhs._p; //ok bc rhs is of the same type and it is done inside that type
-					};
+					_p = rhs._p;};
 				random_access_iterator & operator=(random_access_iterator const &rhs){
 					_p = rhs._p;
-					return *this;	
-				};
+					return *this;};
 				~random_access_iterator(){};
 				
 				//Equality && inequality && compare
@@ -77,7 +74,6 @@ namespace ft
 				
 				//Dereference
 				value_type &operator*(void) const {return *_p;};
-				//-> is a special case of overloading, need to return a ***real pointer*** that will be then dereferenced
 				pointer operator->() const {return &(operator*());};
 				
 				//Increment && decrement
@@ -105,7 +101,7 @@ namespace ft
 		};
 		
 		//VECTOR
-		//Members
+		
 		typedef T 											value_type;
 		typedef Alloc 										allocator_type;
 		typedef typename allocator_type::reference 			reference;
@@ -120,10 +116,11 @@ namespace ft
 		typedef reverse_iterator<iterator>					reverse_iterator;
 		
 		/*
-		Capacity and Allocator
-		at first capacity matches the first size given but then everytime it reallocates memory 
-		then it doubles its capacity
+		Capacity and Allocator at first capacity matches the first size given but then it doubles its capacity
+		when there is not enough memory
+		
 		!! si capacity de depart = 0 alors special case qu'il faudra hard coder car 2 * 0 = 0
+
 		!! be careful about max size and bad_alloc when not possible to allocate more 
 		--> FAIRE ALLOCATE QUI SET LA CAPACITY ET s'occupe de throw erreur??
 		*/
@@ -134,33 +131,42 @@ namespace ft
 		explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _size(n), _capacity(n), _alloc(alloc)
 		{
 			//works with vector<random_class> :  ft::vector<A>	class_vector(4, 12);
-			if (n > max_size())
+			if (_size > max_size())
 				throw (std::length_error("vector"));
 			_array = _alloc.allocate(_size);
 			for (size_type i = 0; i < _size; i++)
 				_alloc.construct(_array + i, val);
 		};
-		/*
-		template <class InputIterator> //bc it could be a pointer
-		vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type())
-		{
-			//find distance between iterators (ptrdiff ?) -> set _size
-			//last - first / sizeof(T)
-			//ou bien cb de fois on fait first++ pour arriver a last puisque ++ incremente du bon nb de bits
-			//alloc corresponding capacity and set _capacity
-			//iterate over first++ until last not included 
-		};// range (3)
-		*/
 
-		//!! ici meme si copy de l'autre, la capacity est initialisée à la size
-		//creer push_back et tester copier un vector a partir d'un autre apres qu'il
-		//ait recu des push back
+		//PROBLEM --> need to use smth that shows that InputIterator is an iterator		
+		// template <class InputIterator> //bc it could be a pointer
+		// vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()): _size(last - first), _capacity(_size), _alloc(alloc)
+		// {
+		// 	if (_size > max_size())
+		// 		throw (std::length_error("vector"));
+		// 	_array = _alloc.allocate(_size);
+		// 	for (; first != last; first++)
+		// 		_alloc.construct(first, *first);
+		// };
+
+		//Verifier une fois push_back cree que quand on construit par copy, capacity est bien set a la SIZE de la copy, la capacity n'est pas recopiee
 		vector (const vector& x) : _size(x.size()), _capacity(_size), _alloc(x.get_allocator())
 		{
 			_array = _alloc.allocate(_size);
 			for (size_type i = 0; i < _size; i++)
 				_alloc.construct(_array + i, x[i]);
 		};
+		
+		//verify if = for std::vector really does deep copy
+		vector& operator= (const vector& x) {
+			_size = x._size;
+			_capacity = _size;
+			_alloc = x._alloc;
+			_array = _alloc.allocate(_size);
+			for (size_type i = 0; i < _size; i++)
+				_alloc.construct(_array + i, x[i]);
+		};
+		
 		
 		//Destructor
 		~vector()
@@ -169,8 +175,7 @@ namespace ft
 			_alloc.destroy(_array);
 			_alloc.deallocate(_array, _capacity);
 		};
-
-		// vector& operator= (const vector& x);
+		
 		
 		// Iterators
 		iterator begin(){
@@ -214,8 +219,7 @@ namespace ft
 		};
 		// void 		reserve(size_type n);
 
-		//Element access:
-		//[] Does segfault in real vector if out of bound, whereas at() checks if in the range
+		//Element access: [] Does segfault in real vector if out of bound, whereas at() checks if in the range
 		reference operator[] (size_type n) {
 			return _array[n];
 		};

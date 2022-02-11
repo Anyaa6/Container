@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 11:36:32 by ariane            #+#    #+#             */
-/*   Updated: 2022/02/09 14:22:19 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/09 14:26:59 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,7 @@ struct iterator {
     typedef Reference reference;
     typedef Category  iterator_category;
   };
-
-//ex ici pour creer une instance de la class template d'en dessous, il faut :
-// ft::iterator_traits<ft::iterator<std::random_access_iterator_tag, int> >
-
+  
 //<class Iterator> est un placeholder donc l'utilisateur pourrait mettre n'importe quoi
 //comme iterator_traits<double> MAIS ne fonctionnera pas au compilateur car 
 //double::difference_type n'existe pas donc va nous empecher de faire n'imp

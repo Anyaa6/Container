@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/02/10 14:53:10 by ariane           ###   ########.fr       */
+/*   Updated: 2022/02/11 09:50:08 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,13 +104,46 @@ int main()
 	for (itvclass = vclass.begin(); itvclass < vclass.end(); itvclass++)
 		std::cout << itvclass->number << std ::endl;
 	*/
+
+    // std::vector<int> v(5, 0);
+	// for (int i = 0; i < 5; i++)
+		// v[i] = i;
+//  
+	// v.push_back(12);
+	// v.push_back(42);
+	// 
+	// std::vector<int> copy(v);
+	// for (int i = 0; i < 5; i++)
+		// std::cout << copy[i] << std::endl;
+	// 
+	// std::cout << "size of v = " << v.size() << " and size of copy = " << copy.size() << std::endl;
+	// std::cout << "capacity of v = " << v.capacity() << " and capacity of copy = " << copy.capacity() << std::endl;
+
 	
+	ft::vector<int> v(5, 0);
+	for (int i = 0; i < 5; i++)
+		v[i] = i;
+ 
+	// v.push_back(12);
+	// v.push_back(42);
+	
+	ft::vector<int> copy = v;
+	for (int i = 0; i < 5; i++)
+		std::cout << copy[i] << std::endl;
+	
+	std::cout << "size of v = " << v.size() << " and size of copy = " << copy.size() << std::endl;
+	std::cout << "capacity of v = " << v.capacity() << " and capacity of copy = " << copy.capacity() << std::endl;
+
 	/*
 	//Test reverse iterators
     ft::vector<int> v(5, 0);
 	for (int i = 0; i < 5; i++)
 		v[i] = i;
  
+	ft::vector<int> copy(v);
+	for (int i = 0; i < 5; i++)
+		std::cout << copy[i] << std::endl;
+	
 	typedef ft::reverse_iterator<ft::vector<int>::iterator> RevIt;
     ft::vector<int>::iterator it = v.begin() + 3;
     RevIt r_it(it);
