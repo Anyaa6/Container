@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/02/11 13:51:41 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/11 16:06:23 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,8 @@ namespace ft
 				_alloc.construct(_array + i, val);
 		};
 
-		//PROBLEM --> need to use smth that shows that InputIterator is an iterator		
+		//PROBLEM --> need to use smth that shows that InputIterator is an iterator	
+		//try to do iterator_traits<InputIterator> and then check if typedefs exists ?? enable_if ou autre ?
 		// template <class InputIterator> //bc it could be a pointer
 		// vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()): _size(last - first), _capacity(_size), _alloc(alloc)
 		// {
@@ -166,7 +167,7 @@ namespace ft
 		};
 		
 		
-		// Iterators
+		// Iterators OK
 		iterator begin(){
 			return _array;};
 			
@@ -192,7 +193,7 @@ namespace ft
 			return (reverse_iterator(_array));};
 
 
-		//Capacity
+		//Capacity OK
 		size_type 	size() const {
 			return _size;
 		};
@@ -222,7 +223,7 @@ namespace ft
 				_array = _realloc(n);
 		};
 
-		//Element access: [] Does segfault in real vector if out of bound, whereas at() checks if in the range
+		//Element access OK : [] Does segfault in real vector if out of bound, whereas at() checks if in the range
 		reference operator[] (size_type n) {
 			return _array[n];
 		};
@@ -256,7 +257,35 @@ namespace ft
 		};
 
 		//Modifiers:
-		// assign
+		//ATTENTION POUR DEPLACER DES ELEMENTS AUX REVERSE ITERATOR A LA FACON DE CHOPER l'ELEMENT SUIVANT
+		void assign (size_type n, const value_type& val){
+			this->clear();//clean and does not change capacity and _size = 0
+			if (n > _capacity)
+				_array = _realloc(n);
+			for (size_type i = 0; i < n; i++)
+				_alloc.construct(_array + i, val);
+			_size = n;
+		};
+		
+		// template <class InputIterator>//verifier si en mettant iterator d'un autre type de vector ex vector<int> pour vector<class> ca fonctionne quand meme
+		// //avec std ne fonctionne pas "no viable function prototype"
+		// //PROBLEM, when calling assign(4, 6) it goes into this function instead of the other
+		// //CHECK FOR ENABLE_IF
+		// void assign (InputIterator first, InputIterator last) {
+		// 	size_type		n = last - first;
+		// 	int i = 0;
+			
+		// 	this->clear();
+		// 	if (n > _capacity)
+		// 		_array = _realloc(n);
+		// 	for (;first != last; first++)
+		// 	{
+		// 		_alloc.construct(_array + i, first);
+		// 		i++;
+		// 	}
+		// 	_size = n;
+		// };
+		
 		void push_back (const value_type& val){
 			if (_size == _capacity)
 				_array = _realloc(_capacity * 2);
@@ -274,9 +303,12 @@ namespace ft
 		// insert
 		// erase
 		// swap
-		// clear
+		void clear() {
+			for (size_type i = _size; i > 0; i--)
+				this->pop_back();
+		}
 
-		//Allocator:
+		//Allocator OK :
 		allocator_type get_allocator() const {
 			return _alloc;
 		};
@@ -296,9 +328,6 @@ namespace ft
 
 			if (n == 0)
 				n = 1;
-			//protection not usefull bc allocate() does it
-			// if (n > max_size())
-				// throw (std::length_error("vector")); //"allocator<T>::allocate(size_t n) 'n' exceeds maximum supported size"));ca c'est dans reserve
 			tmp = _alloc.allocate(n);
 			for (size_type i = 0; i < _size; i++)
 				_alloc.construct(tmp + i, _array[i]);
@@ -309,7 +338,6 @@ namespace ft
 			return (tmp);
 		};
 		//	std::vector<int> resize_test(3, 42);
-
 		// resize_test.reserve(-(resize_test.max_size()));
 		//gives uncaught exception of type std::length_error: allocator<T>::allocate(size_t n) 'n' exceeds maximum supported size
 	

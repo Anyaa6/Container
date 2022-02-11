@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/02/11 13:49:57 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/11 16:07:36 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,47 @@ class A{
 
 int main()
 {
+	// ft::vector<int> veciter(2, 12);
+	// ft::vector<int>::iterator it;
+
+	ft::vector<int> verifyiter;
+	
+	// verifyiter.push_back(14);
+	std::cout << "Before assign size = " << verifyiter.size() << " capacity = " << verifyiter.capacity() << std::endl;
+	verifyiter.assign(4, 6);
+	for (size_t i = 0; i < verifyiter.size(); i++)
+		std::cout << verifyiter[i] << std::endl;
+	std::cout << "size = " << verifyiter.size() << " capacity = " << verifyiter.capacity() << std::endl;
+	verifyiter.assign(12, 2);
+	std::cout << "size = " << verifyiter.size() << " capacity = " << verifyiter.capacity() << std::endl;
+	verifyiter.assign(3, 7);
+	std::cout << "size = " << verifyiter.size() << " capacity = " << verifyiter.capacity() << std::endl;
+	for (size_t i = 0; i < verifyiter.size(); i++)
+		std::cout << verifyiter[i] << std::endl;
+		
+	ft::vector<int> cpyassign;
+	
+	// cpyassin.assign<ft::vector<int>::iterator>(verifyiter.begin(), verifyiter.end());
+	for (size_t i = 0; i < cpyassign.size(); i++)
+		std::cout << cpyassign[i] << std::endl;
+
+	/*
+	//TESTING CLEAR
+	ft::vector<int> clear_test;
+	
+	clear_test.clear();
+	clear_test.push_back(12);
+	clear_test.push_back(12);
+	clear_test.push_back(12);
+	clear_test.push_back(12);
+	clear_test.push_back(12);
+	std::cout << "size = " << clear_test.size() << " capacity = " << clear_test.capacity() << std::endl;
+	clear_test.clear();
+	clear_test.clear();
+	std::cout << "size = " << clear_test.size() << " capacity = " << clear_test.capacity() << std::endl;
+	*/
+
+	/*
 	//TESTING RESIZE
 	ft::vector<int> resize_test(3, 42);
 
@@ -70,7 +111,7 @@ int main()
 		std::cout << resize_test[i] << " ";
 	std::cout << std::endl;
 	std::cout << "size = " << resize_test.size() << " capacity = " << resize_test.capacity() << std::endl;
-
+	*/
 	
 	/*
 	//CHECKING push et pop with zero capacity
