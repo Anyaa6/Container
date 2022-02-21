@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/02/18 12:12:12 by ariane           ###   ########.fr       */
+/*   Updated: 2022/02/21 15:30:30 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,73 +21,127 @@
 
 class A{
 	public :
+	static int id;
 	int		number;
+	int		id_instance;
 	int 	size;
 	int		*array;
 	A(int num, int size) : number(num), size(size), array(NULL) {
+		id_instance = id;
+		std::cout << "Constructor called for id_instance = " << id_instance << std::endl;
 		array = new int[12];
+		id++;
 		// for (int i = 0; i < 12; i++)
 			// array[i] = i;
-		// std::cout << "ICI" << std::endl;
 	};
 	A(A const &rhs){ //with proper copy constructor they do have their own memory -> deep copy
-		array = new int[12];	
-		(void)rhs;
+		number = rhs.number;
+		size = rhs.size;
+		id_instance = this->id;
+		array = new int[12];
+		id++;	
+		std::cout << "COPY Constructor called for id_instance = " << id_instance << " from id_instance = " << rhs.id_instance << std::endl;
 		// for (int i = 0; i < 12; i++)
 		// 	array[i] = rhs.array[i];
-		// std::cout << "COPY CONSTRUCTOR OF CLASS A" << std::endl;
 	};
 	A() {
-		// std::cout << "LA" << std::endl;
+		std::cout << "DEFAULT constructor" << std::endl;
 	}
 	~A(){
-		// std::cout << "Destructor called" << std::endl;
+		std::cout << "Destructor called for number = " << number << " and id_instance = " << id_instance << std::endl;
 		if (array)
 			delete [] array;
 	};	
 };
 
+int A::id = 0;
+
 int main()
 {
-	std::cout << "Testing metafunctions" << std::endl;
-	std::cout << std::boolalpha;
-	std::cout << "is_same vector<int>::iterator == vector<int>::iterator : " << ft::is_same<ft::vector<int>::iterator, ft::vector<int>::iterator>::value << std::endl;
-	std::cout << "is_same vector<int>::iterator == vector<CHAR>::iterator : " << ft::is_same<ft::vector<char>::iterator, ft::vector<int>::iterator>::value << std::endl;
-	std::cout << "ft::is_small<int>::value : " << ft::is_small<int>::value << std::endl;
-	std::cout << "ft::is_small<char>::value : " << ft::is_small<char>::value << std::endl;
-	std::cout << "ft::is_small<bool>::value : " << ft::is_small<bool>::value << std::endl;
-	std::cout << "ft::is_small<A>::value : " << ft::is_small<A>::value << std::endl;
+	//TEST ASSIGN WITH vector<A>
+	// A a(1, 2);
+	ft::vector<A> assignclasses(1, A(1, 2));
 
-	std::cout << "ft::is_small2<int>::value : " << ft::is_small2<int>::value << std::endl;
-	std::cout << "ft::is_small2<char>::value : " << ft::is_small2<char>::value << std::endl;
+	std::cout << "assignclasses = " << std::endl;
+	// assignclasses.push_back(a);
+	// assignclasses.push_back(a);
+	for (size_t i = 0; i < assignclasses.size(); i++)
+		std::cout << assignclasses[i].number << "(id_instance = " << assignclasses[i].id_instance << ")" << " ";
+	std::cout << std::endl;
+
+	// A b(3, 2);
+	ft::vector<A> nextvector(5, A(3, 2));
+	// nextvector.push_back(b);
+	// nextvector.push_back(b);
+	// nextvector.push_back(b);
+	// nextvector.push_back(b);
+	std::cout << "nextvector = " << std::endl;
+	for (size_t i = 0; i < nextvector.size(); i++)
+		std::cout << nextvector[i].number << "(id_instance = " << nextvector[i].id_instance << ")" << " ";
+	std::cout << std::endl;
+
+	std::cout << "\n\nAssign\n";
+	nextvector.assign(assignclasses.begin(), assignclasses.end());
+	std::cout << "nextvector after assign with smaller vector = " << std::endl;
+	for (size_t i = 0; i < nextvector.size(); i++)
+		std::cout << nextvector[i].number << "(id_instance = " << nextvector[i].id_instance << ")" << " ";
+	std::cout << std::endl;
+
+	std::cout << "nextvector size = " << nextvector.size() << " and capacity = " << nextvector.capacity() << std::endl;
+	std::cout << "Before the end of the program" << std::endl;
 	
-	std::cout << " " << std::is_integral<A>::value << std::endl;
 	/*
-	//TESTING ASSIGN
-	// ft::vector<int> veciter(2, 12);
-	// ft::vector<int>::iterator it;
-
-	ft::vector<int> verifyiter;
+	//TEST ASSIGN FUNCTION
+	std::vector<int> verifyassign;
 	
-	// verifyiter.push_back(14);
-	std::cout << "Before assign size = " << verifyiter.size() << " capacity = " << verifyiter.capacity() << std::endl;
-	verifyiter.assign(4, 6);
-	for (size_t i = 0; i < verifyiter.size(); i++)
-		std::cout << verifyiter[i] << std::endl;
-	std::cout << "size = " << verifyiter.size() << " capacity = " << verifyiter.capacity() << std::endl;
-	verifyiter.assign(12, 2);
-	std::cout << "size = " << verifyiter.size() << " capacity = " << verifyiter.capacity() << std::endl;
-	verifyiter.assign(3, 7);
-	std::cout << "size = " << verifyiter.size() << " capacity = " << verifyiter.capacity() << std::endl;
-	for (size_t i = 0; i < verifyiter.size(); i++)
-		std::cout << verifyiter[i] << std::endl;
-		
-	ft::vector<int> cpyassign;
+	// verifyassign.push_back(14);
+	std::cout << "Before assign size = " << verifyassign.size() << " capacity = " << verifyassign.capacity() << std::endl;
+	verifyassign.assign(4, 6);
+	for (size_t i = 0; i < verifyassign.size(); i++)
+		std::cout << verifyassign[i] << " ";
+	std::cout << std::endl;
+	std::cout << "size = " << verifyassign.size() << " capacity = " << verifyassign.capacity() << std::endl;
+	verifyassign.assign(12, 2);
+	std::cout << "size = " << verifyassign.size() << " capacity = " << verifyassign.capacity() << std::endl;
+	verifyassign.assign(3, 7);
+	std::cout << "size = " << verifyassign.size() << " capacity = " << verifyassign.capacity() << std::endl;
+	verifyassign.push_back(12);
+	for (size_t i = 0; i < verifyassign.size(); i++)
+		std::cout << verifyassign[i] << " ";
+	std::cout << std::endl;
 	
-	// cpyassin.assign<ft::vector<int>::iterator>(verifyiter.begin(), verifyiter.end());
+	std::vector<int> cpyassign;
+	cpyassign.push_back(14);
+	cpyassign.push_back(14);
+	cpyassign.push_back(14);
+	cpyassign.push_back(14);
+	cpyassign.push_back(14);
+	cpyassign.push_back(14);
+	std::cout << "cpyassign before being assigned from another shorter vector" << std::endl;
 	for (size_t i = 0; i < cpyassign.size(); i++)
-		std::cout << cpyassign[i] << std::endl;
-*/
+		std::cout << cpyassign[i] << " ";
+	
+	cpyassign.assign<std::vector<int>::iterator>(verifyassign.begin(), verifyassign.end());
+	std::cout << "after assign from another vector" << std::endl;
+	for (size_t i = 0; i < cpyassign.size() + 2; i++)
+		std::cout << cpyassign[i] << " ";
+	std::cout << std::endl;
+	*/
+
+	// cpyassign.push_back(14);
+	// cpyassign.push_back(71);
+	// std::cout << "after push back 14 and 71" << std::endl;
+	// for (size_t i = 0; i < cpyassign.size(); i++)
+		// std::cout << cpyassign[i] << " ";
+	// std::cout << std::endl;
+
+	// cpyassign.assign<ft::vector<int>::reverse_iterator>(cpyassign.rbegin(), cpyassign.rend());
+	// for (size_t i = 0; i < cpyassign.size(); i++)
+		// std::cout << cpyassign[i] << " ";
+	// std::cout << std::endl;
+
+
+		
 	/*
 	//TESTING CLEAR
 	ft::vector<int> clear_test;

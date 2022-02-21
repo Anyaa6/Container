@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/02/18 12:16:58 by ariane           ###   ########.fr       */
+/*   Updated: 2022/02/21 15:30:17 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <stdexcept>
 #include <iostream> // A ENLEVER
 #include "iterator.hpp"
+#include "metafunctions.hpp"
 
 namespace ft
 {
@@ -261,7 +262,7 @@ namespace ft
 		//Modifiers:
 		//ATTENTION POUR DEPLACER DES ELEMENTS AUX REVERSE ITERATOR A LA FACON DE CHOPER l'ELEMENT SUIVANT
 		void assign (size_type n, const value_type& val){
-			this->clear();//clean and does not change capacity and _size = 0
+			this->clear();//clean, _size = 0, does not change capacity
 			if (n > _capacity)
 				_array = _realloc(n);
 			for (size_type i = 0; i < n; i++)
@@ -269,24 +270,63 @@ namespace ft
 			_size = n;
 		};
 		
-		// template <class InputIterator>//verifier si en mettant iterator d'un autre type de vector ex vector<int> pour vector<class> ca fonctionne quand meme
-		// //avec std ne fonctionne pas "no viable function prototype"
-		// //PROBLEM, when calling assign(4, 6) it goes into this function instead of the other
-		// //CHECK FOR ENABLE_IF
-		// void assign (InputIterator first, InputIterator last) {
-		// 	size_type		n = last - first;
-		// 	int i = 0;
-			
-		// 	this->clear();
-		// 	if (n > _capacity)
-		// 		_array = _realloc(n);
-		// 	for (;first != last; first++)
-		// 	{
-		// 		_alloc.construct(_array + i, first);
-		// 		i++;
-		// 	}
-		// 	_size = n;
-		// };
+		template <class InputIterator>//verifier si en mettant iterator d'un autre type de vector ex vector<int> pour vector<class> ca fonctionne quand meme
+		//avec std ne fonctionne pas "no viable function prototype"
+		//must also accept pointers !! and reverse_iterators
+		void assign (typename ft::enable_if<ft::is_same<InputIterator, typename ft::vector<T>::iterator>::value, InputIterator >::type first, InputIterator last) {
+			//All iterators, pointers and references related to this container are invalidated.
+			//!! si valeurs se "croisent", si assign du meme vecteur alors iterators ne pointeront plus nul part
+
+			size_type		n = last - first;
+			// std::cout << "difference between last and first " << n << std::endl;
+			if (n > _capacity)
+				_array = _realloc(n);
+			//std : descend la size a n en destroyant mais ne change pas capacity
+			//puis ASSIGN juste soit _array + i = *first until last;
+				
+			int i = 0;
+			//only detroys the n number of elements, no more (tested with std) so elements
+			//past n are still in existence but since _size is set to n then we should not
+			//access them
+			for (;first != last; first++)
+			{
+				_alloc.destroy(_array + i);
+				_alloc.construct(_array + i, *first);
+				i++;
+			}
+			_size = n;
+		};
+		//std : il destroy en descendant jusqu'a size = n
+		//
+		/* Avec STD : montre qu'il se copie sur lui meme donc efface au fur et a mesure, pas tout d'un coup
+		
+		std::vector<int> cpyassign;
+		
+		cpyassign.push_back(7);
+		cpyassign.push_back(7);
+		cpyassign.push_back(7);
+		cpyassign.push_back(14);
+		cpyassign.push_back(71);
+		for (size_t i = 0; i < cpyassign.size(); i++)
+			std::cout << cpyassign[i] << " ";
+					
+		cpyassign.assign(cpyassign.rbegin(), cpyassign.rend());
+		for (size_t i = 0; i < cpyassign.size(); i++)
+			std::cout << cpyassign[i] << " ";
+		std::cout << std::endl;
+
+		Output : 
+		7 7 7 14 71 
+		71 14 7 14 71 
+
+		template <bool Cond, class T = void> 
+struct enable_if {};
+
+template<class T> 
+struct enable_if<true, T> { 
+	typedef T type;
+};
+		*/
 		
 		void push_back (const value_type& val){
 			if (_size == _capacity)
