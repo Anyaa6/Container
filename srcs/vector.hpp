@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/02/11 16:06:23 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/18 12:16:58 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,8 @@ namespace ft
 			for (size_type i = 0; i < _size; i++)
 				_alloc.construct(_array + i, val);
 		};
+		
+		// vector (is_same<InputIterator, vector<T>::iterator> first, InputIterator last, const allocator_type& alloc = allocator_type()): _size(last - first), _capacity(_size), _alloc(alloc)
 
 		//PROBLEM --> need to use smth that shows that InputIterator is an iterator	
 		//try to do iterator_traits<InputIterator> and then check if typedefs exists ?? enable_if ou autre ?

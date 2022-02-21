@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/02/11 16:07:36 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/18 12:12:12 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <iterator> //A ENLEVER
 #include <limits>
 #include "iterator.hpp"
+#include "metafunctions.hpp"
 
 class A{
 	public :
@@ -48,6 +49,21 @@ class A{
 
 int main()
 {
+	std::cout << "Testing metafunctions" << std::endl;
+	std::cout << std::boolalpha;
+	std::cout << "is_same vector<int>::iterator == vector<int>::iterator : " << ft::is_same<ft::vector<int>::iterator, ft::vector<int>::iterator>::value << std::endl;
+	std::cout << "is_same vector<int>::iterator == vector<CHAR>::iterator : " << ft::is_same<ft::vector<char>::iterator, ft::vector<int>::iterator>::value << std::endl;
+	std::cout << "ft::is_small<int>::value : " << ft::is_small<int>::value << std::endl;
+	std::cout << "ft::is_small<char>::value : " << ft::is_small<char>::value << std::endl;
+	std::cout << "ft::is_small<bool>::value : " << ft::is_small<bool>::value << std::endl;
+	std::cout << "ft::is_small<A>::value : " << ft::is_small<A>::value << std::endl;
+
+	std::cout << "ft::is_small2<int>::value : " << ft::is_small2<int>::value << std::endl;
+	std::cout << "ft::is_small2<char>::value : " << ft::is_small2<char>::value << std::endl;
+	
+	std::cout << " " << std::is_integral<A>::value << std::endl;
+	/*
+	//TESTING ASSIGN
 	// ft::vector<int> veciter(2, 12);
 	// ft::vector<int>::iterator it;
 
@@ -71,7 +87,7 @@ int main()
 	// cpyassin.assign<ft::vector<int>::iterator>(verifyiter.begin(), verifyiter.end());
 	for (size_t i = 0; i < cpyassign.size(); i++)
 		std::cout << cpyassign[i] << std::endl;
-
+*/
 	/*
 	//TESTING CLEAR
 	ft::vector<int> clear_test;
