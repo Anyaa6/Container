@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/02/21 15:30:30 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/21 16:05:48 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,22 +59,18 @@ int A::id = 0;
 int main()
 {
 	//TEST ASSIGN WITH vector<A>
-	// A a(1, 2);
-	ft::vector<A> assignclasses(1, A(1, 2));
+	//Shows that this is NOT true : Any elements held in the container before the call are destroyed and replaced by newly constructed elements (no assignments of elements take place).
+	//if we put debug messages in the constructors AND destructors of A with an id number
+	//we can show that std assign does NOT construct new elements, it only makes it point to the elements
+	//that inputiterators point to
+	ft::vector<A> assignclasses(2, A(1, 2));
 
 	std::cout << "assignclasses = " << std::endl;
-	// assignclasses.push_back(a);
-	// assignclasses.push_back(a);
 	for (size_t i = 0; i < assignclasses.size(); i++)
 		std::cout << assignclasses[i].number << "(id_instance = " << assignclasses[i].id_instance << ")" << " ";
 	std::cout << std::endl;
 
-	// A b(3, 2);
 	ft::vector<A> nextvector(5, A(3, 2));
-	// nextvector.push_back(b);
-	// nextvector.push_back(b);
-	// nextvector.push_back(b);
-	// nextvector.push_back(b);
 	std::cout << "nextvector = " << std::endl;
 	for (size_t i = 0; i < nextvector.size(); i++)
 		std::cout << nextvector[i].number << "(id_instance = " << nextvector[i].id_instance << ")" << " ";

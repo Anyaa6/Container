@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/02/21 15:30:17 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/21 16:05:30 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -274,29 +274,15 @@ namespace ft
 		//avec std ne fonctionne pas "no viable function prototype"
 		//must also accept pointers !! and reverse_iterators
 		void assign (typename ft::enable_if<ft::is_same<InputIterator, typename ft::vector<T>::iterator>::value, InputIterator >::type first, InputIterator last) {
-			//All iterators, pointers and references related to this container are invalidated.
-			//!! si valeurs se "croisent", si assign du meme vecteur alors iterators ne pointeront plus nul part
-
 			size_type		n = last - first;
-			// std::cout << "difference between last and first " << n << std::endl;
 			if (n > _capacity)
 				_array = _realloc(n);
-			//std : descend la size a n en destroyant mais ne change pas capacity
-			//puis ASSIGN juste soit _array + i = *first until last;
-				
+			while (_size > n)
+				this->pop_back();
 			int i = 0;
-			//only detroys the n number of elements, no more (tested with std) so elements
-			//past n are still in existence but since _size is set to n then we should not
-			//access them
-			for (;first != last; first++)
-			{
-				_alloc.destroy(_array + i);
-				_alloc.construct(_array + i, *first);
-				i++;
-			}
-			_size = n;
+			for (;first != last; first++, i++)
+				_array[i] = *first;
 		};
-		//std : il destroy en descendant jusqu'a size = n
 		//
 		/* Avec STD : montre qu'il se copie sur lui meme donc efface au fur et a mesure, pas tout d'un coup
 		
@@ -319,13 +305,6 @@ namespace ft
 		7 7 7 14 71 
 		71 14 7 14 71 
 
-		template <bool Cond, class T = void> 
-struct enable_if {};
-
-template<class T> 
-struct enable_if<true, T> { 
-	typedef T type;
-};
 		*/
 		
 		void push_back (const value_type& val){
