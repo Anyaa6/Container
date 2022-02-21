@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/02/21 16:05:30 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/21 18:23:02 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -270,10 +270,14 @@ namespace ft
 			_size = n;
 		};
 		
-		template <class InputIterator>//verifier si en mettant iterator d'un autre type de vector ex vector<int> pour vector<class> ca fonctionne quand meme
+		template <typename InputIterator>//verifier si en mettant iterator d'un autre type de vector ex vector<int> pour vector<class> ca fonctionne quand meme
 		//avec std ne fonctionne pas "no viable function prototype"
-		//must also accept pointers !! and reverse_iterators
-		void assign (typename ft::enable_if<ft::is_same<InputIterator, typename ft::vector<T>::iterator>::value, InputIterator >::type first, InputIterator last) {
+		//Need to make assign accept reverse iterators
+
+		// ft::is_same<ft::vector<A>::reverse_iterator, ft::reverse_iterator<ft::vector<A>::iterator> >::value
+		// void assign (typename ft::enable_if<ft::is_same<typename ft::iterator_traits<InputIterator>::iterator_category, typename ft::iterator_traits<reverse_iterator>::iterator_category >::value, InputIterator>::type first, InputIterator last) {
+		void assign (typename ft::enable_if<ft::is_same<InputIterator, random_access_iterator>::value, InputIterator>::type first, InputIterator last) {
+			std::cout << "ASSIGN WITH ITERATOR" << std::endl;
 			size_type		n = last - first;
 			if (n > _capacity)
 				_array = _realloc(n);
@@ -283,7 +287,7 @@ namespace ft
 			for (;first != last; first++, i++)
 				_array[i] = *first;
 		};
-		//
+	
 		/* Avec STD : montre qu'il se copie sur lui meme donc efface au fur et a mesure, pas tout d'un coup
 		
 		std::vector<int> cpyassign;

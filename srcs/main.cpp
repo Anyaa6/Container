@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/02/21 16:05:48 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/21 18:23:13 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,9 @@ int main()
 	for (size_t i = 0; i < nextvector.size(); i++)
 		std::cout << nextvector[i].number << "(id_instance = " << nextvector[i].id_instance << ")" << " ";
 	std::cout << std::endl;
+
+	std::cout << "\n\nTesting metafunctions : \n";
+	std::cout << std::boolalpha << "ft::is_same<ft::vector<A>::reverse_iterator, ft::reverse_iterator<ft::vector<A>::iterator> >::value = " << ft::is_same<ft::vector<A>::reverse_iterator, ft::reverse_iterator<ft::vector<A>::iterator> >::value << std::endl;
 
 	std::cout << "\n\nAssign\n";
 	nextvector.assign(assignclasses.begin(), assignclasses.end());
