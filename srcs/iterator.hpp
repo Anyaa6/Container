@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 11:36:32 by ariane            #+#    #+#             */
-/*   Updated: 2022/02/09 14:26:59 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/25 14:57:06 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,8 @@ class reverse_iterator
 			return (reverse_iterator(_base + n));};
 		
 		friend difference_type operator- (const reverse_iterator& lhs, const reverse_iterator& rhs) {
-			return (lhs._base - rhs._base);
+			// return (lhs._base - rhs._base);
+			return (rhs._base - lhs._base);
 		};
 
 		reverse_iterator& operator-= (difference_type n) {

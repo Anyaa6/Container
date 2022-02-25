@@ -1,0 +1,191 @@
+Testing with ft library
+VECTOR CONSTRUCTORS AND DESTRUCTORS 
+creating vector, copy...
+VECTOR ITERATORS - begin, end, rbegin, rend
+last - 1 : 0
+index_test begin 42
+Testing begin front end back
+index_test begin 42
+index_test begin 12
+index_test begin 12
+Testing random_access_iterators
+The different iterators are equal to :
+it == it2
+it3 = ++begin()
+it4 = begin()++
+
+(it == it2) :true
+(it != it2) :false
+(it <= it2) :true
+(it >= it2) :true
+it < it2 :false
+it < it3 :true
+(it > it2) :false
+
+Printing values with index []: 
+it[0] = 12
+it[1] = 12
+it[2] = 12
+it[3] = 12
+changing second value to 52 from iterator *it3 = 52
+Printing values with iterators *it : 
+it = 12
+it = 52
+it = 12
+it = 12
+Printing values with iterators *it from the end : 
+it = 12
+it = 12
+it = 52
+it = 12
+it + 1 = 52
+it + 1 + 1 = 12
+itoffset = 1 + hehe.begin() = 52
+diff between itoffset - begin() = 1
+itft = 12
+Test reverse iterators
+0
+1
+2
+3
+4
+*rit == 3
+*r_rit == 2
+*r_rit.base() == 3
+*(r_rit.base()-1) == 2
+rev_end + 2 = 1
+++newrev = 0
+--newrev = 1
+newrev-- = 1
+newrev = 2
+r_begin[2] = 2
+r_begin += 2 = 2
+r_begin -= 2 = 4
+r_end - r_begin = 5
+1 + r_begin = 3
+Testing relationnal operators of reverse iterators
+true
+false
+true
+false
+true
+4
+3
+2
+1
+0
+Test operator ->
+Constructor called for id_instance = 0
+COPY Constructor called for id_instance = 1 from id_instance = 0
+COPY Constructor called for id_instance = 2 from id_instance = 0
+COPY Constructor called for id_instance = 3 from id_instance = 0
+COPY Constructor called for id_instance = 4 from id_instance = 0
+COPY Constructor called for id_instance = 5 from id_instance = 0
+12
+12
+12
+12
+12
+VECTOR CAPACITY FUNCTIONS - size, max_size, resize, capacity, empty, reserve 
+Creating vector from another vector and checking capacity
+5
+4611686018427387903
+5
+5
+5
+Capacity growth after push backs
+size : 6
+capacity : 10
+size : 7
+capacity : 10
+size : 8
+capacity : 10
+size : 9
+capacity : 10
+size : 10
+capacity : 10
+size : 11
+capacity : 20
+size : 12
+capacity : 20
+size : 13
+capacity : 20
+size : 14
+capacity : 20
+size : 15
+capacity : 20
+size : 16
+capacity : 20
+size : 17
+capacity : 20
+size : 18
+capacity : 20
+size : 19
+capacity : 20
+size : 20
+capacity : 20
+size : 21
+capacity : 40
+21
+40
+21
+21
+Testing capacity growth with reserve function
+capacitytest _capacity = 3
+capacitytest _capacity = 12
+capacitytest _capacity = 12
+capacitytest _capacity = 20
+capacitytest _capacity = 21
+capacitytest size = 7
+capacitytest _capacity = 169
+VECTOR ELEMENT ACCESS - operator[], at, front, back 
+testing [] operator
+haha[0] 12
+hoho[0] 12
+haha[1] 12
+hoho[1] 12
+haha[2] 66
+hoho[2] 66
+haha[3] 226
+hoho[3] 226
+testing at, front, back
+66
+Testing front on NON empty container
+42
+Testing back on NON empty container
+42
+VECTOR MODIFIERS - assign, push_back, pop_back, insert, erase, swap, clear 
+Assign with reverse iterator
+toassign : 
+0 1 2 3 4 5 
+suite : 
+1 2 3 4 5 6 
+toassign : 
+5 4 3 3 4 5 At beginning ---- size = 0 capacity = 0
+Constructor called for id_instance = 6
+COPY Constructor called for id_instance = 7 from id_instance = 6
+After one pushback ---- size = 1 capacity = 1
+Constructor called for id_instance = 8
+COPY Constructor called for id_instance = 9 from id_instance = 7
+COPY Constructor called for id_instance = 10 from id_instance = 8
+After 2 pushback ---- size = 2 capacity = 2
+Constructor called for id_instance = 11
+COPY Constructor called for id_instance = 12 from id_instance = 9
+COPY Constructor called for id_instance = 13 from id_instance = 10
+COPY Constructor called for id_instance = 14 from id_instance = 11
+Constructor called for id_instance = 15
+COPY Constructor called for id_instance = 16 from id_instance = 15
+Constructor called for id_instance = 17
+COPY Constructor called for id_instance = 18 from id_instance = 12
+COPY Constructor called for id_instance = 19 from id_instance = 13
+COPY Constructor called for id_instance = 20 from id_instance = 14
+COPY Constructor called for id_instance = 21 from id_instance = 16
+COPY Constructor called for id_instance = 22 from id_instance = 17
+After multiple pushback ---- size = 5 capacity = 8
+COPY Constructor called for id_instance = 23 from id_instance = 18
+COPY Constructor called for id_instance = 24 from id_instance = 19
+COPY Constructor called for id_instance = 25 from id_instance = 20
+COPY Constructor called for id_instance = 26 from id_instance = 21
+COPY Constructor called for id_instance = 27 from id_instance = 22
+CPY : size = 5 capacity = 5
+VECTOR NON MEMBER FUNCTION OVERLOADS - relational operators, swap 

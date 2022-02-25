@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/02/21 18:23:02 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/25 15:19:40 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,7 +255,7 @@ namespace ft
 		reference back(){
 			return *(_array + _size - 1);
 		};
-		const_reference back() const{
+		const_reference back() const {
 			return *(_array + _size - 1);
 		};
 
@@ -270,15 +270,13 @@ namespace ft
 			_size = n;
 		};
 		
-		template <typename InputIterator>//verifier si en mettant iterator d'un autre type de vector ex vector<int> pour vector<class> ca fonctionne quand meme
-		//avec std ne fonctionne pas "no viable function prototype"
-		//Need to make assign accept reverse iterators
+		//ajouter pointer / utiliser iterator_traits ?
+		template <typename InputIterator>
+		void assign (typename ft::enable_if<(ft::is_same<InputIterator, reverse_iterator>::value) || (ft::is_same<InputIterator, random_access_iterator>::value), InputIterator>::type first, InputIterator last) {
+			size_type			n = 0;
 
-		// ft::is_same<ft::vector<A>::reverse_iterator, ft::reverse_iterator<ft::vector<A>::iterator> >::value
-		// void assign (typename ft::enable_if<ft::is_same<typename ft::iterator_traits<InputIterator>::iterator_category, typename ft::iterator_traits<reverse_iterator>::iterator_category >::value, InputIterator>::type first, InputIterator last) {
-		void assign (typename ft::enable_if<ft::is_same<InputIterator, random_access_iterator>::value, InputIterator>::type first, InputIterator last) {
-			std::cout << "ASSIGN WITH ITERATOR" << std::endl;
-			size_type		n = last - first;
+			for (InputIterator it = first; it != last; it++)
+				n++;
 			if (n > _capacity)
 				_array = _realloc(n);
 			while (_size > n)
@@ -341,6 +339,9 @@ namespace ft
 		//friends
 		// template <class T, class Alloc>
 		// friend void swap (vector<T,Alloc>& x, vector<T,Alloc>& y);
+		//echanger simplement _array --> Sujet correct dit check that keyword friend is only used for operator
+		//All iterators, pointers and references referring to elements in both containers remain valid, and are now referring to the same elements they referred to before the call, but in the other container, where they now iterate.
+		// Note that the end iterator does not refer to an element and may be invalidated.
 
 	private:
 		value_type	*_array;
@@ -372,6 +373,8 @@ namespace ft
 		// //Non-member function overloads --> friend autorisé
 		
 		// relational operators
+		// The other operations also use the operators == and < internally to compare the elements, behaving as if the following equivalent operations were performed --> DONC on ne code que == et < puis on utilise ceux la pour tout le reste
+		
 		// swap -> existe comme fonction membre vector.swap(other_vector) et aussi comme fonction
 		//non membre : swap(vector<int>, other_vector<int>) et dans ce cas il faudra que swap ait
 		//accès au attributs private de vector -> friend 
