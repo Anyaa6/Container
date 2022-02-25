@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <deque>
-#if 1 //CREATE A REAL STL EXAMPLE
+#if 0 //CREATE A REAL STL EXAMPLE
 	#define TESTING "Testing with std library"
 	#include <map>
 	#include <stack>
@@ -302,6 +302,7 @@ int main()
 	std::cout << "Assign with reverse iterator" << std::endl;
 	ft::vector<int> toassign(6, 5);
 	ft::vector<int> suite(6, 5);
+	int int_array[7] = {7,6, 8, 9, 2, 3};
 
 	for (int i = 0; i < 6; i++)
 	{
@@ -321,10 +322,19 @@ int main()
 	
 	toassign.assign(suite.rbegin(), suite.rend()); //reverse_iterator
 
-	std::cout << "toassign : " << std::endl;
+	std::cout << "toassign after assign(suite.rbegin(), suite.rend()) : " << std::endl;
 	for (int i = 0; i < 6; i++)
 		std::cout << toassign[i] << " ";
 	std::cout << std::endl;
+	
+	std::cout << "Assigning from int_array pointer :" << std::endl;
+	for (int i = 0; i < 6; i++)
+		std::cout << int_array[i] << " ";
+
+	toassign.assign(int_array, int_array + 3); //reverse_iterator
+	std::cout << "\ntoassign : " << std::endl;
+	for (int i = 0; i < 6; i++)
+		std::cout << toassign[i] << " ";
 
 	std::cout << "TESTING CLEAR" << std::endl;
 	ft::vector<int> clear_test;

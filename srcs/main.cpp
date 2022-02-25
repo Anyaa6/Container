@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/02/25 16:04:42 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/25 16:38:17 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,43 +58,13 @@ int A::id = 0;
 
 int main()
 {
+	//assign (size_type n, const value_type& val) does not act the same in std and ft when using vector of class A
+	//probably due to line 266 of vector.hpp --> this->clear
+	std::vector<A> assignclasses(4, A(1, 2));
 
-	//Assign works with reverse iterator
-	ft::vector<int> toassign(6, 5);
-	ft::vector<int> suite(6, 5);
-	int int_array[7] = {7,6, 8, 9, 2, 3};
-
-	for (int i = 0; i < 6; i++)
-	{
-		toassign[i] = i;
-		suite[i] = i + 1;
-	}
-
-	std::cout << "toassign : " << std::endl;
-	for (int i = 0; i < 6; i++)
-		std::cout << toassign[i] << " ";
-
-	std::cout << "\nsuite : " << std::endl;
-	for (int i = 0; i < 6; i++)
-		std::cout << suite[i] << " ";
-
-	std::cout << std::endl;
-	
-	toassign.assign(suite.rbegin(), suite.rend()); //reverse_iterator
-
-	std::cout << "toassign after assign(suite.rbegin(), suite.rend()) : " << std::endl;
-	for (int i = 0; i < 6; i++)
-		std::cout << toassign[i] << " ";
-	std::cout << std::endl;
-	
-	std::cout << "Assigning from int_array pointer :" << std::endl;
-	for (int i = 0; i < 6; i++)
-		std::cout << int_array[i] << " ";
-
-	toassign.assign(int_array, int_array + 3); //reverse_iterator
-	std::cout << "\ntoassign : " << std::endl;
-	for (int i = 0; i < 6; i++)
-		std::cout << toassign[i] << " ";
+	std::cout << "\n\n" << std::endl;
+	assignclasses.assign(4, A(3, 5));
+	std::cout << "\n\n" << std::endl;
 
 	/*
 	//TEST ASSIGN WITH vector<A>
@@ -128,7 +98,6 @@ int main()
 	std::cout << "nextvector size = " << nextvector.size() << " and capacity = " << nextvector.capacity() << std::endl;
 	std::cout << "Before the end of the program" << std::endl;
 	*/
-	
 	/*
 	//TEST ASSIGN FUNCTION
 	ft::vector<int> verifyassign;
@@ -204,10 +173,6 @@ int main()
 	std::cout << "size = " << resize_test.size() << " capacity = " << resize_test.capacity() << std::endl;
 	*/
 	
-	/*
-
-	*/
-
 	/*
 	STD TESTS to compare destruction of objects
 	free error bc instance_of_a is destructed before the ones in classvec and they point to

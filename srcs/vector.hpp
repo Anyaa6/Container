@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/02/25 16:10:31 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/25 16:33:14 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -261,6 +261,7 @@ namespace ft
 
 		//Modifiers:
 		//ATTENTION POUR DEPLACER DES ELEMENTS AUX REVERSE ITERATOR A LA FACON DE CHOPER l'ELEMENT SUIVANT
+		//VERIFY THAT 
 		void assign (size_type n, const value_type& val){
 			this->clear();//clean, _size = 0, does not change capacity
 			if (n > _capacity)
