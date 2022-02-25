@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/02/25 15:19:40 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/25 16:10:31 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -270,9 +270,8 @@ namespace ft
 			_size = n;
 		};
 		
-		//ajouter pointer / utiliser iterator_traits ?
 		template <typename InputIterator>
-		void assign (typename ft::enable_if<(ft::is_same<InputIterator, reverse_iterator>::value) || (ft::is_same<InputIterator, random_access_iterator>::value), InputIterator>::type first, InputIterator last) {
+		void assign (typename ft::enable_if<(ft::is_same<InputIterator, reverse_iterator>::value) || (ft::is_same<InputIterator, random_access_iterator>::value) || (ft::is_same<InputIterator, pointer>::value), InputIterator>::type first, InputIterator last) {
 			size_type			n = 0;
 
 			for (InputIterator it = first; it != last; it++)

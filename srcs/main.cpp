@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/02/25 15:22:23 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/25 16:04:42 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,10 @@ int A::id = 0;
 int main()
 {
 
-	/*
 	//Assign works with reverse iterator
 	ft::vector<int> toassign(6, 5);
 	ft::vector<int> suite(6, 5);
+	int int_array[7] = {7,6, 8, 9, 2, 3};
 
 	for (int i = 0; i < 6; i++)
 	{
@@ -80,13 +80,22 @@ int main()
 
 	std::cout << std::endl;
 	
-	toassign.assign(toassign.rbegin(), toassign.rend()); //reverse_iterator
+	toassign.assign(suite.rbegin(), suite.rend()); //reverse_iterator
 
-	std::cout << "toassign : " << std::endl;
+	std::cout << "toassign after assign(suite.rbegin(), suite.rend()) : " << std::endl;
 	for (int i = 0; i < 6; i++)
 		std::cout << toassign[i] << " ";
-		*/
+	std::cout << std::endl;
 	
+	std::cout << "Assigning from int_array pointer :" << std::endl;
+	for (int i = 0; i < 6; i++)
+		std::cout << int_array[i] << " ";
+
+	toassign.assign(int_array, int_array + 3); //reverse_iterator
+	std::cout << "\ntoassign : " << std::endl;
+	for (int i = 0; i < 6; i++)
+		std::cout << toassign[i] << " ";
+
 	/*
 	//TEST ASSIGN WITH vector<A>
 	//Shows that this is NOT true : Any elements held in the container before the call are destroyed and replaced by newly constructed elements (no assignments of elements take place).
@@ -169,24 +178,6 @@ int main()
 	// for (size_t i = 0; i < cpyassign.size(); i++)
 		// std::cout << cpyassign[i] << " ";
 	// std::cout << std::endl;
-
-
-		
-	/*
-	//TESTING CLEAR
-	ft::vector<int> clear_test;
-	
-	clear_test.clear();
-	clear_test.push_back(12);
-	clear_test.push_back(12);
-	clear_test.push_back(12);
-	clear_test.push_back(12);
-	clear_test.push_back(12);
-	std::cout << "size = " << clear_test.size() << " capacity = " << clear_test.capacity() << std::endl;
-	clear_test.clear();
-	clear_test.clear();
-	std::cout << "size = " << clear_test.size() << " capacity = " << clear_test.capacity() << std::endl;
-	*/
 
 	/*
 	//TESTING RESIZE

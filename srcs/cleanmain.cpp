@@ -49,7 +49,14 @@ class A{
 
 int A::id = 0;
 
-//ADD FUNCTION THAT PRINTS THE VECTORS AT EVERY TESTS TO BE SURE IT IS THE SAME AS STD::VECTOR
+template <typename T>
+void	print_any_vector(ft::vector<T> &to_display, std::string vector_name)
+{
+	std::cout << "\nVector " << vector_name << std::endl;
+	for (typename ft::vector<T>::size_type i = 0; i < to_display.size(); i++)
+		std::cout << to_display[i] << " ";
+	std::cout << "\n" << std::endl;
+}
 
 int main()
 {
@@ -63,6 +70,7 @@ int main()
 	haha[2] = 66;
 	haha[3] = 226;
 	ft::vector<int> hoho(haha); //par copy
+	print_any_vector(hoho, "hoho");
 	
 	//-------------------------------------------------------------------
 	/*DONE*/std::cout << "VECTOR ITERATORS - begin, end, rbegin, rend" << std::endl;
@@ -239,6 +247,7 @@ int main()
 	std::cout << "capacitytest size = " << capacitytest.size() << std::endl;
 	capacitytest.reserve(169);
 	std::cout << "capacitytest _capacity = " << capacitytest.capacity() << std::endl;
+	print_any_vector(capacitytest, "capacitytest");
 
 	//-------------------------------------------------------------------
 	/*DONE*/std::cout << "VECTOR ELEMENT ACCESS - operator[], at, front, back " << std::endl;
@@ -288,7 +297,8 @@ int main()
 	std::cout << value_test.back() << std::endl;
 	
 	//-------------------------------------------------------------------
-	/*pop_back, insert, swap, clear*/std::cout << "VECTOR MODIFIERS - assign, push_back, pop_back, insert, erase, swap, clear " << std::endl;
+	/*pop_back, insert, swap*/std::cout << "VECTOR MODIFIERS - assign, push_back, pop_back, insert, erase, swap, clear " << std::endl;
+
 	std::cout << "Assign with reverse iterator" << std::endl;
 	ft::vector<int> toassign(6, 5);
 	ft::vector<int> suite(6, 5);
@@ -309,12 +319,26 @@ int main()
 
 	std::cout << std::endl;
 	
-	toassign.assign(toassign.rbegin(), toassign.rend()); //reverse_iterator
+	toassign.assign(suite.rbegin(), suite.rend()); //reverse_iterator
 
 	std::cout << "toassign : " << std::endl;
 	for (int i = 0; i < 6; i++)
 		std::cout << toassign[i] << " ";
 	std::cout << std::endl;
+
+	std::cout << "TESTING CLEAR" << std::endl;
+	ft::vector<int> clear_test;
+	
+	clear_test.clear();
+	clear_test.push_back(12);
+	clear_test.push_back(12);
+	clear_test.push_back(12);
+	clear_test.push_back(12);
+	clear_test.push_back(12);
+	std::cout << "size = " << clear_test.size() << " capacity = " << clear_test.capacity() << std::endl;
+	clear_test.clear();
+	clear_test.clear();
+	std::cout << "size = " << clear_test.size() << " capacity = " << clear_test.capacity() << std::endl;
 
 	//-------------------------------------------------------------------
 	std::cout << "VECTOR NON MEMBER FUNCTION OVERLOADS - relational operators, swap " << std::endl;
