@@ -84,6 +84,28 @@ int main()
 	haha[3] = 226;
 	ft::vector<int> hoho(haha); //par copy
 	print_any_vector(hoho, "hoho");
+
+	std::cout << "Testing iterator constructor" << std::endl;
+	ft::vector<int> base_vector(4, 2);
+	ft::vector<int> iterator_contructor(base_vector.begin(), base_vector.end());
+
+	print_any_vector(iterator_contructor, "iterator_contructor");
+
+	ft::vector<A> class_base_vector(4, A(5,2));
+	ft::vector<A> class_iterator_contructor(class_base_vector.begin(), class_base_vector.end());
+
+	print_any_vector(iterator_contructor, "class A iterator_contructor");
+
+	std::cout << "Testing = operator" << std::endl;
+	ft::vector<A> initial(5, A(2, 3));
+	ft::vector<A> deep_copy;
+
+	deep_copy = initial;
+
+	deep_copy[3].id_instance = 5;
+	std::cout << "deep_copy[3] : " << deep_copy[3] << " initial[3] : " << initial[3] << std::endl;
+	print_any_vector(initial, "initial");
+	print_any_vector(deep_copy, "deep_copy");
 	
 	//-------------------------------------------------------------------
 	/*DONE*/std::cout << "VECTOR ITERATORS - begin, end, rbegin, rend" << std::endl;
@@ -337,9 +359,9 @@ int main()
 	std::cout << value_test.back() << std::endl;
 	
 	//-------------------------------------------------------------------
-	/*pop_back, insert, swap*/std::cout << "VECTOR MODIFIERS - assign, push_back, pop_back, insert, erase, swap, clear " << std::endl;
-
+	/*insert, erase, swap*/std::cout << "VECTOR MODIFIERS - assign, push_back, pop_back, insert, erase, swap, clear " << std::endl;
 	std::cout << "Assign with debug messages from class A" << std::endl;
+	/*Leaks here */
 	ft::vector<A> assignclasses(3, A(1, 2));
 
 	std::cout << "\n" << std::endl;
@@ -357,7 +379,7 @@ int main()
 	
 	std::cout << "\n" << std::endl;
 	print_any_vector(assignclasses, "assignclasses");
-
+	/* to here */
 	std::cout << "Assign with reverse iterator" << std::endl;
 	ft::vector<int> toassign(6, 5);
 	ft::vector<int> suite(6, 5);
@@ -368,7 +390,7 @@ int main()
 		toassign[i] = i;
 		suite[i] = i + 1;
 	}
-
+	
 	std::cout << "toassign : " << std::endl;
 	for (int i = 0; i < 6; i++)
 		std::cout << toassign[i] << " ";
@@ -401,6 +423,7 @@ int main()
 	clear_test.clear();
 	clear_test.push_back(12);
 	clear_test.push_back(12);
+	clear_test.pop_back();
 	clear_test.push_back(12);
 	clear_test.push_back(12);
 	clear_test.push_back(12);
@@ -408,7 +431,6 @@ int main()
 	clear_test.clear();
 	clear_test.clear();
 	std::cout << "size = " << clear_test.size() << " capacity = " << clear_test.capacity() << std::endl;
-
 	//-------------------------------------------------------------------
 	std::cout << "VECTOR NON MEMBER FUNCTION OVERLOADS - relational operators, swap " << std::endl;
 

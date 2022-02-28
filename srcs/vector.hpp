@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/02/28 16:00:43 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/28 18:36:29 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,19 +129,18 @@ namespace ft
 				_alloc.construct(_array + i, val);
 		};
 		
-		// vector (is_same<InputIterator, vector<T>::iterator> first, InputIterator last, const allocator_type& alloc = allocator_type()): _size(last - first), _capacity(_size), _alloc(alloc)
-
-		//PROBLEM --> need to use smth that shows that InputIterator is an iterator	
-		//try to do iterator_traits<InputIterator> and then check if typedefs exists ?? enable_if ou autre ?
-		// template <class InputIterator> //bc it could be a pointer
-		// vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()): _size(last - first), _capacity(_size), _alloc(alloc)
-		// {
-		// 	if (_size > max_size())
-		// 		throw (std::length_error("vector"));
-		// 	_array = _alloc.allocate(_size);
-		// 	for (; first != last; first++)
-		// 		_alloc.construct(first, *first);
-		// };
+		template <class InputIterator>
+		vector (typename ft::enable_if<(ft::is_same<InputIterator, reverse_iterator>::value) 
+		|| (ft::is_same<InputIterator, random_access_iterator>::value) 
+		|| (ft::is_same<InputIterator, pointer>::value), InputIterator>::type first, 
+		InputIterator last, const allocator_type& alloc = allocator_type()): _size(last - first), _capacity(_size), _alloc(alloc)
+		{
+			if (_size > max_size())
+				throw (std::length_error("vector"));
+			_array = _alloc.allocate(_size);
+			for (int i = 0; first != last; first++, i++)
+				_alloc.construct(_array + i, *first);
+		};
 
 		vector (const vector& x) : _size(x.size()), _capacity(_size), _alloc(x.get_allocator())
 		{
@@ -150,7 +149,6 @@ namespace ft
 				_alloc.construct(_array + i, x[i]);
 		};
 		
-		//deep copy works, verified
 		vector& operator= (const vector& x) {
 			_size = x._size;
 			_capacity = _size;
@@ -158,6 +156,7 @@ namespace ft
 			_array = _alloc.allocate(_size);
 			for (size_type i = 0; i < _size; i++)
 				_alloc.construct(_array + i, x[i]);
+			return (*this);
 		};
 		
 		
@@ -269,6 +268,7 @@ namespace ft
 			if (n > _capacity)
 			{
 				this->clear();
+				_alloc.deallocate(_array, _capacity);
 				_array = _alloc.allocate(n);
 				_capacity = n;
 				for (size_type i = 0; i < n; i++)
@@ -284,9 +284,10 @@ namespace ft
 			}
 		};
 		
-		//pour enable if, le passer dans iterator traits et comparer avec is_same a iterator_traits<InputIterator>::pointer, pointer>
 		template <typename InputIterator>
-		void assign (typename ft::enable_if<(ft::is_same<InputIterator, reverse_iterator>::value) || (ft::is_same<InputIterator, random_access_iterator>::value) || (ft::is_same<InputIterator, pointer>::value), InputIterator>::type first, InputIterator last) {
+		void assign (typename ft::enable_if<(ft::is_same<InputIterator, reverse_iterator>::value) 
+		|| (ft::is_same<InputIterator, random_access_iterator>::value) 
+		|| (ft::is_same<InputIterator, pointer>::value), InputIterator>::type first, InputIterator last) {
 			size_type			n = 0;
 			for (InputIterator it = first; it != last; it++)
 				n++;
@@ -294,6 +295,7 @@ namespace ft
 			if (n > _capacity)
 			{
 				this->clear();
+				_alloc.deallocate(_array, _capacity);
 				_array = _alloc.allocate(n);
 				_capacity = n;
 				for (int i = 0;first != last; first++, i++)
@@ -325,7 +327,32 @@ namespace ft
 		};
 		// insert
 		// erase
-		// swap
+		//make it clean
+		//cannot use '=' otherwise it will construct and addresses will not be the same and iterators invalidated
+		void swap (vector& x) {
+			ft::vector<T>	tmp;
+			
+			tmp._array = _array;
+			tmp._capacity = _capacity;
+			tmp._size = _size;
+			tmp._alloc = _alloc;
+			
+			_array = x._array;
+			_capacity = x._capacity;
+			_size = x._size;
+			_alloc = x._alloc;
+
+			x._array = tmp._array;
+			x._capacity = tmp._capacity;
+			x._size = tmp._size;
+			x._alloc = tmp._alloc;
+			
+			//So that _array is not destructed with tmp upon exiting
+			tmp._array = NULL;
+			tmp._capacity = 0;
+			tmp._size = 0;
+		};
+
 		void clear() {
 			for (size_type i = _size; i > 0; i--)
 				this->pop_back();
@@ -339,9 +366,7 @@ namespace ft
 		//friends
 		// template <class T, class Alloc>
 		// friend void swap (vector<T,Alloc>& x, vector<T,Alloc>& y);
-		//echanger simplement _array --> Sujet correct dit check that keyword friend is only used for operator
-		//All iterators, pointers and references referring to elements in both containers remain valid, and are now referring to the same elements they referred to before the call, but in the other container, where they now iterate.
-		// Note that the end iterator does not refer to an element and may be invalidated.
+		//use friend on swap MEMBER FUNCTION to use that member function
 
 	private:
 		value_type	*_array;
@@ -375,10 +400,4 @@ namespace ft
 		// relational operators
 		// The other operations also use the operators == and < internally to compare the elements, behaving as if the following equivalent operations were performed --> DONC on ne code que == et < puis on utilise ceux la pour tout le reste
 		
-		// swap -> existe comme fonction membre vector.swap(other_vector) et aussi comme fonction
-		//non membre : swap(vector<int>, other_vector<int>) et dans ce cas il faudra que swap ait
-		//accès au attributs private de vector -> friend 
-		// template <class T, class Alloc>
-		// void swap (vector<T,Alloc>& x, vector<T,Alloc>& y);
-
 #endif
