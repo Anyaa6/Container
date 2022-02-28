@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/02/25 16:33:14 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/28 16:00:43 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -260,54 +260,54 @@ namespace ft
 		};
 
 		//Modifiers:
-		//ATTENTION POUR DEPLACER DES ELEMENTS AUX REVERSE ITERATOR A LA FACON DE CHOPER l'ELEMENT SUIVANT
-		//VERIFY THAT 
 		void assign (size_type n, const value_type& val){
-			this->clear();//clean, _size = 0, does not change capacity
+			//Not using _realloc bc extra steps to copy old elements
+			//Assign has 2 behaviors bc depending on wether it needs to reallocate memory, std must
+			//be using 2 functions, when realloc it will CONSTRUCT new elements, but if no need to
+			//realloc then it will only have it point to the element "val" without even constructing
+			//it, causing free error on exit
 			if (n > _capacity)
-				_array = _realloc(n);
-			for (size_type i = 0; i < n; i++)
-				_alloc.construct(_array + i, val);
-			_size = n;
+			{
+				this->clear();
+				_array = _alloc.allocate(n);
+				_capacity = n;
+				for (size_type i = 0; i < n; i++)
+					_alloc.construct(_array + i, val);
+				_size = n;
+			}
+			else 
+			{
+				while (_size > n)
+					this->pop_back();
+				for (size_type i = 0; i < n; i++)
+					_array[i] = val;
+			}
 		};
 		
+		//pour enable if, le passer dans iterator traits et comparer avec is_same a iterator_traits<InputIterator>::pointer, pointer>
 		template <typename InputIterator>
 		void assign (typename ft::enable_if<(ft::is_same<InputIterator, reverse_iterator>::value) || (ft::is_same<InputIterator, random_access_iterator>::value) || (ft::is_same<InputIterator, pointer>::value), InputIterator>::type first, InputIterator last) {
 			size_type			n = 0;
-
 			for (InputIterator it = first; it != last; it++)
 				n++;
+
 			if (n > _capacity)
-				_array = _realloc(n);
-			while (_size > n)
-				this->pop_back();
-			int i = 0;
-			for (;first != last; first++, i++)
-				_array[i] = *first;
+			{
+				this->clear();
+				_array = _alloc.allocate(n);
+				_capacity = n;
+				for (int i = 0;first != last; first++, i++)
+					_alloc.construct(_array + i, *first);
+				_size = n;
+			}
+			else 
+			{
+				while (_size > n)
+					this->pop_back();
+				for (int i = 0;first != last; first++, i++)
+					_array[i] = *first;
+			}		
 		};
-	
-		/* Avec STD : montre qu'il se copie sur lui meme donc efface au fur et a mesure, pas tout d'un coup
-		
-		std::vector<int> cpyassign;
-		
-		cpyassign.push_back(7);
-		cpyassign.push_back(7);
-		cpyassign.push_back(7);
-		cpyassign.push_back(14);
-		cpyassign.push_back(71);
-		for (size_t i = 0; i < cpyassign.size(); i++)
-			std::cout << cpyassign[i] << " ";
-					
-		cpyassign.assign(cpyassign.rbegin(), cpyassign.rend());
-		for (size_t i = 0; i < cpyassign.size(); i++)
-			std::cout << cpyassign[i] << " ";
-		std::cout << std::endl;
-
-		Output : 
-		7 7 7 14 71 
-		71 14 7 14 71 
-
-		*/
 		
 		void push_back (const value_type& val){
 			if (_size == _capacity)

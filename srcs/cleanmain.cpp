@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <deque>
-#if 0 //CREATE A REAL STL EXAMPLE
+#if 1 //CREATE A REAL STL EXAMPLE
 	#define TESTING "Testing with std library"
 	#include <map>
 	#include <stack>
@@ -42,18 +42,31 @@ class A{
 		std::cout << "DEFAULT constructor" << std::endl;
 	}
 	~A(){
+		//Not using destructor debug msg bc destruction happens in reverse order at exit -> creates diff between tester files
+		// std::cout << "Destructor called for number = " << number << " and id_instance = " << id_instance << std::endl;
 		if (array)
 			delete [] array;
 	};	
+	int operator[](int const &index) const {
+		(void)index;
+		return id_instance;
+	};
 };
+
+std::ostream & operator<<(std::ostream &cout, A const &A)
+{
+	cout << A.id_instance;
+	return cout;
+}
 
 int A::id = 0;
 
+//changed ft::vector<T> to T to be able to use function with std
 template <typename T>
-void	print_any_vector(ft::vector<T> &to_display, std::string vector_name)
+void	print_any_vector(T &to_display, std::string vector_name)
 {
 	std::cout << "\nVector " << vector_name << std::endl;
-	for (typename ft::vector<T>::size_type i = 0; i < to_display.size(); i++)
+	for (typename T::size_type i = 0; i < to_display.size(); i++)
 		std::cout << to_display[i] << " ";
 	std::cout << "\n" << std::endl;
 }
@@ -203,10 +216,14 @@ int main()
 		std::cout << itvclass->number << std ::endl;
 
 	//-------------------------------------------------------------------
-	/*empty, resize*/std::cout << "VECTOR CAPACITY FUNCTIONS - size, max_size, resize, capacity, empty, reserve " << std::endl;
+	/*DONE*/std::cout << "VECTOR CAPACITY FUNCTIONS - size, max_size, resize, capacity, empty, reserve " << std::endl;
 	ft::vector<int> real_stuff(5,12);
 	ft::vector<int> cp_real_stuff(real_stuff);
+	ft::vector<int> empty_cont;
 	
+	std::cout << "Testing empty : " << std::endl;
+	std::cout << std::boolalpha << "Real_stuff is empty : " << real_stuff.empty() 
+	<< " empty_cont is empty : " << empty_cont.empty() << std::noboolalpha << std::endl;
 
 	std::cout << "Creating vector from another vector and checking capacity" << std::endl;
 	std::cout << real_stuff.size() << std::endl;
@@ -248,6 +265,29 @@ int main()
 	capacitytest.reserve(169);
 	std::cout << "capacitytest _capacity = " << capacitytest.capacity() << std::endl;
 	print_any_vector(capacitytest, "capacitytest");
+
+	std::cout << "Testing resize : " << std::endl;
+	ft::vector<int> resize_test(3, 42);
+
+	std::cout << "size = " << resize_test.size() << " capacity = " << resize_test.capacity() << std::endl;
+	resize_test.resize(12);
+	for (size_t i = 0; i < resize_test.size(); i++)
+		std::cout << resize_test[i] << " ";
+	std::cout << std::endl;
+	std::cout << "size = " << resize_test.size() << " capacity = " << resize_test.capacity() << std::endl;
+	resize_test.push_back(12);
+	std::cout << "size = " << resize_test.size() << " capacity = " << resize_test.capacity() << std::endl;
+	resize_test.resize(13);
+	for (size_t i = 0; i < resize_test.size(); i++)
+		std::cout << resize_test[i] << " ";
+	std::cout << std::endl;
+	
+	std::cout << "size = " << resize_test.size() << " capacity = " << resize_test.capacity() << std::endl;
+	resize_test.resize(2);
+	for (size_t i = 0; i < resize_test.size(); i++)
+		std::cout << resize_test[i] << " ";
+	std::cout << std::endl;
+	std::cout << "size = " << resize_test.size() << " capacity = " << resize_test.capacity() << std::endl;
 
 	//-------------------------------------------------------------------
 	/*DONE*/std::cout << "VECTOR ELEMENT ACCESS - operator[], at, front, back " << std::endl;
@@ -298,6 +338,25 @@ int main()
 	
 	//-------------------------------------------------------------------
 	/*pop_back, insert, swap*/std::cout << "VECTOR MODIFIERS - assign, push_back, pop_back, insert, erase, swap, clear " << std::endl;
+
+	std::cout << "Assign with debug messages from class A" << std::endl;
+	ft::vector<A> assignclasses(3, A(1, 2));
+
+	std::cout << "\n" << std::endl;
+	std::cout << "before assign with value" << std::endl;
+	assignclasses.assign(7, A(3, 5));
+	std::cout << "\n" << std::endl;
+
+	print_any_vector(assignclasses, "assignclasses");
+
+	ft::vector<A> assigned_by_assign_function(1, A(2, 5));
+	std::cout << "\nbefore assign with iterator" << std::endl;
+
+	assigned_by_assign_function.assign(&assignclasses[0], &assignclasses[3]);
+	assigned_by_assign_function.assign(assignclasses.begin(), assignclasses.end());
+	
+	std::cout << "\n" << std::endl;
+	print_any_vector(assignclasses, "assignclasses");
 
 	std::cout << "Assign with reverse iterator" << std::endl;
 	ft::vector<int> toassign(6, 5);

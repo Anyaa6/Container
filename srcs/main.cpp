@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/02/25 16:38:17 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/02/28 15:53:21 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,109 +46,38 @@ class A{
 	};
 	A() {
 		std::cout << "DEFAULT constructor" << std::endl;
-	}
+	};
 	~A(){
 		std::cout << "Destructor called for number = " << number << " and id_instance = " << id_instance << std::endl;
 		if (array)
 			delete [] array;
-	};	
+	};
+	int operator[](int const &index) const {
+		(void)index;
+		return id_instance;
+	};
 };
+
+std::ostream & operator<<(std::ostream &cout, A const &A)
+{
+	cout << A.id_instance;
+	return cout;
+}
 
 int A::id = 0;
 
+template <typename T>
+void	print_any_vector(T &to_display, std::string vector_name)
+{
+	std::cout << "\nVector " << vector_name << std::endl;
+	for (typename T::size_type i = 0; i < to_display.size(); i++)
+		std::cout << to_display[i] << " ";
+	std::cout << "\n" << std::endl;
+}
+
 int main()
 {
-	//assign (size_type n, const value_type& val) does not act the same in std and ft when using vector of class A
-	//probably due to line 266 of vector.hpp --> this->clear
-	std::vector<A> assignclasses(4, A(1, 2));
 
-	std::cout << "\n\n" << std::endl;
-	assignclasses.assign(4, A(3, 5));
-	std::cout << "\n\n" << std::endl;
-
-	/*
-	//TEST ASSIGN WITH vector<A>
-	//Shows that this is NOT true : Any elements held in the container before the call are destroyed and replaced by newly constructed elements (no assignments of elements take place).
-	//if we put debug messages in the constructors AND destructors of A with an id number
-	//we can show that std assign does NOT construct new elements, it only makes it point to the elements
-	//that inputiterators point to
-	ft::vector<A> assignclasses(2, A(1, 2));
-
-	std::cout << "assignclasses = " << std::endl;
-	for (size_t i = 0; i < assignclasses.size(); i++)
-		std::cout << assignclasses[i].number << "(id_instance = " << assignclasses[i].id_instance << ")" << " ";
-	std::cout << std::endl;
-
-	ft::vector<A> nextvector(5, A(3, 2));
-	std::cout << "nextvector = " << std::endl;
-	for (size_t i = 0; i < nextvector.size(); i++)
-		std::cout << nextvector[i].number << "(id_instance = " << nextvector[i].id_instance << ")" << " ";
-	std::cout << std::endl;
-
-	std::cout << "\n\nTesting metafunctions : \n";
-	std::cout << std::boolalpha << "ft::is_same<ft::vector<A>::reverse_iterator, ft::reverse_iterator<ft::vector<A>::iterator> >::value = " << ft::is_same<ft::vector<A>::reverse_iterator, ft::reverse_iterator<ft::vector<A>::iterator> >::value << std::endl;
-
-	std::cout << "\n\nAssign\n";
-	nextvector.assign(assignclasses.begin(), assignclasses.end());
-	std::cout << "nextvector after assign with smaller vector = " << std::endl;
-	for (size_t i = 0; i < nextvector.size(); i++)
-		std::cout << nextvector[i].number << "(id_instance = " << nextvector[i].id_instance << ")" << " ";
-	std::cout << std::endl;
-
-	std::cout << "nextvector size = " << nextvector.size() << " and capacity = " << nextvector.capacity() << std::endl;
-	std::cout << "Before the end of the program" << std::endl;
-	*/
-	/*
-	//TEST ASSIGN FUNCTION
-	ft::vector<int> verifyassign;
-	
-	// verifyassign.push_back(14);
-	std::cout << "Before assign size = " << verifyassign.size() << " capacity = " << verifyassign.capacity() << std::endl;
-	verifyassign.assign(4, 6);
-	for (size_t i = 0; i < verifyassign.size(); i++)
-		std::cout << verifyassign[i] << " ";
-	std::cout << std::endl;
-	std::cout << "size = " << verifyassign.size() << " capacity = " << verifyassign.capacity() << std::endl;
-	verifyassign.assign(12, 2);
-	std::cout << "size = " << verifyassign.size() << " capacity = " << verifyassign.capacity() << std::endl;
-	verifyassign.assign(3, 7);
-	std::cout << "size = " << verifyassign.size() << " capacity = " << verifyassign.capacity() << std::endl;
-	verifyassign.push_back(12);
-	for (size_t i = 0; i < verifyassign.size(); i++)
-		std::cout << verifyassign[i] << " ";
-	std::cout << std::endl;
-	
-	ft::vector<int> cpyassign;
-	cpyassign.push_back(14);
-	cpyassign.push_back(14);
-	cpyassign.push_back(14);
-	cpyassign.push_back(14);
-	cpyassign.push_back(14);
-	cpyassign.push_back(14);
-	std::cout << "cpyassign before being assigned from another shorter vector" << std::endl;
-	for (size_t i = 0; i < cpyassign.size(); i++)
-		std::cout << cpyassign[i] << " ";
-	
-	cpyassign.assign<ft::vector<int>::iterator>(verifyassign.begin(), verifyassign.end());
-	std::cout << "after assign from another vector" << std::endl;
-	for (size_t i = 0; i < cpyassign.size() + 2; i++)
-		std::cout << cpyassign[i] << " ";
-	std::cout << std::endl;
-	*/
-
-	// cpyassign.push_back(14);
-	// cpyassign.push_back(71);
-	// std::cout << "after push back 14 and 71" << std::endl;
-	// for (size_t i = 0; i < cpyassign.size(); i++)
-		// std::cout << cpyassign[i] << " ";
-	// std::cout << std::endl;
-
-	// cpyassign.assign<ft::vector<int>::reverse_iterator>(cpyassign.rbegin(), cpyassign.rend());
-	// for (size_t i = 0; i < cpyassign.size(); i++)
-		// std::cout << cpyassign[i] << " ";
-	// std::cout << std::endl;
-
-	/*
 	//TESTING RESIZE
 	ft::vector<int> resize_test(3, 42);
 
@@ -171,7 +100,6 @@ int main()
 		std::cout << resize_test[i] << " ";
 	std::cout << std::endl;
 	std::cout << "size = " << resize_test.size() << " capacity = " << resize_test.capacity() << std::endl;
-	*/
 	
 	/*
 	STD TESTS to compare destruction of objects
