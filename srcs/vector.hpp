@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/03/01 15:19:57 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/03/01 17:12:57 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -285,9 +285,7 @@ namespace ft
 		void assign (typename ft::enable_if<(ft::is_same<InputIterator, reverse_iterator>::value) 
 		|| (ft::is_same<InputIterator, random_access_iterator>::value) 
 		|| (ft::is_same<InputIterator, pointer>::value), InputIterator>::type first, InputIterator last) {
-			size_type			n = 0;
-			for (InputIterator it = first; it != last; it++)
-				n++;
+			size_type			n = _distance_between_it(first, last);
 
 			if (n > _capacity)
 			{
@@ -319,7 +317,8 @@ namespace ft
 			}
 		};
 		
-		// insert
+		// insert --> ALL 3 FUNCTIONS AVEC THE SAME BEHAVIOR
+		
 		//The vector is extended by inserting new elements BEFORE the element at the specified position, effectively increasing the container size by the number of elements inserted.
 		//causes the container to relocate all the elements that were after position to their new positions
 		
@@ -332,12 +331,57 @@ namespace ft
 		// Otherwise, only those pointing to position and beyond are invalidated, with all iterators, pointers and references to elements before position guaranteed to keep referring to the same elements they were referring to before the call.
 		
 		// If no realloc, none of the elements before position is accessed, and concurrently accessing or modifying them is safe (although see iterator validity above).
-		iterator insert (iterator position, const value_type& val);
+		// iterator insert (iterator position, const value_type& val);
 		
-		void insert (iterator position, size_type n, const value_type& val);
+		// void insert (iterator position, size_type n, const value_type& val) {
+			// if (n + _size > _capacity) {
+				// _realloc_empty();
+			// }
+		// };
 
+		//WORKS! now clean and make sure it works for empty containers
+		//WORKS WITH EMPTY CONTAINERS (this AND the one that first and last belong to)
 		template <class InputIterator>
-		void insert (iterator position, InputIterator first, InputIterator last);
+		void insert (iterator position, InputIterator first, InputIterator last) {
+			size_type	n = _distance_between_it(first, last);
+			size_type	pos_index = _distance_between_it(begin(), position);
+			
+			if (n + _size> _capacity)
+			{
+				ft::vector<T>	tmp;
+				
+				tmp._array = _alloc.allocate(n + _size);
+				tmp._capacity = n + _size;
+				
+				//Copies first -> last at right position in --> movement
+				size_type i_after_insert = pos_index;
+				for (; first != last; first++, i_after_insert++, tmp._size++)
+					_alloc.construct(tmp._array + i_after_insert, *first);
+				
+				//Copies elemets before first in <-- movement
+				iterator before_pos = position - 1;
+				for (size_type i = pos_index - 1; before_pos >= this->begin(); before_pos--, i--, tmp._size++)
+					_alloc.construct(tmp._array + i, *before_pos);
+
+				//copies elements after last in --> movement
+				for (; position != end(); position++, i_after_insert++, tmp._size++)
+					_alloc.construct(tmp._array + i_after_insert, *position);
+				
+				//destroys initial vector
+				this->~vector();
+				_swap_between_two(*this, tmp);
+				_set_to_zero(&tmp);
+			}
+			else
+			{
+				//n = nb of inserted elements
+				//copies n last elements of vec to their end position if --> movement
+
+				//moves (operator =) all prev elements including position to their end position in <-- movement
+
+				//moves (operator =) elements from first to last to their location in --> movement
+			}
+		};
 		
 		// erase
 		
@@ -348,11 +392,7 @@ namespace ft
 			_swap_between_two(tmp, *this);
 			_swap_between_two(*this, x);
 			_swap_between_two(x, tmp);
-			
-			//So that _array is not destructed with tmp upon exiting
-			tmp._array = NULL;
-			tmp._capacity = 0;
-			tmp._size = 0;
+			_set_to_zero(&tmp); //So that _array is not destructed with tmp upon exiting
 		};
 
 		void clear() {
@@ -402,7 +442,24 @@ namespace ft
 			y._size = z._size;
 			y._alloc = z._alloc;			
 		}
+
+		template <class InputIterator>
+		size_type _distance_between_it(InputIterator const first, InputIterator const last) const {
+			size_type	n = 0;
+			for (InputIterator it = first; it != last; it++)
+				n++;
+			return n;				
+		};
+		
+		void _set_to_zero(ft::vector<T> *tmp) {
+			tmp->_capacity = 0;
+			tmp->_size = 0;
+			tmp->_array = NULL;
+		};
+
 	};
+
+	//Non-member function overloads --> friend autorisé
 
 	template <class T, class Alloc>
 	void swap (vector<T,Alloc>& x, vector<T,Alloc>& y) {
