@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/02/28 18:36:29 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/03/01 11:41:16 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <iostream> // A ENLEVER
 #include "iterator.hpp"
 #include "metafunctions.hpp"
+
 
 namespace ft
 {
@@ -327,25 +328,14 @@ namespace ft
 		};
 		// insert
 		// erase
-		//make it clean
+		
 		//cannot use '=' otherwise it will construct and addresses will not be the same and iterators invalidated
 		void swap (vector& x) {
 			ft::vector<T>	tmp;
 			
-			tmp._array = _array;
-			tmp._capacity = _capacity;
-			tmp._size = _size;
-			tmp._alloc = _alloc;
-			
-			_array = x._array;
-			_capacity = x._capacity;
-			_size = x._size;
-			_alloc = x._alloc;
-
-			x._array = tmp._array;
-			x._capacity = tmp._capacity;
-			x._size = tmp._size;
-			x._alloc = tmp._alloc;
+			_swap_between_two(tmp, *this);
+			_swap_between_two(*this, x);
+			_swap_between_two(x, tmp);
 			
 			//So that _array is not destructed with tmp upon exiting
 			tmp._array = NULL;
@@ -363,17 +353,15 @@ namespace ft
 			return _alloc;
 		};
 
-		//friends
-		// template <class T, class Alloc>
-		// friend void swap (vector<T,Alloc>& x, vector<T,Alloc>& y);
-		//use friend on swap MEMBER FUNCTION to use that member function
-
 	private:
 		value_type	*_array;
 		size_type	_size;
 		size_type	_capacity;
 		allocator_type	_alloc;
-
+		
+		//	std::vector<int> resize_test(3, 42);
+		// resize_test.reserve(-(resize_test.max_size()));
+		//gives uncaught exception of type std::length_error: allocator<T>::allocate(size_t n) 'n' exceeds maximum supported size
 		value_type *_realloc(size_type n){
 			value_type *tmp;
 
@@ -388,10 +376,18 @@ namespace ft
 			_capacity = n;
 			return (tmp);
 		};
-		//	std::vector<int> resize_test(3, 42);
-		// resize_test.reserve(-(resize_test.max_size()));
-		//gives uncaught exception of type std::length_error: allocator<T>::allocate(size_t n) 'n' exceeds maximum supported size
-	
+
+		void _swap_between_two(vector &y, vector &z) {
+			y._array = z._array;
+			y._capacity = z._capacity;
+			y._size = z._size;
+			y._alloc = z._alloc;			
+		}
+	};
+
+	template <class T, class Alloc>
+	void swap (vector<T,Alloc>& x, vector<T,Alloc>& y) {
+		x.swap(y);
 	};
 }
 

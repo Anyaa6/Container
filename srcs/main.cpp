@@ -6,18 +6,18 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/02/28 18:31:09 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/03/01 11:32:05 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vector.hpp"
 #include <iostream>
 
-#include <vector> //A ENLEVER
-#include <iterator> //A ENLEVER
-#include <limits>
-#include "iterator.hpp"
-#include "metafunctions.hpp"
+// #include <vector> //A ENLEVER
+// #include <iterator> //A ENLEVER
+// #include <limits>
+// #include "vector.hpp"
+// #include "iterator.hpp"
+// #include "metafunctions.hpp"
 
 class A{
 	public :
@@ -75,21 +75,27 @@ void	print_any_vector(T &to_display, std::string vector_name)
 	std::cout << "\n" << std::endl;
 }
 
+#if 1 //CREATE A REAL STL EXAMPLE
+	#define TESTING "Testing with std library"
+	#include <map>
+	#include <stack>
+	#include <limits>
+	#include <iterator>
+	#include <vector>
+	namespace ft = std;
+#else
+	#define TESTING "Testing with ft library"
+	#include "metafunctions.hpp"
+	#include "iterator.hpp"
+	#include "vector.hpp"
+#endif
+
 int main()
 {
+	std::cout << TESTING << std::endl;
+	//--------------------------------------
 
-	std::vector<A> swap1(2, A(3, 2));
-	std::vector<A> swap2;
 
-	for (int i = 0; i < 6; i++)
-		swap2.push_back(A(2, i));
-	print_any_vector(swap2, "swap2");
-	print_any_vector(swap1, "swap1");
 
-	swap1.swap(swap2);
-	print_any_vector(swap2, "swap2");
-	print_any_vector(swap1, "swap1");
-
-	
 	return 0;
 }

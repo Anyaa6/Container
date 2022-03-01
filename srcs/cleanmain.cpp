@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <deque>
-#if 1 //CREATE A REAL STL EXAMPLE
+#if 0 //CREATE A REAL STL EXAMPLE
 	#define TESTING "Testing with std library"
 	#include <map>
 	#include <stack>
@@ -71,12 +71,151 @@ void	print_any_vector(T &to_display, std::string vector_name)
 	std::cout << "\n" << std::endl;
 }
 
+void modifiers(){
+	/*insert, erase*/std::cout << "VECTOR MODIFIERS - assign, push_back, pop_back, insert, erase, swap, clear " << std::endl;
+	std::cout << "Assign with debug messages from class A" << std::endl;
+	ft::vector<A> assignclasses(3, A(1, 2));
+
+	std::cout << "\n" << std::endl;
+	std::cout << "before assign with value" << std::endl;
+	assignclasses.assign(7, A(3, 5));
+	std::cout << "\n" << std::endl;
+
+	print_any_vector(assignclasses, "assignclasses");
+
+	ft::vector<A> assigned_by_assign_function(1, A(2, 5));
+	std::cout << "\nbefore assign with iterator" << std::endl;
+
+	assigned_by_assign_function.assign(&assignclasses[0], &assignclasses[3]);
+	assigned_by_assign_function.assign(assignclasses.begin(), assignclasses.end());
+	
+	std::cout << "\n" << std::endl;
+	print_any_vector(assignclasses, "assignclasses");
+	std::cout << "Assign with reverse iterator" << std::endl;
+	ft::vector<int> toassign(6, 5);
+	ft::vector<int> suite(6, 5);
+	int int_array[7] = {7,6, 8, 9, 2, 3};
+
+	for (int i = 0; i < 6; i++)
+	{
+		toassign[i] = i;
+		suite[i] = i + 1;
+	}
+	
+	std::cout << "toassign : " << std::endl;
+	for (int i = 0; i < 6; i++)
+		std::cout << toassign[i] << " ";
+
+	std::cout << "\nsuite : " << std::endl;
+	for (int i = 0; i < 6; i++)
+		std::cout << suite[i] << " ";
+
+	std::cout << std::endl;
+	
+	toassign.assign(suite.rbegin(), suite.rend()); //reverse_iterator
+
+	std::cout << "toassign after assign(suite.rbegin(), suite.rend()) : " << std::endl;
+	for (int i = 0; i < 6; i++)
+		std::cout << toassign[i] << " ";
+	std::cout << std::endl;
+	
+	std::cout << "Assigning from int_array pointer :" << std::endl;
+	for (int i = 0; i < 6; i++)
+		std::cout << int_array[i] << " ";
+
+	toassign.assign(int_array, int_array + 3); //reverse_iterator
+	std::cout << "\ntoassign : " << std::endl;
+	for (int i = 0; i < 6; i++)
+		std::cout << toassign[i] << " ";
+
+	std::cout << "TESTING CLEAR" << std::endl;
+	ft::vector<int> clear_test;
+	
+	clear_test.clear();
+	clear_test.push_back(12);
+	clear_test.push_back(12);
+	clear_test.pop_back();
+	clear_test.push_back(12);
+	clear_test.push_back(12);
+	clear_test.push_back(12);
+	std::cout << "size = " << clear_test.size() << " capacity = " << clear_test.capacity() << std::endl;
+	clear_test.clear();
+	clear_test.clear();
+	std::cout << "size = " << clear_test.size() << " capacity = " << clear_test.capacity() << std::endl;
+
+	std::cout << "Testing swap member function" << std::endl;
+	//Constructor and destructors in random order
+	/*
+	ft::vector<A> swap1(2, A(3, 2));
+	ft::vector<A> swap2;
+	
+	for (int i = 0; i < 6; i++)
+		swap2.push_back(A(2, i));
+	print_any_vector(swap2, "swap2");
+	print_any_vector(swap1, "swap1");
+
+	swap1.swap(swap2);
+	print_any_vector(swap2, "swap2");
+	print_any_vector(swap1, "swap1");
+	*/
+
+	ft::vector<int> swap1_int(2, 5);
+	ft::vector<int> swap2_int;
+	
+	for (int i = 0; i < 6; i++)
+		swap2_int.push_back(i);
+	print_any_vector(swap2_int, "swap2_int");
+	print_any_vector(swap1_int, "swap1_int");
+
+	swap1_int.swap(swap2_int);
+	print_any_vector(swap2_int, "swap2_int");
+	print_any_vector(swap1_int, "swap1");
+};
+
+void non_member_functions() {
+	/*relational operators*/std::cout << "VECTOR NON MEMBER FUNCTION OVERLOADS - relational operators, swap " << std::endl;
+
+	std::cout << "Testing swap non-member function" << std::endl;
+	ft::vector<int> swap_overload_int(2, 7);
+	ft::vector<int> swap_overload2_int;
+
+	for (int i = 0; i < 6; i++)
+		swap_overload2_int.push_back(i);
+
+	print_any_vector(swap_overload2_int, "swap_overload2_int");
+	print_any_vector(swap_overload_int, "swap_overload_int");
+
+	swap(swap_overload_int, swap_overload2_int);
+	print_any_vector(swap_overload2_int, "swap_overload2_int");
+	print_any_vector(swap_overload_int, "swap_overload_int");
+
+	/*
+	//Const and dest in different order
+	ft::vector<A> swap_overload_class(2, A(3, 2));
+	ft::vector<A> swap2_overload_class;
+	
+	for (int i = 0; i < 6; i++)
+		swap2_overload_class.push_back(A(2, i));
+	print_any_vector(swap2_overload_class, "swap2_overload_class");
+	print_any_vector(swap_overload_class, "swap_overload_class");
+
+	swap(swap_overload_class, swap2_overload_class);
+	print_any_vector(swap2_overload_class, "swap2_overload_class");
+	print_any_vector(swap_overload_class, "swap_overload_class");
+	*/
+
+	//Check ok : triggers same warning as std when using swap on vectors of different types
+	//and allocators
+	// swap(swap_overload_int, swap2_overload_class);
+	// print_any_vector(swap2_overload_class, "swap2_overload_class");
+	// print_any_vector(swap_overload_class, "swap_overload_class");
+};
+
 int main()
 {
-	std::cout << TESTING << std::endl;
-
+	std::cout << "Tester : " << TESTING << std::endl;
 	//-------------------------------------------------------------------
-	std::cout << "VECTOR CONSTRUCTORS AND DESTRUCTORS " << std::endl;
+	/*DONE*/std::cout << "VECTOR CONSTRUCTORS AND DESTRUCTORS " << std::endl;
 
 	std::cout << "creating vector, copy..." << std::endl;
 	ft::vector<int>	haha(4, 12);
@@ -359,81 +498,9 @@ int main()
 	std::cout << value_test.back() << std::endl;
 	
 	//-------------------------------------------------------------------
-	/*insert, erase, swap*/std::cout << "VECTOR MODIFIERS - assign, push_back, pop_back, insert, erase, swap, clear " << std::endl;
-	std::cout << "Assign with debug messages from class A" << std::endl;
-	/*Leaks here */
-	ft::vector<A> assignclasses(3, A(1, 2));
-
-	std::cout << "\n" << std::endl;
-	std::cout << "before assign with value" << std::endl;
-	assignclasses.assign(7, A(3, 5));
-	std::cout << "\n" << std::endl;
-
-	print_any_vector(assignclasses, "assignclasses");
-
-	ft::vector<A> assigned_by_assign_function(1, A(2, 5));
-	std::cout << "\nbefore assign with iterator" << std::endl;
-
-	assigned_by_assign_function.assign(&assignclasses[0], &assignclasses[3]);
-	assigned_by_assign_function.assign(assignclasses.begin(), assignclasses.end());
-	
-	std::cout << "\n" << std::endl;
-	print_any_vector(assignclasses, "assignclasses");
-	/* to here */
-	std::cout << "Assign with reverse iterator" << std::endl;
-	ft::vector<int> toassign(6, 5);
-	ft::vector<int> suite(6, 5);
-	int int_array[7] = {7,6, 8, 9, 2, 3};
-
-	for (int i = 0; i < 6; i++)
-	{
-		toassign[i] = i;
-		suite[i] = i + 1;
-	}
-	
-	std::cout << "toassign : " << std::endl;
-	for (int i = 0; i < 6; i++)
-		std::cout << toassign[i] << " ";
-
-	std::cout << "\nsuite : " << std::endl;
-	for (int i = 0; i < 6; i++)
-		std::cout << suite[i] << " ";
-
-	std::cout << std::endl;
-	
-	toassign.assign(suite.rbegin(), suite.rend()); //reverse_iterator
-
-	std::cout << "toassign after assign(suite.rbegin(), suite.rend()) : " << std::endl;
-	for (int i = 0; i < 6; i++)
-		std::cout << toassign[i] << " ";
-	std::cout << std::endl;
-	
-	std::cout << "Assigning from int_array pointer :" << std::endl;
-	for (int i = 0; i < 6; i++)
-		std::cout << int_array[i] << " ";
-
-	toassign.assign(int_array, int_array + 3); //reverse_iterator
-	std::cout << "\ntoassign : " << std::endl;
-	for (int i = 0; i < 6; i++)
-		std::cout << toassign[i] << " ";
-
-	std::cout << "TESTING CLEAR" << std::endl;
-	ft::vector<int> clear_test;
-	
-	clear_test.clear();
-	clear_test.push_back(12);
-	clear_test.push_back(12);
-	clear_test.pop_back();
-	clear_test.push_back(12);
-	clear_test.push_back(12);
-	clear_test.push_back(12);
-	std::cout << "size = " << clear_test.size() << " capacity = " << clear_test.capacity() << std::endl;
-	clear_test.clear();
-	clear_test.clear();
-	std::cout << "size = " << clear_test.size() << " capacity = " << clear_test.capacity() << std::endl;
+	modifiers();
 	//-------------------------------------------------------------------
-	std::cout << "VECTOR NON MEMBER FUNCTION OVERLOADS - relational operators, swap " << std::endl;
-
+	non_member_functions();
 
 	return 0;
 }
