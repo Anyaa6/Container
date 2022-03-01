@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <deque>
-#if 0 //CREATE A REAL STL EXAMPLE
+#if 1 //CREATE A REAL STL EXAMPLE
 	#define TESTING "Testing with std library"
 	#include <map>
 	#include <stack>
@@ -38,12 +38,21 @@ class A{
 		id++;	
 		std::cout << "COPY Constructor called for id_instance = " << id_instance << " from id_instance = " << rhs.id_instance << std::endl;
 	};
+	A& operator=(const A& rhs) {
+		number = rhs.number;
+		size = rhs.size;
+		id_instance = rhs.id_instance;
+		array = rhs.array; //lhs gets rhs array
+		// rhs.array = NULL; //rhs array set to NULL so that it is not deleted
+		std::cout << "= overload from : " << id_instance << std::endl;
+		return *this;
+	};
 	A() {
 		std::cout << "DEFAULT constructor" << std::endl;
 	}
 	~A(){
 		//Not using destructor debug msg bc destruction happens in reverse order at exit -> creates diff between tester files
-		// std::cout << "Destructor called for number = " << number << " and id_instance = " << id_instance << std::endl;
+		std::cout << "Destructor called for number = " << number << " and id_instance = " << id_instance << std::endl;
 		if (array)
 			delete [] array;
 	};	

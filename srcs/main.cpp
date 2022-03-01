@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/03/01 11:32:05 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/03/01 15:17:50 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,15 @@ class A{
 		std::cout << "COPY Constructor called for id_instance = " << id_instance << " from id_instance = " << rhs.id_instance << std::endl;
 		// for (int i = 0; i < 12; i++)
 		// 	array[i] = rhs.array[i];
+	};
+	A& operator=(const A& rhs) {
+		number = rhs.number;
+		size = rhs.size;
+		id_instance = rhs.id_instance;
+		array = rhs.array; //lhs gets rhs array
+		// rhs.array = NULL; //rhs array set to NULL so that it is not deleted
+		std::cout << "= overload from : " << id_instance << std::endl;
+		return *this;
 	};
 	A() {
 		std::cout << "DEFAULT constructor" << std::endl;
@@ -95,7 +104,72 @@ int main()
 	std::cout << TESTING << std::endl;
 	//--------------------------------------
 
+	//change constructors --> construct from last to first
 
+	//TEST ON EMPTY CONT
+	//TEST WITH EMPTY first -> last
 
+	//Testing void insert (iterator position, InputIterator first, InputIterator last);
+	// ft::vector<A> to_insert(2, A(5, 1));
+	// ft::vector<A> to_grow(5, A(5, 1));
+	
+	// to_grow.reserve(12);
+	// // to_grow.push_back(A(3, 2)); //augments capacity to 2 * initial _capacity
+	// // to_grow.pop_back();
+	
+	// print_any_vector(to_insert, "to_insert");
+	// print_any_vector(to_grow, "to_grow");
+	// std::cout << "to_grow.capacity() : " << to_grow.capacity() << std::endl;
+
+	// ft::vector<A>::iterator it_grow = ++to_grow.begin();
+	// // it_grow++;
+
+	// std::cout << "\ninsert : " << std::endl;
+	// to_grow.insert(it_grow, to_insert.begin(), to_insert.end());
+
+	// print_any_vector(to_insert, "to_insert");
+	// print_any_vector(to_grow, "to_grow");
+
+		
+	//Testing void insert (iterator position, size_type n, const value_type& val);
+	//same as void insert (iterator position, InputIterator first, InputIterator last);
+	// ft::vector<A> to_grow_by_value(6, A(5, 1));
+	
+	// // to_grow_by_value.reserve(12);
+	// // to_grow_by_value.push_back(A(3, 2)); //augments capacity to 2 * initial _capacity
+	// // to_grow_by_value.pop_back();
+	
+	// print_any_vector(to_grow_by_value, "to_grow_by_value");
+	// std::cout << "to_grow_by_value.capacity() : " << to_grow_by_value.capacity() << std::endl;
+	// std::cout << "inserted elements are A(8, 2)" << std::endl;
+
+	// ft::vector<A>::iterator it_grow = ++to_grow_by_value.begin();
+	// it_grow++;
+
+	// std::cout << "\ninsert : " << std::endl;
+	// to_grow_by_value.insert(it_grow, 3, A(8, 2));
+
+	// print_any_vector(to_grow_by_value, "to_grow_by_value");
+
+	//Testing iterator insert (iterator position, const value_type& val);
+	ft::vector<A> insert_single_value(6, A(5, 1));
+	A instance(8,2);
+	
+	insert_single_value.reserve(12);
+	// insert_single_value.push_back(A(3, 2)); //augments capacity to 2 * initial _capacity
+	// insert_single_value.pop_back();
+	
+	print_any_vector(insert_single_value, "insert_single_value");
+	std::cout << "insert_single_value.capacity() : " << insert_single_value.capacity() << std::endl;
+	std::cout << "inserted elements is A(8, 2)" << std::endl;
+
+	ft::vector<A>::iterator it_grow = ++insert_single_value.begin();
+	it_grow++;
+
+	std::cout << "\ninsert : " << std::endl;
+	insert_single_value.insert(it_grow,  instance);
+
+	print_any_vector(insert_single_value, "insert_single_value");
+	
 	return 0;
 }

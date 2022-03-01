@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/03/01 11:41:16 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/03/01 15:19:57 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,8 +164,8 @@ namespace ft
 		//Destructor
 		~vector()
 		{
-			for (size_type i = 0; i < _size; i++)
-				_alloc.destroy(_array + i);
+			for (; _size > 0; _size--)
+				_alloc.destroy(_array + _size - 1);
 			_alloc.deallocate(_array, _capacity);
 		};
 		
@@ -268,13 +268,9 @@ namespace ft
 			//it, causing free error on exit
 			if (n > _capacity)
 			{
-				this->clear();
-				_alloc.deallocate(_array, _capacity);
-				_array = _alloc.allocate(n);
-				_capacity = n;
+				_realloc_empty(n);
 				for (size_type i = 0; i < n; i++)
-					_alloc.construct(_array + i, val);
-				_size = n;
+					this->push_back(val);
 			}
 			else 
 			{
@@ -295,13 +291,9 @@ namespace ft
 
 			if (n > _capacity)
 			{
-				this->clear();
-				_alloc.deallocate(_array, _capacity);
-				_array = _alloc.allocate(n);
-				_capacity = n;
-				for (int i = 0;first != last; first++, i++)
-					_alloc.construct(_array + i, *first);
-				_size = n;
+				_realloc_empty(n);
+				for (;first != last; first++)
+					this->push_back(*first);
 			}
 			else 
 			{
@@ -326,10 +318,30 @@ namespace ft
 				_size--;
 			}
 		};
+		
 		// insert
+		//The vector is extended by inserting new elements BEFORE the element at the specified position, effectively increasing the container size by the number of elements inserted.
+		//causes the container to relocate all the elements that were after position to their new positions
+		
+		//val = Value to be copied (or moved) to the inserted elements. --> Same as assign?? copied if reallocation, otherwise just assigned?
+		
+		//Return value : An iterator that points to the first of the newly inserted elements. == position parameter
+
+		//Iterator validity :
+		// If a reallocation happens, all iterators, pointers and references related to the container are invalidated.
+		// Otherwise, only those pointing to position and beyond are invalidated, with all iterators, pointers and references to elements before position guaranteed to keep referring to the same elements they were referring to before the call.
+		
+		// If no realloc, none of the elements before position is accessed, and concurrently accessing or modifying them is safe (although see iterator validity above).
+		iterator insert (iterator position, const value_type& val);
+		
+		void insert (iterator position, size_type n, const value_type& val);
+
+		template <class InputIterator>
+		void insert (iterator position, InputIterator first, InputIterator last);
+		
 		// erase
 		
-		//cannot use '=' otherwise it will construct and addresses will not be the same and iterators invalidated
+		//cannot use '=' otherwise it will copy construct and addresses will not be the same and iterators invalidated
 		void swap (vector& x) {
 			ft::vector<T>	tmp;
 			
@@ -375,6 +387,13 @@ namespace ft
 			_alloc.deallocate(_array, _capacity);
 			_capacity = n;
 			return (tmp);
+		};
+
+		void _realloc_empty(size_type n){
+			this->clear();
+			_alloc.deallocate(_array, _capacity);
+			_array = _alloc.allocate(n);
+			_capacity = n;
 		};
 
 		void _swap_between_two(vector &y, vector &z) {
