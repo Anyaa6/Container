@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/03/07 15:29:14 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/03/07 17:53:50 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -330,10 +330,6 @@ namespace ft
 		
 		//Return value : An iterator that points to the first of the newly inserted elements. == position parameter
 
-		//Iterator validity :
-		// If a reallocation happens, all iterators, pointers and references related to the container are invalidated.
-		// Otherwise, only those pointing to position and beyond are invalidated, with all iterators, pointers and references to elements before position guaranteed to keep referring to the same elements they were referring to before the call.
-		
 		// If no realloc, none of the elements before position is accessed, and concurrently accessing or modifying them is safe (although see iterator validity above).
 		// iterator insert (iterator position, const value_type& val);
 		
@@ -343,8 +339,59 @@ namespace ft
 			// }
 		// };
 
+		// void _copy(size_type n, const value_type& val, iterator at_position, container &destination) {
+
+		void insert (iterator position, size_type n, const value_type& val){
+			size_type	pos_index = _distance_between_it(begin(), position);
+			
+			if (n + _size > _capacity)
+			{
+				ft::vector<T>	tmp;
+				tmp._array = _alloc.allocate(n + _size);
+				tmp._capacity = n + _size;
+				
+				//Copies n * val at right position in --> movement
+				_copy(n, val, iterator(tmp._array + pos_index), tmp);
+				//Copies elemets before first in <-- movement
+				_copy(reverse_iterator(position), this->rend(), reverse_iterator(tmp._array + pos_index), tmp);
+				//copies elements after last val in --> movement
+				_copy(position, end(), iterator(tmp._array + pos_index + n), tmp);
+				
+				this->~vector();
+				_swap_between_two(*this, tmp);
+				_set_to_zero(&tmp);
+			}
+			else
+			{
+				size_type nb_of_elements_after_pos = _size - pos_index;
+				//if there are more than n numbers after pos in initial vector
+				if (nb_of_elements_after_pos >= n){
+					//copies n last elements of vec to their end position in --> movement
+					_copy(iterator(_array + _size - n), iterator(_array + _size), iterator(_array + _size), *this);
+					//moves (operator =) all prev elements including position to their end position in <-- movement
+					_move(reverse_iterator(_array + _size - 2 * n ), reverse_iterator(position), reverse_iterator(_array + _size - n));
+					//moves (operator =) elements from first to last to their location in --> movement
+					_move(n, val, position);
+				}
+				//if there are not enough numbers after pos in initial vector to copy to their end position directly
+				else {
+					//change name
+					size_type nb_of_val_copies = n - (_size - pos_index);
+					//copy nb_of_val_copies * val to their end position in --> movement
+					_copy(nb_of_val_copies, val, iterator(_array + _size), *this);
+					//copy last existing elements of the vector at the end of vector in --> movement
+					_copy(iterator(_array + _size - n), iterator(_array + _size - nb_of_val_copies), iterator(_array + _size), *this);//ici
+					//moves (operator =) as many val as needed to complete insert
+					_move(nb_of_elements_after_pos, val, position);
+				}
+				
+			}
+		};
+
 		template <class InputIterator>
-		void insert (iterator position, InputIterator first, InputIterator last) {
+		void insert (iterator position, typename ft::enable_if<(ft::is_same<InputIterator, reverse_iterator>::value) 
+		|| (ft::is_same<InputIterator, random_access_iterator>::value) 
+		|| (ft::is_same<InputIterator, pointer>::value), InputIterator>::type first, InputIterator last) {
 			size_type	n = _distance_between_it(first, last); //nb of inserted elements
 			size_type	pos_index = _distance_between_it(begin(), position);
 			
@@ -373,6 +420,8 @@ namespace ft
 				_move(reverse_iterator(_array + _size - 2 * n ), reverse_iterator(position), reverse_iterator(_array + _size - n));
 				//moves (operator =) elements from first to last to their location in --> movement
 				_move(first, last, position);
+
+				//NEED TO ADAPT THIS PART
 			}
 		};
 		
@@ -449,15 +498,30 @@ namespace ft
 		};
 
 		template <typename iterator, typename container>
-		void _copy(iterator first, iterator last, iterator at_position, container &destination) {
+		void _copy(typename ft::enable_if<(ft::is_same<iterator, reverse_iterator>::value) 
+		|| (ft::is_same<iterator, random_access_iterator>::value) 
+		|| (ft::is_same<iterator, pointer>::value), iterator>::type first, iterator last, iterator at_position, container &destination) {
 			for (; first != last; first++, at_position++, destination._size++)
 				_alloc.construct(&*at_position, *first);
 		};
 
+		template <typename container>
+		void _copy(size_type n, const value_type& val, iterator at_position, container &destination) {
+			for (size_type i = 0; i < n; i++, at_position++, destination._size++)
+				_alloc.construct(&*at_position, val);
+		};
+		
 		template <typename iterator>
-		void _move(iterator first, iterator last, iterator at_position) {
+		void _move(typename ft::enable_if<(ft::is_same<iterator, reverse_iterator>::value) 
+		|| (ft::is_same<iterator, random_access_iterator>::value) 
+		|| (ft::is_same<iterator, pointer>::value), iterator>::type first, iterator last, iterator at_position) {
 			for (; first != last; first++, at_position++)
 				*at_position = *first;
+		};
+
+		void _move(size_type n, const value_type& val, iterator at_position) {
+			for (size_type i = 0; i < n; i++, at_position++)
+				*at_position = val;
 		};
 
 	};

@@ -168,17 +168,82 @@ void modifiers(){
 	print_any_vector(swap1, "swap1");
 	*/
 
-	ft::vector<int> swap1_int(2, 5);
-	ft::vector<int> swap2_int;
+	/*
+	//Gives malloc err for std AND ft, would need rhs set to NULL
+	std::cout << "Testing void insert (iterator position, InputIterator first, InputIterator last);" << std::endl;
+	ft::vector<A> to_insert(4, A(5, 1));
+	ft::vector<A> to_grow(12, A(5, 1));
 	
-	for (int i = 0; i < 6; i++)
-		swap2_int.push_back(i);
-	print_any_vector(swap2_int, "swap2_int");
-	print_any_vector(swap1_int, "swap1_int");
+	std::cout << "\nBefore RESERVE\n\n";
+	to_grow.reserve(50);
+	std::cout << "\nRESERVE DONE\n\n";
+	// to_grow.push_back(A(3, 2)); //augments capacity to 2 * initial _capacity
+	// to_grow.pop_back();
+	
+	print_any_vector(to_insert, "to_insert");
+	print_any_vector(to_grow, "to_grow");
+	std::cout << "to_grow.capacity() : " << to_grow.capacity() << std::endl;
 
-	swap1_int.swap(swap2_int);
-	print_any_vector(swap2_int, "swap2_int");
-	print_any_vector(swap1_int, "swap1");
+	ft::vector<A>::iterator it_grow = to_grow.begin();
+	// it_grow++;
+	// it_grow++;
+	// it_grow++;
+
+	std::cout << "\ninsert : " << std::endl;
+	to_grow.insert(it_grow, to_insert.begin(), to_insert.end());
+
+	print_any_vector(to_insert, "to_insert");
+	print_any_vector(to_grow, "to_grow");
+	*/
+
+	std::cout << "Testing void insert (iterator position, InputIterator first, InputIterator last);" << std::endl;
+	ft::vector<int> to_insert(3);
+	for (size_t i = 0; i < to_insert.size(); i++)
+		to_insert[i] = i + 3;
+	ft::vector<int> to_grow(12);
+	for (size_t i = 0; i < to_grow.size(); i++)
+		to_grow[i] = i;
+	
+	std::cout << "\nBefore RESERVE\n\n";
+	// to_grow.reserve(50);
+	std::cout << "\nRESERVE DONE\n\n";
+	// to_grow.push_back(A(3, 2)); //augments capacity to 2 * initial _capacity
+	// to_grow.pop_back();
+	
+	print_any_vector(to_insert, "to_insert");
+	print_any_vector(to_grow, "to_grow");
+	std::cout << "to_grow.capacity() : " << to_grow.capacity() << std::endl;
+
+	ft::vector<int>::iterator it_grow = ++to_grow.begin();
+	it_grow++;
+	// it_grow++;
+	// it_grow++;
+
+	std::cout << "\ninsert : " << std::endl;
+	to_grow.insert(it_grow, to_insert.begin(), to_insert.end());
+
+	print_any_vector(to_insert, "to_insert");
+	print_any_vector(to_grow, "to_grow");
+
+	std::cout << "\nTesting void insert (iterator position, size_type n, const value_type& val); " << std::endl;
+	ft::vector<int> to_grow_by_value(6);
+	for (size_t i = 0; i < to_grow_by_value.size(); i++)
+		to_grow_by_value[i] = i;
+	
+	to_grow_by_value.reserve(12);
+	
+	print_any_vector(to_grow_by_value, "to_grow_by_value");
+	std::cout << "to_grow_by_value.capacity() : " << to_grow_by_value.capacity() << std::endl;
+	std::cout << "inserted elements are 3*7" << std::endl;
+	
+	ft::vector<int>::iterator it_grow_int = ++to_grow_by_value.begin();
+	it_grow_int++;
+
+	std::cout << "\ninsert : " << std::endl;
+	to_grow_by_value.insert(it_grow_int, 3, 7);
+
+	print_any_vector(to_grow_by_value, "to_grow_by_value");
+
 };
 
 void non_member_functions() {
