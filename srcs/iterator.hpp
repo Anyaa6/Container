@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 11:36:32 by ariane            #+#    #+#             */
-/*   Updated: 2022/02/25 16:10:34 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/03/07 15:12:38 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ class reverse_iterator
 
 		//Dereference and []
 		reference operator*() const {
-			return *(_base -1);};
+			return *(_base - 1);};
 
 		reference operator[] (difference_type n) const {
 			return (*(_base - n - 1));};

@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/03/01 17:12:57 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/03/07 15:29:14 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ namespace ft
 		typedef reverse_iterator<const_iterator>			const_reverse_iterator;
 		typedef reverse_iterator<iterator>					reverse_iterator;
 		
-		//Constructor
+		//Constructors --> construction goes from _array[0] to _array[n] in forward movement
 		explicit vector (const allocator_type& alloc = allocator_type()) : _array(NULL), _size(0), _capacity(0), _alloc(alloc) {};
 
 		//tested with classes as value including allocated memory -> OK
@@ -203,6 +203,10 @@ namespace ft
 		size_type 	max_size() const {
 			return (_alloc.max_size());
 		};
+
+		//a modifier, si n > _capacity :
+		//si n > _capacity * 2 --> resize a n exact
+		//si n <= capacity * 2 --> resize a capacity * 2
 		void 		resize (size_type n, value_type val = value_type()) {
 			if (n > max_size()) //bc msg is different for resize et reserve
 				throw (std::length_error("vector"));
@@ -339,47 +343,36 @@ namespace ft
 			// }
 		// };
 
-		//WORKS! now clean and make sure it works for empty containers
-		//WORKS WITH EMPTY CONTAINERS (this AND the one that first and last belong to)
 		template <class InputIterator>
 		void insert (iterator position, InputIterator first, InputIterator last) {
-			size_type	n = _distance_between_it(first, last);
+			size_type	n = _distance_between_it(first, last); //nb of inserted elements
 			size_type	pos_index = _distance_between_it(begin(), position);
 			
-			if (n + _size> _capacity)
+			if (n + _size > _capacity)
 			{
 				ft::vector<T>	tmp;
-				
 				tmp._array = _alloc.allocate(n + _size);
 				tmp._capacity = n + _size;
 				
-				//Copies first -> last at right position in --> movement
-				size_type i_after_insert = pos_index;
-				for (; first != last; first++, i_after_insert++, tmp._size++)
-					_alloc.construct(tmp._array + i_after_insert, *first);
-				
+				//Copies first -> last range at right position in --> movement
+				_copy(first, last, iterator(tmp._array + pos_index), tmp);
 				//Copies elemets before first in <-- movement
-				iterator before_pos = position - 1;
-				for (size_type i = pos_index - 1; before_pos >= this->begin(); before_pos--, i--, tmp._size++)
-					_alloc.construct(tmp._array + i, *before_pos);
-
+				_copy(reverse_iterator(position), this->rend(), reverse_iterator(tmp._array + pos_index), tmp);
 				//copies elements after last in --> movement
-				for (; position != end(); position++, i_after_insert++, tmp._size++)
-					_alloc.construct(tmp._array + i_after_insert, *position);
+				_copy(position, end(), iterator(tmp._array + pos_index + n), tmp);
 				
-				//destroys initial vector
 				this->~vector();
 				_swap_between_two(*this, tmp);
 				_set_to_zero(&tmp);
 			}
 			else
 			{
-				//n = nb of inserted elements
-				//copies n last elements of vec to their end position if --> movement
-
+				//copies n last elements of vec to their end position in --> movement
+				_copy(iterator(_array + _size - n), iterator(_array + _size), iterator(_array + _size), *this);
 				//moves (operator =) all prev elements including position to their end position in <-- movement
-
+				_move(reverse_iterator(_array + _size - 2 * n ), reverse_iterator(position), reverse_iterator(_array + _size - n));
 				//moves (operator =) elements from first to last to their location in --> movement
+				_move(first, last, position);
 			}
 		};
 		
@@ -414,16 +407,17 @@ namespace ft
 		//	std::vector<int> resize_test(3, 42);
 		// resize_test.reserve(-(resize_test.max_size()));
 		//gives uncaught exception of type std::length_error: allocator<T>::allocate(size_t n) 'n' exceeds maximum supported size
+		//When reallocating and re-constructing elements, goes in <-- motion
 		value_type *_realloc(size_type n){
 			value_type *tmp;
 
 			if (n == 0)
 				n = 1;
 			tmp = _alloc.allocate(n);
-			for (size_type i = 0; i < _size; i++)
-				_alloc.construct(tmp + i, _array[i]);
-			for (size_type i = 0; i < _size; i++)
-				_alloc.destroy(_array + i);
+			for (size_type i = _size; i > 0; i--)
+				_alloc.construct(tmp + i - 1, _array[i - 1]);
+			for (size_type i = _size; i > 0; i--)
+				_alloc.destroy(_array + i - 1);
 			_alloc.deallocate(_array, _capacity);
 			_capacity = n;
 			return (tmp);
@@ -445,16 +439,25 @@ namespace ft
 
 		template <class InputIterator>
 		size_type _distance_between_it(InputIterator const first, InputIterator const last) const {
-			size_type	n = 0;
-			for (InputIterator it = first; it != last; it++)
-				n++;
-			return n;				
+			return (static_cast<size_type>(last - first));
 		};
 		
 		void _set_to_zero(ft::vector<T> *tmp) {
 			tmp->_capacity = 0;
 			tmp->_size = 0;
 			tmp->_array = NULL;
+		};
+
+		template <typename iterator, typename container>
+		void _copy(iterator first, iterator last, iterator at_position, container &destination) {
+			for (; first != last; first++, at_position++, destination._size++)
+				_alloc.construct(&*at_position, *first);
+		};
+
+		template <typename iterator>
+		void _move(iterator first, iterator last, iterator at_position) {
+			for (; first != last; first++, at_position++)
+				*at_position = *first;
 		};
 
 	};

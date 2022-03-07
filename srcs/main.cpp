@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/03/01 17:12:15 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/03/07 15:28:13 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	print_any_vector(T &to_display, std::string vector_name)
 	std::cout << "\n" << std::endl;
 }
 
-#if 1 //CREATE A REAL STL EXAMPLE
+#if 0 //CREATE A REAL STL EXAMPLE
 	#define TESTING "Testing with std library"
 	#include <map>
 	#include <stack>
@@ -103,17 +103,17 @@ int main()
 {
 	std::cout << TESTING << std::endl;
 	//--------------------------------------
-
-	//change constructors --> construct from last to first
-
+	
 	//TEST ON EMPTY CONT
 	//TEST WITH EMPTY first -> last
 
 	//Testing void insert (iterator position, InputIterator first, InputIterator last);
-	ft::vector<A> to_insert(2, A(5, 1));
-	ft::vector<A> to_grow(5, A(5, 1));
+	ft::vector<A> to_insert(4, A(5, 1));
+	ft::vector<A> to_grow(12, A(5, 1));
 	
-	to_grow.reserve(12);
+	std::cout << "\nBefore RESERVE\n\n";
+	to_grow.reserve(50);
+	std::cout << "\nRESERVE DONE\n\n";
 	// to_grow.push_back(A(3, 2)); //augments capacity to 2 * initial _capacity
 	// to_grow.pop_back();
 	
@@ -123,15 +123,14 @@ int main()
 
 	ft::vector<A>::iterator it_grow = ++to_grow.begin();
 	it_grow++;
-	// it_grow++;
-	// it_grow++;
+	it_grow++;
+	it_grow++;
 
 	std::cout << "\ninsert : " << std::endl;
 	to_grow.insert(it_grow, to_insert.begin(), to_insert.end());
 
 	print_any_vector(to_insert, "to_insert");
 	print_any_vector(to_grow, "to_grow");
-
 		
 	//Testing void insert (iterator position, size_type n, const value_type& val);
 	//same as void insert (iterator position, InputIterator first, InputIterator last);
@@ -172,6 +171,22 @@ int main()
 	// insert_single_value.insert(it_grow,  instance);
 // 
 	// print_any_vector(insert_single_value, "insert_single_value");
+
+
+
+
+
+
+
+
+
+	// ft::vector<A> resize_growth;
+
+	// resize_growth.reserve(9);
+	// std::cout << "resize_growth capacity = " << resize_growth.capacity() << std::endl;
+	
+	// resize_growth.resize(10);
+	// std::cout << "resize_growth capacity = " << resize_growth.capacity() << std::endl;
 	
 	return 0;
 }
