@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <deque>
-#if 0 //CREATE A REAL STL EXAMPLE
+#if 1 //CREATE A REAL STL EXAMPLE
 	#define TESTING "Testing with std library"
 	#include <map>
 	#include <stack>
@@ -82,6 +82,33 @@ void	print_any_vector(T &to_display, std::string vector_name)
 
 void modifiers(){
 	/*insert, erase*/std::cout << "VECTOR MODIFIERS - assign, push_back, pop_back, insert, erase, swap, clear " << std::endl;
+	std::cout << "Testing erase" << std::endl;
+	ft::vector<A>  erase_test(3, A(12, 5));
+	
+	print_any_vector(erase_test, "erase_test");
+	ft::vector<A>::iterator result = erase_test.erase((--erase_test.end()));
+	std::cout << "return value = " << *result << std::endl;
+	print_any_vector(erase_test, "erase_test");
+
+	std::cout << "Testing erase range" << std::endl;
+	ft::vector<A>  erase_range_test(12, A(12, 5));
+	
+	print_any_vector(erase_range_test, "erase_range_test");
+
+	ft::vector<A>::iterator result_range = erase_range_test.erase(erase_range_test.begin(), erase_range_test.end());
+	std::cout << "return value = " << *result_range << std::endl;
+	print_any_vector(erase_range_test, "erase_test");
+	/*
+	for (int i = 0; i < 8; i++)
+		erase_range_test.push_back(A(2,5));
+
+	ft::vector<A>::iterator first_erase_range = ++(++erase_range_test.begin());
+	ft::vector<A>::iterator last_erase_range = --(--(--erase_range_test.end()));
+	ft::vector<A>::iterator result_range_2 = erase_range_test.erase(first_erase_range, last_erase_range);
+	std::cout << "return value = " << *result_range_2 << std::endl;
+	print_any_vector(erase_range_test, "erase_test");
+	*/
+	
 	std::cout << "Assign with debug messages from class A" << std::endl;
 	ft::vector<A> assignclasses(3, A(1, 2));
 
@@ -152,9 +179,10 @@ void modifiers(){
 	clear_test.clear();
 	std::cout << "size = " << clear_test.size() << " capacity = " << clear_test.capacity() << std::endl;
 
+
+	/*
 	std::cout << "Testing swap member function" << std::endl;
 	//Constructor and destructors in random order
-	/*
 	ft::vector<A> swap1(2, A(3, 2));
 	ft::vector<A> swap2;
 	
@@ -214,35 +242,81 @@ void modifiers(){
 	print_any_vector(to_grow, "to_grow");
 	std::cout << "to_grow.capacity() : " << to_grow.capacity() << std::endl;
 
-	ft::vector<int>::iterator it_grow = ++to_grow.begin();
-	it_grow++;
-	// it_grow++;
-	// it_grow++;
+	ft::vector<int>::iterator it_grow_simple = ++to_grow.begin();
+	it_grow_simple++;
+	// it_grow_simple++;
+	// it_grow_simple++;
 
 	std::cout << "\ninsert : " << std::endl;
-	to_grow.insert(it_grow, to_insert.begin(), to_insert.end());
+	to_grow.insert(it_grow_simple, to_insert.begin(), to_insert.end());
 
 	print_any_vector(to_insert, "to_insert");
 	print_any_vector(to_grow, "to_grow");
 
 	std::cout << "\nTesting void insert (iterator position, size_type n, const value_type& val); " << std::endl;
-	ft::vector<int> to_grow_by_value(6);
-	for (size_t i = 0; i < to_grow_by_value.size(); i++)
-		to_grow_by_value[i] = i;
+	ft::vector<A> to_grow_by_value(9, A(2, 3));
 	
 	to_grow_by_value.reserve(12);
 	
 	print_any_vector(to_grow_by_value, "to_grow_by_value");
 	std::cout << "to_grow_by_value.capacity() : " << to_grow_by_value.capacity() << std::endl;
-	std::cout << "inserted elements are 3*7" << std::endl;
+	std::cout << "inserted elements are 3*7 at position 4" << std::endl;
 	
-	ft::vector<int>::iterator it_grow_int = ++to_grow_by_value.begin();
-	it_grow_int++;
+	ft::vector<A>::iterator it_grow = to_grow_by_value.begin();
+	for (int i = 0; i < 3; i++)
+		it_grow++;
 
 	std::cout << "\ninsert : " << std::endl;
-	to_grow_by_value.insert(it_grow_int, 3, 7);
+	to_grow_by_value.insert(it_grow, 7, A(3, 4));
 
 	print_any_vector(to_grow_by_value, "to_grow_by_value");
+	
+
+	std::cout << "\nTesting void insert (iterator position, size_type n, const value_type& val); " << std::endl;
+	ft::vector<int> to_grow_by_value_int(6);
+	for (size_t i = 0; i < to_grow_by_value_int.size(); i++)
+		to_grow_by_value_int[i] = i;
+	
+	to_grow_by_value_int.reserve(12);
+	
+	print_any_vector(to_grow_by_value_int, "to_grow_by_value_int");
+	std::cout << "to_grow_by_value_int.capacity() : " << to_grow_by_value_int.capacity() << std::endl;
+	std::cout << "inserted elements are 3*7" << std::endl;
+	
+	ft::vector<int>::iterator it_grow_int = ++to_grow_by_value_int.begin();
+	it_grow_int++;
+	it_grow_int++;
+	it_grow_int++;
+	
+	print_any_vector(to_grow_by_value_int, "to_grow_by_value_int");
+
+	std::cout << "\ninsert : " << std::endl;
+	to_grow_by_value_int.insert(it_grow_int, 3, 7);
+
+	print_any_vector(to_grow_by_value_int, "to_grow_by_value");
+
+	std::cout << "Testing iterator insert (iterator position, const value_type& val); " << std::endl;
+	ft::vector<A> insert_single_value(6, A(5, 1));
+
+	std::cout << "\ninserted element : " << std::endl;
+	A instance(8,2);
+	std::cout << std::endl;
+	
+	insert_single_value.reserve(12);
+	
+	print_any_vector(insert_single_value, "insert_single_value");
+	std::cout << "insert_single_value.capacity() : " << insert_single_value.capacity() << std::endl;
+	std::cout << "inserted elements is A(8, 2)" << std::endl;
+
+	// ft::vector<A>::iterator it_single = insert_single_value.begin();
+	// for (int i = 0; i < 3; i++)
+		// it_single++;
+
+	std::cout << "\ninsert : " << std::endl;
+	std::cout << *(insert_single_value.insert(insert_single_value.end(), instance)) << std::endl;
+	// insert_single_value.insert(it_single,  instance);
+
+	print_any_vector(insert_single_value, "insert_single_value");
 
 };
 

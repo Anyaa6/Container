@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/03/07 17:58:24 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/03/08 13:19:27 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -265,11 +265,6 @@ namespace ft
 
 		//Modifiers:
 		void assign (size_type n, const value_type& val){
-			//Not using _realloc bc extra steps to copy old elements
-			//Assign has 2 behaviors bc depending on wether it needs to reallocate memory, std must
-			//be using 2 functions, when realloc it will CONSTRUCT new elements, but if no need to
-			//realloc then it will only have it point to the element "val" without even constructing
-			//it, causing free error on exit
 			if (n > _capacity)
 			{
 				_realloc_empty(n);
@@ -321,25 +316,45 @@ namespace ft
 			}
 		};
 		
-		// insert --> ALL 3 FUNCTIONS AVEC THE SAME BEHAVIOR
-		
-		//The vector is extended by inserting new elements BEFORE the element at the specified position, effectively increasing the container size by the number of elements inserted.
-		//causes the container to relocate all the elements that were after position to their new positions
-		
-		//val = Value to be copied (or moved) to the inserted elements. --> Same as assign?? copied if reallocation, otherwise just assigned?
-		
-		//Return value : An iterator that points to the first of the newly inserted elements. == position parameter
+		//tested at end and beginning and at the end, works
+		iterator insert (iterator position, const value_type& val) {
+			size_type	n = 1; //nb of inserted elements
+			size_type	pos_index = _distance_between_it(begin(), position);
+			
+			if (n + _size > _capacity)
+			{
+				ft::vector<T>	tmp;
+				tmp._array = _alloc.allocate(n + _size);
+				tmp._capacity = n + _size;
+				
+				//Copies first -> last range at right position in --> movement
+				_alloc.construct(tmp._array + pos_index, val);
+				tmp._size++;
+				//Copies elemets before first in <-- movement
+				_copy(reverse_iterator(position), this->rend(), reverse_iterator(tmp._array + pos_index), tmp);
+				//copies elements after last in --> movement
+				_copy(position, end(), iterator(tmp._array + pos_index + n), tmp);
+				
+				this->~vector();
+				_swap_between_two(*this, tmp);
+				_set_to_zero(&tmp);
+				return (iterator(_array + pos_index));
+			}
+			if (position == end()) {
+				_alloc.construct(_array + _size, val);
+				_size++;
+				return (--end());
+			}
+			//copies n last elements of vec to their end position in --> movement
+			_alloc.construct(_array + _size, _array[_size - n]);
+			_size++;
+			//moves (operator =) all prev elements including position to their end position in <-- movement
+			_move(reverse_iterator(_array + _size - 2 * n ), reverse_iterator(position), reverse_iterator(_array + _size - n));
+			//moves (operator =) val to its location
+			*position = val;
+			return (position);
+		};
 
-		// If no realloc, none of the elements before position is accessed, and concurrently accessing or modifying them is safe (although see iterator validity above).
-		// iterator insert (iterator position, const value_type& val);
-		
-		// void insert (iterator position, size_type n, const value_type& val) {
-			// if (n + _size > _capacity) {
-				// _realloc_empty();
-			// }
-		// };
-
-		// void _copy(size_type n, const value_type& val, iterator at_position, container &destination) {
 
 		void insert (iterator position, size_type n, const value_type& val){
 			size_type	pos_index = _distance_between_it(begin(), position);
@@ -362,30 +377,7 @@ namespace ft
 				_set_to_zero(&tmp);
 			}
 			else
-			{
-				size_type nb_of_elements_after_pos = _size - pos_index;
-				//if there are more than n numbers after pos in initial vector
-				if (nb_of_elements_after_pos >= n){
-					//copies n last elements of vec to their end position in --> movement
-					_copy(iterator(_array + _size - n), iterator(_array + _size), iterator(_array + _size), *this);
-					//moves (operator =) all prev elements including position to their end position in <-- movement
-					_move(reverse_iterator(_array + _size - 2 * n ), reverse_iterator(position), reverse_iterator(_array + _size - n));
-					//moves (operator =) elements from first to last to their location in --> movement
-					_move(n, val, position);
-				}
-				//if there are not enough numbers after pos in initial vector to copy to their end position directly
-				else {
-					//change name
-					size_type nb_of_val_copies = n - (_size - pos_index);
-					//copy nb_of_val_copies * val to their end position in --> movement
-					_copy(nb_of_val_copies, val, iterator(_array + _size), *this);
-					//copy last existing elements of the vector at the end of vector in --> movement
-					_copy(iterator(_array + _size - n), iterator(_array + _size - nb_of_val_copies), iterator(_array + _size), *this);//ici
-					//moves (operator =) as many val as needed to complete insert
-					_move(nb_of_elements_after_pos, val, position);
-				}
-				
-			}
+				_insert_without_realloc(position, n, val, pos_index);
 		};
 
 		template <class InputIterator>
@@ -420,12 +412,29 @@ namespace ft
 				_move(reverse_iterator(_array + _size - 2 * n ), reverse_iterator(position), reverse_iterator(_array + _size - n));
 				//moves (operator =) elements from first to last to their location in --> movement
 				_move(first, last, position);
-
-				//NEED TO ADAPT THIS PART
+				//no need to adapt this part like fill insert bc STD works like this
 			}
 		};
 		
-		// erase
+		iterator erase (iterator position){
+			// if not last element move elements in --> order to position
+			if (position != --end())
+				_move(position + 1, end(), position);
+			// destroy last element
+			_alloc.destroy(_array + _size - 1);
+			_size--;
+			return (position);
+		};
+
+		iterator erase (iterator first, iterator last) {
+			size_type dist_to_end = _distance_between_it(last, this->end());
+			//move elements from last (included) to end to first
+			_move(last, this->end(), first);
+			//destroy all ellements past last in <-- order
+			while (first + dist_to_end != this->end())
+				this->pop_back();
+			return (first);
+		};
 		
 		//cannot use '=' otherwise it will copy construct and addresses will not be the same and iterators invalidated
 		void swap (vector& x) {
@@ -524,10 +533,32 @@ namespace ft
 				*at_position = val;
 		};
 
+		void _insert_without_realloc(iterator position, size_type n, const value_type& val, size_type pos_index) {
+			size_type nb_of_elements_after_pos = _size - pos_index;
+			//if there are more than n numbers after pos in initial vector
+			if (nb_of_elements_after_pos >= n){
+				//copies n last elements of vec to their end position in --> movement
+				_copy(iterator(_array + _size - n), iterator(_array + _size), iterator(_array + _size), *this);
+				//moves (operator =) all prev elements including position to their end position in <-- movement
+				_move(reverse_iterator(_array + _size - 2 * n ), reverse_iterator(position), reverse_iterator(_array + _size - n));
+				//moves (operator =) elements from first to last to their location in --> movement
+				_move(n, val, position);
+			}
+			//if there are not enough numbers after pos in initial vector to copy to their end position directly
+			else {
+				size_type nb_of_val_copies = n - (_size - pos_index);
+				//copy nb_of_val_copies * val to their end position in --> movement
+				_copy(nb_of_val_copies, val, iterator(_array + _size), *this);
+				//copy last existing elements of the vector at the end of vector in --> movement
+				_copy(iterator(_array + _size - n), iterator(_array + _size - nb_of_val_copies), iterator(_array + _size), *this);//ici
+				//moves (operator =) as many val as needed to complete insert
+				_move(nb_of_elements_after_pos, val, position);
+			}
+		};
+
 	};
 
 	//Non-member function overloads --> friend autorisé
-
 	template <class T, class Alloc>
 	void swap (vector<T,Alloc>& x, vector<T,Alloc>& y) {
 		x.swap(y);
