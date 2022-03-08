@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/03/08 16:37:59 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/03/08 18:13:27 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,45 +112,28 @@ int main()
 	std::cout << TESTING << std::endl;
 	//--------------------------------------
 
-
-
-
-
-
-	/*
-	ft::vector<A> resize_growth(3, A(12, 5));
-	print_any_vector(resize_growth, "resize_growth");
-	// resize_growth.reserve(9);
-	// std::cout << "resize_growth capacity = " << resize_growth.capacity() << std::endl;
-	std::cout << "\nBefore resize : " << std::endl;
-	resize_growth.resize(10, A(3, 0));
-	std::cout << "resize_growth capacity = " << resize_growth.capacity() << std::endl;
-
-	std::cout << "\nAfter resize : " << std::endl;
-	print_any_vector(resize_growth, "resize_growth");
-	*/
+	//Const and dest in different order
+	// ft::vector<A> swap_overload_class(2, A(3, 2));
+	ft::vector<A> swap2_overload_class;
 	
-
-
-
-
-
-
-
-	/*
-	//PBLM WITH SWAP now that I have reversed constructor and destructor order
-	//dest et const are not in right order
-	ft::vector<int> swap1_int(2, 5);
-	ft::vector<int> swap2_int;
+	// swap2_overload_class.reserve(10);
 	
-	for (int i = 0; i < 6; i++)
-		swap2_int.push_back(i);
-	print_any_vector(swap2_int, "swap2_int");
-	print_any_vector(swap1_int, "swap1_int");
+	for (int i = 0; i < 3; i++){
+		swap2_overload_class.push_back(A(2, i));
+		print_any_vector(swap2_overload_class, "swap2_overload_class");
+		std::cout << std::endl;	
+	}
+	print_any_vector(swap2_overload_class, "swap2_overload_class");
+	// print_any_vector(swap_overload_class, "swap_overload_class");
 
-	swap1_int.swap(swap2_int);
-	print_any_vector(swap2_int, "swap2_int");
-	print_any_vector(swap1_int, "swap1");
-	*/
+	// swap(swap_overload_class, swap2_overload_class);
+	// print_any_vector(swap2_overload_class, "swap2_overload_class");
+	// print_any_vector(swap_overload_class, "swap_overload_class");
+
+	//Check ok : triggers same warning as std when using swap on vectors of different types
+	//and allocators
+	// swap(swap_overload_int, swap2_overload_class);
+	// print_any_vector(swap2_overload_class, "swap2_overload_class");
+	// print_any_vector(swap_overload_class, "swap_overload_class");
 	return 0;
 }

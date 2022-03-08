@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/03/08 16:36:12 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/03/08 18:23:24 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,20 +205,26 @@ namespace ft
 			return (_alloc.max_size());
 		};
 
-		//a modifier, si n > _capacity :
-		//si n > _capacity * 2 --> resize a n exact
-		//si n <= capacity * 2 --> resize a capacity * 2
 		void 		resize (size_type n, value_type val = value_type()) {
 			if (n > max_size()) //bc msg is different for resize et reserve
 				throw (std::length_error("vector"));
 			if (n < _size)
 				for (size_type i = _size; i > n; i--)
 					this->pop_back();
-			if (n > _capacity)
-				_array = _realloc(n);
-			if (n > _size)
-				for (size_type i = _size; i < n; i++)
-					this->push_back(val);
+			if (n > _capacity) {
+				ft::vector<T>	tmp;
+				tmp._array = (n >= _capacity * 2 ? _alloc.allocate(n) : _alloc.allocate(_capacity * 2));
+				tmp._capacity = (n >= _capacity * 2 ? n : _capacity * 2);
+				
+				//copy extra elements in --> movement to fill vector with value
+				_copy(n - _size, val, iterator(tmp._array + _size), tmp);
+				//copy existing elements int <-- movement
+				_copy(this->rbegin(), this->rend(), reverse_iterator(tmp._array + _size), tmp);
+				
+				this->~vector();
+				_swap_between_two(*this, tmp);
+				_set_to_zero(&tmp);				
+			}
 		};
 		size_type 	capacity() const {
 			return _capacity;	
@@ -304,7 +310,19 @@ namespace ft
 		
 		void push_back (const value_type& val){
 			if (_size == _capacity)
+			{
+				// ft::vector<T>	tmp;
+				// tmp._array = _alloc.allocate(_capacity * 2);
+				// tmp._capacity = _capacity * 2;
+				// 
+				// _copy(1, val, iterator(tmp._array + _size), tmp);
+				// _copy(this->rbegin(), this->rend(), reverse_iterator(tmp._array + _size - 1), tmp);
+				// 
+				// this->~vector();
+				// _swap_between_two(*this, tmp);
+				// _set_to_zero(&tmp);				
 				_array = _realloc(_capacity * 2);
+			}
 			_size++;
 			_alloc.construct(_array + _size - 1, val);
 		};

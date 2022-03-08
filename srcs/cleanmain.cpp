@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <deque>
-#if 0 //CREATE A REAL STL EXAMPLE
+#if 1 //CREATE A REAL STL EXAMPLE
 	#define TESTING "Testing with std library"
 	#include <map>
 	#include <stack>
@@ -15,7 +15,6 @@
 	#include "iterator.hpp"
 	#include "vector.hpp"
 #endif
-
 
 class A{
 	public :
@@ -59,6 +58,16 @@ class A{
 	int operator[](int const &index) const {
 		(void)index;
 		return id_instance;
+	};
+	friend bool operator== (const A& lhs, const A& rhs) {
+		if (lhs.size != rhs.size || lhs.number != rhs.number)
+			return (false);
+		return (true);
+	};
+	friend bool operator< (const A& lhs, const A& rhs) {
+		if (lhs.size < rhs.size)
+			return (true);
+		return (false);
 	};
 };
 
@@ -372,6 +381,17 @@ void non_member_functions() {
 	std::cout << "lhs > rhs_other" << (lhs > rhs_other) << std::endl;
 	std::cout << "lhs <= rhs_other" << (lhs <= rhs_other) << std::endl;
 
+	ft::vector<int> swap1_int(2, 5);
+	ft::vector<int> swap2_int;
+	
+	for (int i = 0; i < 6; i++)
+		swap2_int.push_back(i);
+	print_any_vector(swap2_int, "swap2_int");
+	print_any_vector(swap1_int, "swap1_int");
+
+	swap1_int.swap(swap2_int);
+	print_any_vector(swap2_int, "swap2_int");
+	print_any_vector(swap1_int, "swap1");
 	/*
 	//Const and dest in different order
 	ft::vector<A> swap_overload_class(2, A(3, 2));
@@ -632,6 +652,17 @@ int main()
 		std::cout << resize_test[i] << " ";
 	std::cout << std::endl;
 	std::cout << "size = " << resize_test.size() << " capacity = " << resize_test.capacity() << std::endl;
+
+	ft::vector<A> resize_growth(4, A(12, 5));
+	print_any_vector(resize_growth, "resize_growth");
+	// resize_growth.reserve(9);
+	// std::cout << "resize_growth capacity = " << resize_growth.capacity() << std::endl;
+	std::cout << "\nBefore resize : " << std::endl;
+	resize_growth.resize(2, A(3, 0));
+	std::cout << "resize_growth capacity = " << resize_growth.capacity() << std::endl;
+
+	std::cout << "\nAfter resize : " << std::endl;
+	print_any_vector(resize_growth, "resize_growth");
 
 	//-------------------------------------------------------------------
 	/*DONE*/std::cout << "VECTOR ELEMENT ACCESS - operator[], at, front, back " << std::endl;
