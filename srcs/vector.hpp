@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/03/08 13:47:13 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/03/08 16:36:12 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <iostream> // A ENLEVER
 #include "iterator.hpp"
 #include "metafunctions.hpp"
+#include "utils.hpp"
 
 
 namespace ft
@@ -558,7 +559,7 @@ namespace ft
 
 	};
 
-	//Non-member function overloads --> friend autorisé
+	//Non-member function overloads
 	template <class T, class Alloc>
 	void swap (vector<T,Alloc>& x, vector<T,Alloc>& y) {
 		x.swap(y);
@@ -568,32 +569,33 @@ namespace ft
 	bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
 		if (lhs.size() != rhs.size())
 			return (false);
-			
-		for (size_t i = 0; i < lhs.size(); i++)
-			if (!(lhs[i] == rhs[i]))
-				return (false);
-		return (true);
+		return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 	};
 	
-	// template <class T, class Alloc>
-	// bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-	// 
-	// template <class T, class Alloc>
-	// bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-	// 
-	// template <class T, class Alloc>
-	// bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-	// 
-	// template <class T, class Alloc>
-	// bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-	// 
-	// template <class T, class Alloc>
-	// bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	template <class T, class Alloc>
+	bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		return (!(lhs == rhs));
+	};
+	
+	template <class T, class Alloc>
+	bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		return (lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+	};
+	
+	template <class T, class Alloc>
+	bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		return (!(rhs < lhs));
+	};
+	
+	template <class T, class Alloc>
+	bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		return (rhs < lhs);
+	};
+	
+	template <class T, class Alloc>
+	bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		return (!(lhs < rhs));
+	};
 }
 
-		// //Non-member function overloads --> friend autorisé
-		
-		// relational operators
-		// The other operations also use the operators == and < internally to compare the elements, behaving as if the following equivalent operations were performed --> DONC on ne code que == et < puis on utilise ceux la pour tout le reste
-		
-#endif
+#endif //VECTOR_HPP

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <deque>
-#if 1 //CREATE A REAL STL EXAMPLE
+#if 0 //CREATE A REAL STL EXAMPLE
 	#define TESTING "Testing with std library"
 	#include <map>
 	#include <stack>
@@ -81,7 +81,7 @@ void	print_any_vector(T &to_display, std::string vector_name)
 }
 
 void modifiers(){
-	/*insert, erase*/std::cout << "VECTOR MODIFIERS - assign, push_back, pop_back, insert, erase, swap, clear " << std::endl;
+	/*DONE*/std::cout << "VECTOR MODIFIERS - assign, push_back, pop_back, insert, erase, swap, clear " << std::endl;
 	std::cout << "Testing erase" << std::endl;
 	ft::vector<A>  erase_test(3, A(12, 5));
 	
@@ -336,6 +336,41 @@ void non_member_functions() {
 	swap(swap_overload_int, swap_overload2_int);
 	print_any_vector(swap_overload2_int, "swap_overload2_int");
 	print_any_vector(swap_overload_int, "swap_overload_int");
+
+	std::cout << "Testing == operator" << std::endl;
+	ft::vector<A>  lhs(12, A(12, 5));
+	ft::vector<A>  rhs(12, A(3, 5));
+	ft::vector<A>  rhs_other(lhs);
+
+	ft::vector<int>  lhs_int(12, 7);
+	for (size_t i = 0; i < lhs_int.size(); i++)
+		lhs_int[i] = i + 2;
+	ft::vector<int>  lhs_copy(lhs_int);
+	lhs_int[2] = 16;
+	ft::vector<int>  rhs_int(12, 4);
+	ft::vector<int>  rhs_other_int(lhs_int);
+
+	std::cout << std::boolalpha << "\n\nlhs_int == rhs_int = " << (lhs_int == rhs_int) << "\nlhs_int == rhs_other_int = " << (lhs_int == rhs_other_int) << " lhs_int == lhs_copy = " << (lhs_int == lhs_copy) << "\n\n" << std::endl;
+
+	std::cout << "lhsint < rhs_int" << (lhs_int < rhs_int) << std::endl;
+	std::cout << "lhsint != rhs_int" << (lhs_int != rhs_int) << std::endl;
+	std::cout << "lhsint <= rhs_int" << (lhs_int <= rhs_int) << std::endl;
+	std::cout << "lhsint >= rhs_int" << (lhs_int >= rhs_int) << std::endl;
+	std::cout << "lhsint > rhs_int" << (lhs_int > rhs_int) << std::endl;
+	
+	std::cout << "lhs_int != lhs_copy" << (lhs_int != lhs_copy) << std::endl;
+	std::cout << "lhs_int == lhs_copy" << (lhs_int == lhs_copy) << std::endl;
+	std::cout << "lhs_int < lhs_copy" << (lhs_int < lhs_copy) << std::endl;
+	std::cout << "lhs_int >= lhs_copy" << (lhs_int >= lhs_copy) << std::endl;
+	std::cout << "lhs_int > lhs_copy" << (lhs_int > lhs_copy) << std::endl;
+	std::cout << "lhs_int <= lhs_copy" << (lhs_int <= lhs_copy) << std::endl;
+
+	std::cout << "lhs != rhs_other" << (lhs != rhs_other) << std::endl;
+	std::cout << "lhs == rhs_other" << (lhs == rhs_other) << std::endl;
+	std::cout << "lhs < rhs_other" << (lhs < rhs_other) << std::endl;
+	std::cout << "lhs >= rhs_other" << (lhs >= rhs_other) << std::endl;
+	std::cout << "lhs > rhs_other" << (lhs > rhs_other) << std::endl;
+	std::cout << "lhs <= rhs_other" << (lhs <= rhs_other) << std::endl;
 
 	/*
 	//Const and dest in different order
