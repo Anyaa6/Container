@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/03/08 13:21:34 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/03/08 13:50:30 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,11 @@ class A{
 		(void)index;
 		return id_instance;
 	};
+	friend bool operator== (const A& lhs, const A& rhs) {
+		if (lhs.size != rhs.size || lhs.number != rhs.number)
+			return (false);
+		return (true);
+	};
 };
 
 std::ostream & operator<<(std::ostream &cout, A const &A)
@@ -101,23 +106,33 @@ int main()
 {
 	std::cout << TESTING << std::endl;
 	//--------------------------------------
-	std::cout << "Testing erase range" << std::endl;
-	ft::vector<A>  erase_range_test(12, A(12, 5));
+	std::cout << "Testing == operator" << std::endl;
+	ft::vector<A>  lhs(12, A(12, 5));
+	ft::vector<A>  rhs(12, A(3, 5));
+	ft::vector<A>  rhs_other(lhs);
+
+	ft::vector<int>  lhs_int(12, 7);
+	for (size_t i = 0; i < lhs_int.size(); i++)
+		lhs_int[i] = i + 2;
+	ft::vector<int>  lhs_copy(lhs_int);
+	lhs_int[2] = 16;
+	ft::vector<int>  rhs_int(12, 4);
+	ft::vector<int>  rhs_other_int(lhs_int);
+
+
+
+	// std::cout << "\nVector lhs" << std::endl;
+	// for (size_t i = 0; i < lhs.size(); i++)
+		// std::cout << "for [" << i << "], size = " << lhs[i].size << " number = " << lhs[i].number << std::endl;
+	// std::cout << "\n" << std::endl;
+// 
+	// std::cout << "\nVector rhs_other" << std::endl;
+	// for (size_t i = 0; i < rhs_other.size(); i++)
+		// std::cout << "for [" << i << "], size = " << rhs_other[i].size << " number = " << rhs_other[i].number << std::endl;
+	// std::cout << "\n" << std::endl;
 	
-	print_any_vector(erase_range_test, "erase_range_test");
-
-	ft::vector<A>::iterator result_range = erase_range_test.erase(erase_range_test.begin(), erase_range_test.end());
-	std::cout << "return value = " << *result_range << std::endl;
-	print_any_vector(erase_range_test, "erase_test");
-
-	for (int i = 0; i < 8; i++)
-		erase_range_test.push_back(A(2,5));
-
-	ft::vector<A>::iterator first_erase_range = ++(++erase_range_test.begin());
-	ft::vector<A>::iterator last_erase_range = --(--(--erase_range_test.end()));
-	ft::vector<A>::iterator result_range_2 = erase_range_test.erase(first_erase_range, last_erase_range);
-	std::cout << "return value = " << *result_range_2 << std::endl;
-	print_any_vector(erase_range_test, "erase_test");
+	std::cout << std::boolalpha << "\n\nlhs == rhs = " << (lhs == rhs) << "\nlhs == rhs_other = " << (lhs == rhs_other) << "\n\n" << std::endl;
+	std::cout << std::boolalpha << "\n\nlhs_int == rhs_int = " << (lhs_int == rhs_int) << "\nlhs_int == rhs_other_int = " << (lhs_int == rhs_other_int) << " lhs_int == lhs_copy = " << (lhs_int == lhs_copy) << "\n\n" << std::endl;
 
 	/*
 	ft::vector<A> resize_growth(3, A(12, 5));

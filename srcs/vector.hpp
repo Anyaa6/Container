@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/03/08 13:19:27 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/03/08 13:47:13 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -563,6 +563,32 @@ namespace ft
 	void swap (vector<T,Alloc>& x, vector<T,Alloc>& y) {
 		x.swap(y);
 	};
+
+	template <class T, class Alloc>
+	bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		if (lhs.size() != rhs.size())
+			return (false);
+			
+		for (size_t i = 0; i < lhs.size(); i++)
+			if (!(lhs[i] == rhs[i]))
+				return (false);
+		return (true);
+	};
+	
+	// template <class T, class Alloc>
+	// bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	// 
+	// template <class T, class Alloc>
+	// bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	// 
+	// template <class T, class Alloc>
+	// bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	// 
+	// template <class T, class Alloc>
+	// bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	// 
+	// template <class T, class Alloc>
+	// bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
 }
 
 		// //Non-member function overloads --> friend autorisé
