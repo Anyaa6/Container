@@ -6,7 +6,7 @@
 /*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/03/11 10:15:47 by ariane           ###   ########.fr       */
+/*   Updated: 2022/03/11 11:47:33 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,7 @@ namespace ft
 		
 		//Constructors --> construction goes from _array[0] to _array[n] in forward movement
 		explicit vector (const allocator_type& alloc = allocator_type()) : _array(NULL), _size(0), _capacity(0), _alloc(alloc) {};
+		// explicit vector (const allocator_type& alloc = allocator_type()) : _size(0), _capacity(0), _alloc(alloc) {};
 
 		//tested with classes as value including allocated memory -> OK
 		explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _size(n), _capacity(n), _alloc(alloc)
@@ -263,6 +264,9 @@ namespace ft
 			return *_array;
 		};
 		reference back(){
+			// std::cout << "_size - 1 = " << _size - 1 << std::endl;
+			// std::cout << "_size - 1 = " << static_cast<int>(_size) - 1 << std::endl;
+			// return _array[static_cast<int>(_size) - 1];
 			return *(_array + _size - 1);
 		};
 		const_reference back() const {

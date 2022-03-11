@@ -2,7 +2,7 @@
 #include <string>
 #include <deque>
 #include <ctime>
-#if 1//CREATE A REAL STL EXAMPLE
+#if 0//CREATE A REAL STL EXAMPLE
 	#define TESTING "Testing with std library"
 	#include <map>
 	#include <stack>
@@ -15,6 +15,7 @@
 	#include "metafunctions.hpp"
 	#include "iterator.hpp"
 	#include "vector.hpp"
+	#include "stack.hpp"
 #endif
 #include "tester_class.hpp"
 
