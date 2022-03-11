@@ -1,7 +1,8 @@
 #include <iostream>
 #include <string>
 #include <deque>
-#if 1 //CREATE A REAL STL EXAMPLE
+#include <ctime>
+#if 0 //CREATE A REAL STL EXAMPLE
 	#define TESTING "Testing with std library"
 	#include <map>
 	#include <stack>
@@ -416,6 +417,7 @@ void non_member_functions() {
 
 int main()
 {
+	const clock_t start_time = clock();
 	std::cout << "Tester : " << TESTING << std::endl;
 	//-------------------------------------------------------------------
 	/*DONE*/std::cout << "VECTOR CONSTRUCTORS AND DESTRUCTORS " << std::endl;
@@ -716,5 +718,9 @@ int main()
 	//-------------------------------------------------------------------
 	non_member_functions();
 
+	float time = float(clock () - start_time) / CLOCKS_PER_SEC;
+	std::cout << "Program ran in : " << time << "s time" << std::endl;
+	if (std::string("Testing with std library").compare(TESTING) == 0)
+		std::cout << "Max time for ft : " << time * 20 << "s" << std::endl;
 	return 0;
 }
