@@ -2,7 +2,7 @@
 #include <string>
 #include <deque>
 #include <ctime>
-#if 0//CREATE A REAL STL EXAMPLE
+#if 1//CREATE A REAL STL EXAMPLE
 	#define TESTING "Testing with std library"
 	#include <map>
 	#include <stack>
@@ -18,8 +18,30 @@
 #endif
 #include "tester_class.hpp"
 
-void modifiers(){
+void vector_modifiers(){
 	/*DONE*/std::cout << "VECTOR MODIFIERS - assign, push_back, pop_back, insert, erase, swap, clear " << std::endl;
+
+	/*
+		ft::vector<A> empty_vec_assign;
+	ft::vector<A> range_vec_assign(10, A(3, 5));
+	ft::vector<A>::iterator itrange = range_vec_assign.begin();
+
+	empty_vec_assign.assign(itrange, range_vec_assign.end());
+	print_any_vector(empty_vec_assign, "empty_vec_assign");
+	std::cout << std::endl;
+	for (int i = 0; i < 7; i++)
+		itrange++;
+	empty_vec_assign.assign(itrange, range_vec_assign.end());
+	print_any_vector(empty_vec_assign, "empty_vec_assign");
+	std::cout << std::endl;
+	for (int i = 0; i < 4; i++)
+		itrange--;
+	empty_vec_assign.assign(itrange, range_vec_assign.end());
+	std::cout << std::endl;
+
+	print_any_vector(empty_vec_assign, "empty_vec_assign");
+	*/
+
 	std::cout << "Testing erase" << std::endl;
 	ft::vector<A>  erase_test(3, A(12, 5));
 	
@@ -258,7 +280,7 @@ void modifiers(){
 
 };
 
-void non_member_functions() {
+void vector_non_member_functions() {
 	/*relational operators*/std::cout << "VECTOR NON MEMBER FUNCTION OVERLOADS - relational operators, swap " << std::endl;
 
 	std::cout << "Testing swap non-member function" << std::endl;
@@ -343,12 +365,8 @@ void non_member_functions() {
 	// print_any_vector(swap_overload_class, "swap_overload_class");
 };
 
-int main()
-{
-	const clock_t start_time = clock();
-	std::cout << "Tester : " << TESTING << std::endl;
-	//-------------------------------------------------------------------
-	/*DONE*/std::cout << "VECTOR CONSTRUCTORS AND DESTRUCTORS " << std::endl;
+void vector_functions() {
+/*DONE*/std::cout << "VECTOR CONSTRUCTORS AND DESTRUCTORS " << std::endl;
 
 	std::cout << "creating vector, copy..." << std::endl;
 	ft::vector<int>	haha(4, 12);
@@ -642,10 +660,20 @@ int main()
 	std::cout << value_test.back() << std::endl;
 	
 	//-------------------------------------------------------------------
-	modifiers();
+	vector_modifiers();
 	//-------------------------------------------------------------------
-	non_member_functions();
+	vector_non_member_functions();
+}
 
+int main()
+{
+	const clock_t start_time = clock();
+	//-------------------------------------------------------------------
+	vector_functions();
+	
+
+	//-------------------------------------------------------------------
+	std::cout << "Tester : " << TESTING << std::endl;
 	float time = float(clock () - start_time) / CLOCKS_PER_SEC;
 	std::cout << "Program ran in : " << time << "s time" << std::endl;
 	if (std::string("Testing with std library").compare(TESTING) == 0)

@@ -1,3 +1,8 @@
+#ifndef TESTER_CLASS_HPP
+#define TESTER_CLASS_HPP
+
+#include <iostream>
+
 class A{
 	public :
 	static int id;
@@ -70,3 +75,5 @@ void	print_any_vector(T &to_display, std::string vector_name)
 		std::cout << to_display[i] << " ";
 	std::cout << "\n" << std::endl;
 }
+
+#endif //TESTER_CLASS_HPP

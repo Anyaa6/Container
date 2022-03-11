@@ -6,7 +6,7 @@
 /*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/03/11 09:26:13 by ariane           ###   ########.fr       */
+/*   Updated: 2022/03/11 10:15:47 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -279,10 +279,19 @@ namespace ft
 			}
 			else 
 			{
+				size_type i = 0;
+				if (n > _size) {
+					for (; i < _size; i++)
+						_array[i] = val;
+					for (; i < n; i++, _size++)
+						_alloc.construct(_array + i, val);
+				}
+				else {
+					for (; i < n; i++)
+						_array[i] = val;
+				}
 				while (_size > n)
 					this->pop_back();
-				for (size_type i = 0; i < n; i++)
-					_array[i] = val;
 			}
 		};
 		
@@ -300,10 +309,19 @@ namespace ft
 			}
 			else 
 			{
+				size_type i = 0;
+				if (n > _size) {
+					for (; i < _size; i++, first++)
+						_array[i] = *first;
+					for (; i < n; i++, _size++, first++)
+						_alloc.construct(_array + i, *first);
+				}
+				else {
+					for (; i < n; i++, first++)
+						_array[i] = *first;
+				}
 				while (_size > n)
 					this->pop_back();
-				for (int i = 0;first != last; first++, i++)
-					_array[i] = *first;
 			}		
 		};
 		
