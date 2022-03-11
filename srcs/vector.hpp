@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/03/08 18:23:24 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/03/11 09:26:13 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 #include <memory>
 #include <limits>
 #include <stdexcept>
-#include <iostream> // A ENLEVER
 #include "iterator.hpp"
 #include "metafunctions.hpp"
 #include "utils.hpp"
@@ -310,19 +309,7 @@ namespace ft
 		
 		void push_back (const value_type& val){
 			if (_size == _capacity)
-			{
-				// ft::vector<T>	tmp;
-				// tmp._array = _alloc.allocate(_capacity * 2);
-				// tmp._capacity = _capacity * 2;
-				// 
-				// _copy(1, val, iterator(tmp._array + _size), tmp);
-				// _copy(this->rbegin(), this->rend(), reverse_iterator(tmp._array + _size - 1), tmp);
-				// 
-				// this->~vector();
-				// _swap_between_two(*this, tmp);
-				// _set_to_zero(&tmp);				
 				_array = _realloc(_capacity * 2);
-			}
 			_size++;
 			_alloc.construct(_array + _size - 1, val);
 		};
