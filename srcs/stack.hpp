@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:38 by abonnel           #+#    #+#             */
-/*   Updated: 2022/03/25 14:09:49 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/03/25 16:17:15 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,12 @@ namespace ft
 		size_type size() const {
 			return (_ctnr.size());
 		};
-		//issue with top, it works on empty container eventhough it shouldn't and eventhough empty_vec.back() does segfault so top should also segfault
 		value_type& top() {
 			return (_ctnr.back());
 		};
-		// const value_type& top() const {
-			// return (_ctnr.back());
-		// };
+		const value_type& top() const {
+			return (_ctnr.back());
+		};
 		void push (const value_type& val){
 			_ctnr.push_back(val);
 		};

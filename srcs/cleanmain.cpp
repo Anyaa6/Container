@@ -2,7 +2,7 @@
 #include <string>
 #include <deque>
 #include <ctime>
-#if 1//CREATE A REAL STL EXAMPLE
+#if 0//CREATE A REAL STL EXAMPLE
 	#define TESTING "Testing with std library"
 	#include <map>
 	#include <stack>
@@ -71,10 +71,37 @@ void stack_push_pop() {
 	std::cout << "stack_push_pop.top() = " << stack_push_pop.top() << std::endl;
 }
 
+void stack_top_back_empty() {
+	std::cout << "TESTING TOP AND BACK on stack\n\n" << std::endl;
+
+	ft::vector<A>		vec_for_stack(4, A(12, 5));
+	ft::vector<A>	empty_vec;
+	ft::stack<A, ft::vector<A> >   empty_stack(empty_vec);
+	ft::stack<A, ft::vector<A> >   stack_from_vec(vec_for_stack);
+
+	std::cout << std::boolalpha;
+	std::cout << "empty stack is empty = " << empty_stack.empty() << std::endl;
+	std::cout << "stack_from_vec stack is empty " << stack_from_vec.empty() << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "empty stack size = " << empty_stack.size() << std::endl;
+	std::cout << "stack_from_vec stack size " << stack_from_vec.size() << std::endl;
+	std::cout << std::endl;
+
+	// std::cout << "Testing stack top" << std::endl;
+	// std::cout << "empty stack top = " << empty_stack.top() << std::endl;
+	// std::cout << "empty_vec back = " << empty_vec.back() << std::endl;
+	// std::cout << std::endl;
+	
+	std::cout << "stack_from_vec stack top " << stack_from_vec.top() << std::endl;
+	std::cout << "vec_for_stack stack back " << vec_for_stack.back() << std::endl;
+	std::cout << std::endl;
+}
+
 void stack_tests(){
 	stack_relational_operators();
 	stack_push_pop();
-
+	stack_top_back_empty();
 }
 
 void vector_modifiers(){

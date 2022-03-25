@@ -6,7 +6,7 @@
 #    By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/10 12:12:46 by ariane            #+#    #+#              #
-#    Updated: 2022/02/25 16:27:19 by abonnel          ###   ########.fr        #
+#    Updated: 2022/03/25 15:12:20 by abonnel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,7 @@ SRCSTEST	=	srcs/cleanmain.cpp
 
 CC			=	clang++
 CFLAGS		=	-Wall -Werror -Wextra -std=c++98
+#-g3 -fsanitize=address
 
 OBJS		=	$(SRCS:.cpp=.o)
 OBJSTEST	=	$(SRCSTEST:.cpp=.o)

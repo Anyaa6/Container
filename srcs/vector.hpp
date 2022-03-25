@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/03/25 14:09:01 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/03/25 15:21:19 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,13 +264,12 @@ namespace ft
 			return *_array;
 		};
 		reference back(){
-			// std::cout << "_size - 1 = " << _size - 1 << std::endl;
-			// std::cout << "_size - 1 = " << static_cast<int>(_size) - 1 << std::endl;
-			// return _array[static_cast<int>(_size) - 1];
-			return *(_array + _size - 1);
+			reference last_value = *(_array + _size - 1);
+			return (last_value);
 		};
 		const_reference back() const {
-			return *(_array + _size - 1);
+			reference last_value = *(_array + _size - 1);
+			return (last_value);
 		};
 
 		//Modifiers:
