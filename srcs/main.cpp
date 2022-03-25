@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/03/11 12:07:36 by ariane           ###   ########.fr       */
+/*   Updated: 2022/03/25 14:08:14 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
-#if 1//CREATE A REAL STL EXAMPLE
+#if 0//CREATE A REAL STL EXAMPLE
 	#define TESTING "Testing with std library"
 	#include <limits>
 	#include <iterator>
@@ -31,57 +31,7 @@ int main()
 {
 	std::cout << TESTING << std::endl;
 	//--------------------------------------
-	ft::stack<A, ft::vector<A> >  lhs(ft::vector<A>(12, A(12, 5)));
-	ft::stack<A, ft::vector<A> >  rhs(ft::vector<A>(12, A(3, 5)));
-	ft::stack<A, ft::vector<A> >  rhs_other(lhs);
 
-	ft::stack<int, ft::vector<int> >  lhs_int(ft::vector<int>(12, 7));
-	// for (size_t i = 0; i < lhs_int.size(); i++)
-		// lhs_int[i] = i + 2;
-	ft::stack<int, ft::vector<int> >  lhs_copy(ft::vector<int>(12, 7));
-	// lhs_int[2] = 16;
-	ft::stack<int, ft::vector<int> >  rhs_int(ft::vector<int>(12, 4));
-	ft::stack<int, ft::vector<int> >  rhs_other_int(ft::vector<int>(12, 7));
-	
-	std::cout << std::boolalpha << "\n\nlhs_int == rhs_int = " << (lhs_int == rhs_int) << "\nlhs_int == rhs_other_int = " << (lhs_int == rhs_other_int) << " lhs_int == lhs_copy = " << (lhs_int == lhs_copy) << "\n\n" << std::endl;
-
-	std::cout << "lhsint < rhs_int" << (lhs_int < rhs_int) << std::endl;
-	std::cout << "lhsint != rhs_int" << (lhs_int != rhs_int) << std::endl;
-	std::cout << "lhsint <= rhs_int" << (lhs_int <= rhs_int) << std::endl;
-	std::cout << "lhsint >= rhs_int" << (lhs_int >= rhs_int) << std::endl;
-	std::cout << "lhsint > rhs_int" << (lhs_int > rhs_int) << std::endl;
-	
-	std::cout << "lhs_int != lhs_copy" << (lhs_int != lhs_copy) << std::endl;
-	std::cout << "lhs_int == lhs_copy" << (lhs_int == lhs_copy) << std::endl;
-	std::cout << "lhs_int < lhs_copy" << (lhs_int < lhs_copy) << std::endl;
-	std::cout << "lhs_int >= lhs_copy" << (lhs_int >= lhs_copy) << std::endl;
-	std::cout << "lhs_int > lhs_copy" << (lhs_int > lhs_copy) << std::endl;
-	std::cout << "lhs_int <= lhs_copy" << (lhs_int <= lhs_copy) << std::endl;
-
-	std::cout << "lhs != rhs_other" << (lhs != rhs_other) << std::endl;
-	std::cout << "lhs == rhs_other" << (lhs == rhs_other) << std::endl;
-	std::cout << "lhs < rhs_other" << (lhs < rhs_other) << std::endl;
-	std::cout << "lhs >= rhs_other" << (lhs >= rhs_other) << std::endl;
-	std::cout << "lhs > rhs_other" << (lhs > rhs_other) << std::endl;
-	std::cout << "lhs <= rhs_other" << (lhs <= rhs_other) << std::endl;
-/*	
-	ft::stack<A, ft::vector<A> > 	stack_push_pop(ft::vector<A>(3, A(12, 4)));
-
-	//NEED TO FIX VECTOR PUSH BACK FOR IT TO WORK
-	std::cout << "stack_push_pop.top() = " << stack_push_pop.top() << std::endl;
-	std::cout << "stack_push_pop.push(A(2, 10))" << std::endl;
-	std::cout << "stack_push_pop size = " << stack_push_pop.size() << std::endl;
-	stack_push_pop.push(A(2, 10));
-	std::cout << "stack_push_pop.top() = " << stack_push_pop.top() << std::endl;
-	std::cout << "stack_push_pop.pop() x 2" << std::endl;
-	stack_push_pop.pop();
-	stack_push_pop.pop();
-	std::cout << "stack_push_pop.top() = " << stack_push_pop.top() << std::endl;
-	*/
-
-
-
-	
 	/* TESTING TOP AND BACK BC ISSUE
 	ft::vector<A> 	empty_vec_const;
 

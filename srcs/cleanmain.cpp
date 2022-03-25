@@ -2,7 +2,7 @@
 #include <string>
 #include <deque>
 #include <ctime>
-#if 0//CREATE A REAL STL EXAMPLE
+#if 1//CREATE A REAL STL EXAMPLE
 	#define TESTING "Testing with std library"
 	#include <map>
 	#include <stack>
@@ -18,6 +18,64 @@
 	#include "stack.hpp"
 #endif
 #include "tester_class.hpp"
+
+void stack_relational_operators(){
+	ft::stack<A, ft::vector<A> >  lhs(ft::vector<A>(12, A(12, 5)));
+	ft::stack<A, ft::vector<A> >  rhs(ft::vector<A>(12, A(3, 5)));
+	ft::stack<A, ft::vector<A> >  rhs_other(lhs);
+
+	ft::stack<int, ft::vector<int> >  lhs_int(ft::vector<int>(12, 7));
+	// for (size_t i = 0; i < lhs_int.size(); i++)
+		// lhs_int[i] = i + 2;
+	ft::stack<int, ft::vector<int> >  lhs_copy(ft::vector<int>(12, 7));
+	// lhs_int[2] = 16;
+	ft::stack<int, ft::vector<int> >  rhs_int(ft::vector<int>(12, 4));
+	ft::stack<int, ft::vector<int> >  rhs_other_int(ft::vector<int>(12, 7));
+	
+	std::cout << std::boolalpha << "\n\nlhs_int == rhs_int = " << (lhs_int == rhs_int) << "\nlhs_int == rhs_other_int = " << (lhs_int == rhs_other_int) << " lhs_int == lhs_copy = " << (lhs_int == lhs_copy) << "\n\n" << std::endl;
+
+	std::cout << "lhsint < rhs_int = " << (lhs_int < rhs_int) << std::endl;
+	std::cout << "lhsint != rhs_int = " << (lhs_int != rhs_int) << std::endl;
+	std::cout << "lhsint <= rhs_int = " << (lhs_int <= rhs_int) << std::endl;
+	std::cout << "lhsint >= rhs_int = " << (lhs_int >= rhs_int) << std::endl;
+	std::cout << "lhsint > rhs_int = " << (lhs_int > rhs_int) << std::endl;
+	
+	std::cout << "lhs_int != lhs_copy = " << (lhs_int != lhs_copy) << std::endl;
+	std::cout << "lhs_int == lhs_copy = " << (lhs_int == lhs_copy) << std::endl;
+	std::cout << "lhs_int < lhs_copy = " << (lhs_int < lhs_copy) << std::endl;
+	std::cout << "lhs_int >= lhs_copy = " << (lhs_int >= lhs_copy) << std::endl;
+	std::cout << "lhs_int > lhs_copy = " << (lhs_int > lhs_copy) << std::endl;
+	std::cout << "lhs_int <= lhs_copy = " << (lhs_int <= lhs_copy) << std::endl;
+
+	std::cout << "lhs != rhs_other = " << (lhs != rhs_other) << std::endl;
+	std::cout << "lhs == rhs_other = " << (lhs == rhs_other) << std::endl;
+	std::cout << "lhs < rhs_other = " << (lhs < rhs_other) << std::endl;
+	std::cout << "lhs >= rhs_other = " << (lhs >= rhs_other) << std::endl;
+	std::cout << "lhs > rhs_other = " << (lhs > rhs_other) << std::endl;
+	std::cout << "lhs <= rhs_other = " << (lhs <= rhs_other) << std::endl;
+}
+
+void stack_push_pop() {
+	ft::stack<A, ft::vector<A> > 	stack_push_pop(ft::vector<A>(3, A(12, 4)));
+
+	std::cout << "stack_push_pop.top() = " << stack_push_pop.top() << std::endl;
+	std::cout << "stack_push_pop.push(A(2, 10))" << std::endl;
+	std::cout << "stack_push_pop size = " << stack_push_pop.size() << std::endl;
+	stack_push_pop.push(A(2, 10));
+	std::cout << "BEFORE EXIT" << std::endl;
+	
+	std::cout << "stack_push_pop.top() = " << stack_push_pop.top() << std::endl;
+	std::cout << "stack_push_pop.pop() x 2" << std::endl;
+	stack_push_pop.pop();
+	stack_push_pop.pop();
+	std::cout << "stack_push_pop.top() = " << stack_push_pop.top() << std::endl;
+}
+
+void stack_tests(){
+	stack_relational_operators();
+	stack_push_pop();
+
+}
 
 void vector_modifiers(){
 	/*DONE*/std::cout << "VECTOR MODIFIERS - assign, push_back, pop_back, insert, erase, swap, clear " << std::endl;
@@ -671,6 +729,7 @@ int main()
 	const clock_t start_time = clock();
 	//-------------------------------------------------------------------
 	vector_functions();
+	stack_tests();
 	
 
 	//-------------------------------------------------------------------

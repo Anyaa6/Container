@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   stack.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:38 by abonnel           #+#    #+#             */
-/*   Updated: 2022/03/11 12:10:52 by ariane           ###   ########.fr       */
+/*   Updated: 2022/03/25 14:09:49 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,14 @@ namespace ft
 		// const value_type& top() const {
 			// return (_ctnr.back());
 		// };
-		void push (const value_type& val){ //need to redo push_back of vector
+		void push (const value_type& val){
 			_ctnr.push_back(val);
 		};
 		void pop() {
 			_ctnr.pop_back();
 		};
 
+	//RELATIONAL OPERATORS
 	friend bool operator== (const stack<T,Container>& lhs, const stack<T,Container>& rhs) {
 		return (lhs._ctnr == rhs._ctnr);
 	};
@@ -68,8 +69,6 @@ namespace ft
 	private :
 		container_type		_ctnr;
 	};
-
-
 }
 
 #endif //STACK_HPP

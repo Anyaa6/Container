@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/03/11 11:47:33 by ariane           ###   ########.fr       */
+/*   Updated: 2022/03/25 14:09:01 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,7 +234,7 @@ namespace ft
 		};
 		void 		reserve(size_type n) {
 			if (n > _capacity)
-				_array = _realloc(n);
+				_array = _realloc(n);//, NULL);
 		};
 
 		//Element access OK : [] Does segfault in real vector if out of bound, whereas at() checks if in the range
@@ -331,9 +331,11 @@ namespace ft
 		
 		void push_back (const value_type& val){
 			if (_size == _capacity)
-				_array = _realloc(_capacity * 2);
-			_size++;
-			_alloc.construct(_array + _size - 1, val);
+				_array = _realloc_push_back(_capacity * 2, val);
+			else {
+				_size++;
+				_alloc.construct(_array + _size - 1, val);
+			}
 		};
 		
 		void pop_back() {
@@ -494,7 +496,8 @@ namespace ft
 		// resize_test.reserve(-(resize_test.max_size()));
 		//gives uncaught exception of type std::length_error: allocator<T>::allocate(size_t n) 'n' exceeds maximum supported size
 		//When reallocating and re-constructing elements, goes in <-- motion
-		value_type *_realloc(size_type n){
+		value_type *_realloc(size_type n)
+		{
 			value_type *tmp;
 
 			if (n == 0)
@@ -505,6 +508,24 @@ namespace ft
 			for (size_type i = _size; i > 0; i--)
 				_alloc.destroy(_array + i - 1);
 			_alloc.deallocate(_array, _capacity);
+			_capacity = n;
+			return (tmp);
+		};
+		
+		value_type *_realloc_push_back(size_type n, const value_type &at_end)
+		{
+			value_type *tmp;
+
+			if (n == 0)
+				n = 1;
+			tmp = _alloc.allocate(n);
+			_alloc.construct(tmp + _size, at_end);
+			for (size_type i = _size; i > 0; i--)
+				_alloc.construct(tmp + i - 1, _array[i - 1]);
+			for (size_type i = _size; i > 0; i--)
+				_alloc.destroy(_array + i - 1);
+			_alloc.deallocate(_array, _capacity);
+			_size++;
 			_capacity = n;
 			return (tmp);
 		};
