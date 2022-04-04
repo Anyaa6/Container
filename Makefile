@@ -6,21 +6,24 @@
 #    By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/10 12:12:46 by ariane            #+#    #+#              #
-#    Updated: 2022/03/25 15:12:20 by abonnel          ###   ########.fr        #
+#    Updated: 2022/04/01 14:50:44 by abonnel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		=	Container
 
-HEADER		=	srcs/metafunctions.hpp srcs/vector.hpp srcs/stack.hpp srcs/map.hpp srcs/iterator.hpp
+HEADER		=	srcs/metafunctions.hpp srcs/vector.hpp srcs/stack.hpp \
+				srcs/map.hpp srcs/iterator.hpp srcs/pair.hpp
+				
 SRCS		=	srcs/main.cpp
-SRCSTEST	=	srcs/cleanmain.cpp
+
+SRCSTEST	=	srcs/tests/cleanmain.cpp
 
 CC			=	clang++
-CFLAGS		=	-Wall -Werror -Wextra -std=c++98
+CFLAGS		=	-Wall -Werror -Wextra -std=c++98 $(DFLAGS)
 #-g3 -fsanitize=address
 
-OBJS		=	$(SRCS:.cpp=.o)
+OBJS		=	$(SRCS:.cpp=.o) 
 OBJSTEST	=	$(SRCSTEST:.cpp=.o)
 
 $(NAME): $(OBJS) $(HEADER)
@@ -35,11 +38,14 @@ tester:	$(OBJSTEST) $(HEADER)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJS) tester1 tester0
+	rm -f $(OBJS) $(OBJSTEST)
 
 fclean:	clean
 	rm -f $(NAME)
 
+tclean :
+	rm -f output_ft output_std
+
 re:		fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re tclean

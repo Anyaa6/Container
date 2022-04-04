@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/08 15:17:02 by abonnel           #+#    #+#             */
-/*   Updated: 2022/03/08 16:24:11 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/04/01 10:18:06 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,13 @@ template <class InputIterator1, class InputIterator2>
 bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2) {
 	while (first1!=last1)
 	{
-		if (first2==last2 || *first2<*first1) 
+		if (first2 == last2 || *first2 < *first1) 
 			return false;
-		else if (*first1<*first2)
+		else if (*first1 < *first2)
 			return true;
 		++first1; ++first2;
 	}
-	return (first2!=last2);
+	return (first2 != last2);
 };
 
 // template <class InputIterator1, class InputIterator2, class Compare>

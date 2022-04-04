@@ -2,7 +2,7 @@
 #include <string>
 #include <deque>
 #include <ctime>
-#if 0//CREATE A REAL STL EXAMPLE
+#if std_lib//CREATE A REAL STL EXAMPLE
 	#define TESTING "Testing with std library"
 	#include <map>
 	#include <stack>
@@ -12,12 +12,14 @@
 	namespace ft = std;
 #else
 	#define TESTING "Testing with ft library"
-	#include "metafunctions.hpp"
-	#include "iterator.hpp"
-	#include "vector.hpp"
-	#include "stack.hpp"
+	#include "../metafunctions.hpp"
+	#include "../iterator.hpp"
+	#include "../vector.hpp"
+	#include "../stack.hpp"
+	#include "../pair.hpp"
 #endif
 #include "tester_class.hpp"
+
 
 void stack_relational_operators(){
 	ft::stack<A, ft::vector<A> >  lhs(ft::vector<A>(12, A(12, 5)));
@@ -751,14 +753,37 @@ void vector_functions() {
 	vector_non_member_functions();
 }
 
+void pair_tests() {
+	ft::pair<int, char>  pairinstance(1, 'd');
+	
+	std::cout << "first = " << pairinstance.first << " second = " << pairinstance.second << std::endl; 
+	
+	ft::pair<int, char>  paircopy(pairinstance);
+	
+	std::cout << "first = " << paircopy.first << " second = " << paircopy.second << std::endl; 
+	
+	ft::pair<int, int> 	paircopy2 = ft::make_pair(6, 78);
+	std::cout << "first = " << paircopy2.first << " second = " << paircopy2.second << std::endl; 
+
+	pairinstance = paircopy2;
+	std::cout << "first = " << pairinstance.first << " second = " << pairinstance.second << std::endl; 
+
+	//test relational operators
+	std::cout << std::boolalpha;
+	std::cout << (pairinstance != paircopy) << std::endl;
+	std::cout << (pairinstance == paircopy) << std::endl;
+	std::cout << (pairinstance > paircopy) << std::endl;
+	std::cout << (pairinstance >= paircopy) << std::endl;
+};
+
 int main()
 {
 	const clock_t start_time = clock();
 	//-------------------------------------------------------------------
 	vector_functions();
 	stack_tests();
+	pair_tests();
 	
-
 	//-------------------------------------------------------------------
 	std::cout << "Tester : " << TESTING << std::endl;
 	float time = float(clock () - start_time) / CLOCKS_PER_SEC;
