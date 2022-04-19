@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/04/19 15:12:27 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/04/19 15:26:19 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include "iterator.hpp"
 #include "metafunctions.hpp"
 #include "utils.hpp"
-
+#include "random_access_iterator.hpp"
 
 namespace ft
 {
@@ -27,83 +27,6 @@ namespace ft
 	class vector
 	{
 	public:
-		class random_access_iterator : public ft::iterator<ft::random_access_iterator_tag, T>
-		{
-			public : 
-				typedef typename ft::iterator<ft::random_access_iterator_tag, T>::difference_type		difference_type;
-				typedef typename ft::iterator<ft::random_access_iterator_tag, T>::value_type			value_type;
-				typedef typename ft::iterator<ft::random_access_iterator_tag, T>::pointer				pointer;
-				typedef typename ft::iterator<ft::random_access_iterator_tag, T>::reference				reference;
-				typedef typename ft::iterator<ft::random_access_iterator_tag, T>::iterator_category		iterator_category;
-				
-				//Constructor / Destructor / Canonical
-				random_access_iterator(){
-					_p = NULL;};
-				random_access_iterator(T* const ptr){
-					_p = ptr;};
-				random_access_iterator(random_access_iterator const &rhs){
-					_p = rhs._p;};
-				random_access_iterator & operator=(random_access_iterator const &rhs){
-					_p = rhs._p;
-					return *this;};
-				~random_access_iterator(){};
-				
-				//Equality && inequality && compare
-				bool operator==(random_access_iterator const &rhs) const {return ((_p == rhs._p) ? true : false);};
-				bool operator!=(random_access_iterator const &rhs) const {return ((_p != rhs._p) ? true : false);};
-				bool operator<(random_access_iterator const &rhs) const {return ((_p < rhs._p) ? true : false);};
-				bool operator<=(random_access_iterator const &rhs) const {return ((_p <= rhs._p) ? true : false);};
-				bool operator>=(random_access_iterator const &rhs) const {return ((_p >= rhs._p) ? true : false);};
-				bool operator>(random_access_iterator const &rhs) const {return ((_p > rhs._p) ? true : false);};
-
-				//Arithmetic operations
-				random_access_iterator operator+(difference_type const &offset) const {
-					return (_p + offset);};
-				friend random_access_iterator operator+(difference_type const &offset, random_access_iterator const &it){
-					return (it._p + offset);};
-				random_access_iterator operator-(difference_type const &offset) const {
-					return (_p - offset);};
-				difference_type operator-(random_access_iterator const &it) const {
-					return (_p - it._p);};
-					
-				//Compound assignement
-				random_access_iterator& operator+=(difference_type const &offset){
-					_p += offset;
-					return (*this);};
-				random_access_iterator& operator-=(difference_type const &offset){
-					_p -= offset;
-					return (*this);};
-				
-				//Dereference
-				value_type &operator*(void) const {return *_p;};
-				pointer operator->() const {return &(operator*());};
-				
-				//Increment && decrement
-				random_access_iterator &operator++(){
-					_p++;
-					return (*this);};
-				
-				random_access_iterator operator++(int){
-					pointer tmp(_p++);
-					return (tmp);};
-
-				random_access_iterator &operator--(){
-					_p--;
-					return (*this);};
-				
-				random_access_iterator operator--(int){
-					pointer tmp(_p--);
-					return (tmp);};
-
-				//operator []
-				value_type operator[](int const &index) const {return _p[index];};
-
-			protected :
-				pointer		_p;
-		};
-		
-		//VECTOR
-		
 		typedef T 											value_type;
 		typedef Alloc 										allocator_type;
 		typedef typename allocator_type::reference 			reference;
@@ -112,14 +35,13 @@ namespace ft
 		typedef typename allocator_type::const_pointer 		const_pointer;
 		typedef ptrdiff_t									difference_type;
 		typedef size_t 										size_type;
-		typedef random_access_iterator						iterator;
-		typedef const random_access_iterator				const_iterator;
-		typedef reverse_iterator<const_iterator>			const_reverse_iterator;
-		typedef reverse_iterator<iterator>					reverse_iterator;
+		typedef ft::random_access_iterator<value_type>		iterator;
+		typedef ft::random_access_iterator<const value_type>	const_iterator;
+		typedef ft::reverse_iterator<iterator>					reverse_iterator;
+		typedef ft::reverse_iterator<const_iterator>			const_reverse_iterator;
 		
 		//Constructors --> construction goes from _array[0] to _array[n] in forward movement
 		explicit vector (const allocator_type& alloc = allocator_type()) : _array(NULL), _size(0), _capacity(0), _alloc(alloc) {};
-		// explicit vector (const allocator_type& alloc = allocator_type()) : _size(0), _capacity(0), _alloc(alloc) {};
 
 		//tested with classes as value including allocated memory -> OK
 		explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _size(n), _capacity(n), _alloc(alloc)
@@ -133,7 +55,7 @@ namespace ft
 		
 		template <class InputIterator>
 		vector (typename ft::enable_if<(ft::is_same<InputIterator, reverse_iterator>::value) 
-		|| (ft::is_same<InputIterator, random_access_iterator>::value) 
+		|| (ft::is_same<InputIterator, iterator>::value) 
 		|| (ft::is_same<InputIterator, pointer>::value), InputIterator>::type first, 
 		InputIterator last, const allocator_type& alloc = allocator_type()): _size(last - first), _capacity(_size), _alloc(alloc)
 		{
@@ -300,7 +222,7 @@ namespace ft
 		
 		template <typename InputIterator>
 		void assign (typename ft::enable_if<(ft::is_same<InputIterator, reverse_iterator>::value) 
-		|| (ft::is_same<InputIterator, random_access_iterator>::value) 
+		|| (ft::is_same<InputIterator, iterator>::value) 
 		|| (ft::is_same<InputIterator, pointer>::value), InputIterator>::type first, InputIterator last) {
 			size_type			n = _distance_between_it(first, last);
 
@@ -411,7 +333,7 @@ namespace ft
 
 		template <class InputIterator>
 		void insert (iterator position, typename ft::enable_if<(ft::is_same<InputIterator, reverse_iterator>::value) 
-		|| (ft::is_same<InputIterator, random_access_iterator>::value) 
+		|| (ft::is_same<InputIterator, iterator>::value) 
 		|| (ft::is_same<InputIterator, pointer>::value), InputIterator>::type first, InputIterator last) {
 			size_type	n = _distance_between_it(first, last); //nb of inserted elements
 			size_type	pos_index = _distance_between_it(begin(), position);
@@ -556,7 +478,7 @@ namespace ft
 
 		template <typename iterator, typename container>
 		void _copy(typename ft::enable_if<(ft::is_same<iterator, reverse_iterator>::value) 
-		|| (ft::is_same<iterator, random_access_iterator>::value) 
+		|| (ft::is_same<iterator, iterator>::value) 
 		|| (ft::is_same<iterator, pointer>::value), iterator>::type first, iterator last, iterator at_position, container &destination) {
 			for (; first != last; first++, at_position++, destination._size++)
 				_alloc.construct(&*at_position, *first);
@@ -570,7 +492,7 @@ namespace ft
 		
 		template <typename iterator>
 		void _move(typename ft::enable_if<(ft::is_same<iterator, reverse_iterator>::value) 
-		|| (ft::is_same<iterator, random_access_iterator>::value) 
+		|| (ft::is_same<iterator, iterator>::value) 
 		|| (ft::is_same<iterator, pointer>::value), iterator>::type first, iterator last, iterator at_position) {
 			for (; first != last; first++, at_position++)
 				*at_position = *first;

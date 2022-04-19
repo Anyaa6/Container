@@ -6,14 +6,15 @@
 #    By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/10 12:12:46 by ariane            #+#    #+#              #
-#    Updated: 2022/04/04 14:27:43 by abonnel          ###   ########.fr        #
+#    Updated: 2022/04/19 15:17:04 by abonnel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		=	Container
 
 HEADER		=	srcs/metafunctions.hpp srcs/vector.hpp srcs/stack.hpp \
-				srcs/map.hpp srcs/iterator.hpp srcs/pair.hpp
+				srcs/map.hpp srcs/iterator.hpp srcs/pair.hpp \
+				srcs/node.hpp srcs/random_access_iterator.hpp
 				
 SRCS		=	srcs/main.cpp
 
