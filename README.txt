@@ -11,7 +11,7 @@ sh container.sh tester
 sh container.sh unit_std
 -> for unit test with std::
 
-sh container.sh unit_std
+sh container.sh unit_ft
 -> for unit test with ft::
 
 to check for differences of output

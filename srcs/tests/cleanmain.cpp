@@ -783,7 +783,6 @@ int main()
 	vector_functions();
 	stack_tests();
 	pair_tests();
-	
 	//-------------------------------------------------------------------
 	std::cout << "Tester : " << TESTING << std::endl;
 	float time = float(clock () - start_time) / CLOCKS_PER_SEC;

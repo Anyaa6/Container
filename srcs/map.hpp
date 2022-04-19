@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:21 by abonnel           #+#    #+#             */
-/*   Updated: 2022/04/01 15:17:50 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/04/19 15:05:08 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,13 @@
 #include <memory>
 #include <functional>
 #include "pair.hpp"
-
+#include "node.hpp"
 
 namespace ft 
 {
-	
-	template < class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<pair<const Key,T> > >
+	template < class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator< pair<const Key,T> > >
 	class map 
 	{
-
 	public:
 
 		typedef Key 								key_type;
@@ -42,6 +40,7 @@ namespace ft
 		// typedef const reverse_iterator<iterator>			const_reverse_iterator
 		// typedef ft::iterator_traits<iterator>::difference_type	difference_type;
 		typedef size_t	size_type;
+		
 		//key_compare compares keys directly, value_compare also compares keys but from the pairs level
 		class value_compare {
 			friend class map;
@@ -60,34 +59,62 @@ namespace ft
 		};
 
 		//CONSTRUCTOR
-		map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : root(NULL), _size(0), _alloc(alloc), _comp(comp) {};
+		map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _root(NULL), _size(0), _alloc(alloc), _comp(comp) 
+		{
+			//Creating end node
+			_end = _node_alloc.allocate(1);
+			_node_alloc.construct(_end, _node());
+			_end->value = _alloc.allocate(1);
+			//Value is allocated but not constructed
+			_begin = _end;
+		};
 		
 		~map(){
 			//destroy_tree;
 		};
 
+		//begin & end
+		// iterator begin();
+		// const_iterator begin() const;
 		
+		//INSERT
+		// pair<iterator,bool> insert (const value_type& val) {};
+		
+		// iterator insert (iterator position, const value_type& val);
+		
+		// template <class InputIterator>
+		// void insert (InputIterator first, InputIterator last);
+
 		
 	private:
-		node 			*root;
+		typedef	node<value_type>	_node;
+		typedef typename Alloc::template rebind<_node>::other _node_alloc_type;
+
+		_node 			*_root;
+		_node			*_end;
+		_node			*_begin;
 		size_type 		_size;
 		allocator_type	_alloc;
+		_node_alloc_type	_node_alloc;
 		key_compare		_comp;
-
-		struct _node {
-			value_type	value;
-			node 		*left;
-			node 		*right;
-			node 		*parent;
-			bool		color;
-
-			// _node(data) : value(data) {
-				// left = right = parent = NULL;
-				// color = RED;	//create enum for RED and BLACK
-			// };
-		};
 };
 
 }
+
+/* Random infos
+
+	rend() segfault quand on essaye de l'imprimer 
+
+	
+	Ex de ce qu'il faut pour creer reellement un node
+	_node		*tmp
+	1) D'abord alloc et construct NODE
+	tmp = _node_alloc.allocate(1);
+	_node_alloc.construct(tmp, _node());
+	
+	2) Puis alloc et construct VALUE
+	tmp->value = _alloc.allocate(1);
+	_alloc.construct(tmp->value, value_type(key_type(), mapped_type()));
+*/
 
 #endif
