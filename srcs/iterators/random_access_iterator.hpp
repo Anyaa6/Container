@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/04/19 15:21:45 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/04/19 15:40:51 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@
 #include <limits>
 #include <stdexcept>
 #include "iterator.hpp"
-#include "metafunctions.hpp"
-#include "utils.hpp"
+#include "../utils/metafunctions.hpp"
+#include "../utils/lexicographical_compare.hpp"
 
 
 namespace ft

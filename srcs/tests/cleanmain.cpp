@@ -12,11 +12,12 @@
 	namespace ft = std;
 #else
 	#define TESTING "Testing with ft library"
-	#include "../metafunctions.hpp"
-	#include "../iterator.hpp"
-	#include "../vector.hpp"
-	#include "../stack.hpp"
-	#include "../pair.hpp"
+	#include "../utils/metafunctions.hpp"
+	#include "../iterators/iterator.hpp"
+	#include "../containers/vector.hpp"
+	#include "../containers/stack.hpp"
+	#include "../containers/map.hpp"
+	#include "../utils/pair.hpp"
 #endif
 #include "tester_class.hpp"
 

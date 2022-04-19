@@ -6,17 +6,17 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:21 by abonnel           #+#    #+#             */
-/*   Updated: 2022/04/19 15:05:08 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/04/19 15:37:06 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MAP_H
-#define MAP_H
+#ifndef MAP_HPP
+#define MAP_HPP
 
 #include <memory>
 #include <functional>
-#include "pair.hpp"
-#include "node.hpp"
+#include "../utils/pair.hpp"
+#include "../utils/node.hpp"
 
 namespace ft 
 {
@@ -117,4 +117,4 @@ namespace ft
 	_alloc.construct(tmp->value, value_type(key_type(), mapped_type()));
 */
 
-#endif
+#endif //MAP_HPP

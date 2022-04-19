@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/04/19 14:51:16 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/04/19 15:39:56 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,14 @@
 	namespace ft = std;
 #else
 	#define TESTING "Testing with ft library"
-	#include "metafunctions.hpp"
-	#include "iterator.hpp"
-	#include "vector.hpp"
-	#include "stack.hpp"
-	#include "pair.hpp"
-	#include "map.hpp"
+	#include "../utils/metafunctions.hpp"
+	#include "../iterators/iterator.hpp"
+	#include "../containers/vector.hpp"
+	#include "../containers/stack.hpp"
+	#include "../containers/map.hpp"
+	#include "../utils/pair.hpp"
 #endif
-#include "tests/tester_class.hpp"
+#include "tester_class.hpp"
 
 int main()
 {

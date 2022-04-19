@@ -6,17 +6,20 @@
 #    By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/10 12:12:46 by ariane            #+#    #+#              #
-#    Updated: 2022/04/19 15:17:04 by abonnel          ###   ########.fr        #
+#    Updated: 2022/04/19 15:37:52 by abonnel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		=	Container
 
-HEADER		=	srcs/metafunctions.hpp srcs/vector.hpp srcs/stack.hpp \
-				srcs/map.hpp srcs/iterator.hpp srcs/pair.hpp \
-				srcs/node.hpp srcs/random_access_iterator.hpp
+HEADER		=	srcs/utils/metafunctions.hpp srcs/utils/pair.hpp \
+				srcs/utils/node.hpp srcs/utils/lexicographical_compare.hpp \
+				srcs/containers/vector.hpp srcs/containers/stack.hpp \
+				srcs/containers/map.hpp \
+				srcs/iterators/iterator.hpp srcs/iterators/random_access_iterator.hpp \
 				
-SRCS		=	srcs/main.cpp
+				
+SRCS		=	srcs/tests/main.cpp
 
 SRCSTEST	=	srcs/tests/cleanmain.cpp
 
