@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:38 by abonnel           #+#    #+#             */
-/*   Updated: 2022/03/25 16:17:15 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/04/26 13:22:32 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ namespace ft
 		return (lhs._ctnr >= rhs._ctnr);
 	};
 		
-	private :
+	protected :
 		container_type		_ctnr;
 	};
 }

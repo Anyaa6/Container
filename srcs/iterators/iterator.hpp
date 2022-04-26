@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 11:36:32 by ariane            #+#    #+#             */
-/*   Updated: 2022/03/07 15:12:38 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/04/26 12:19:13 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 namespace ft {
 
 struct random_access_iterator_tag {}; //possible d'utiliser ceux de base aussi
+struct bidirectional_iterator_tag {}; //possible d'utiliser ceux de base aussi
 
 //iterator est une interface pour definir ce qu'est un iterateur
 template <class Category, class T, class Distance = ptrdiff_t,
@@ -77,103 +78,6 @@ class iterator_traits<const T*>
     typedef	const value_type*	        pointer;
     typedef const value_type&           reference;
     typedef std::random_access_iterator_tag  iterator_category;
-};
-
-//pour reverse_iterator, heriter de random_ et override increment/decrement operations? !! arithmetics aussi
-template <class iterator>
-class reverse_iterator
-{
-	public : 
-		typedef iterator								iterator_type;//must be at least bidirectionnal
-		typedef typename iterator::difference_type		difference_type;
-		typedef typename iterator::value_type			value_type;
-		typedef typename iterator::pointer				pointer;
-		typedef typename iterator::reference			reference;
-		typedef typename iterator::iterator_category	iterator_category;
-
-		//Const Destructor
-		reverse_iterator(){
-			_base = iterator_type();};
-			
-		explicit reverse_iterator (iterator_type it){
-			_base = it;};
-			
-		template <class Iter>
-		reverse_iterator (const reverse_iterator<Iter>& rev_it){
-			_base = rev_it._base;};
-
-		iterator_type base() const{
-			return _base;};
-
-		//Dereference and []
-		reference operator*() const {
-			return *(_base - 1);};
-
-		reference operator[] (difference_type n) const {
-			return (*(_base - n - 1));};
-
-		pointer operator->() const {
-			return &(operator*());};
-			
-		//Arithmetic
-		reverse_iterator operator+ (difference_type n) const {
-			return (reverse_iterator(_base - n));};
-
-		friend reverse_iterator operator+(difference_type n, reverse_iterator &rev_it){
-			return (reverse_iterator(rev_it._base - n));};
-
-		reverse_iterator& operator+= (difference_type n) {
-			_base -= n;
-			return (*this);};
-
-		reverse_iterator operator- (difference_type n) const {
-			return (reverse_iterator(_base + n));};
-		
-		friend difference_type operator- (const reverse_iterator& lhs, const reverse_iterator& rhs) {
-			// return (lhs._base - rhs._base);
-			return (rhs._base - lhs._base);
-		};
-
-		reverse_iterator& operator-= (difference_type n) {
-			_base += n;
-			return (*this);};
-
-		//Increment / decrement
-		reverse_iterator& operator++() {
-			_base--;
-			return *this;};
-			
-		reverse_iterator  operator++(int) {
-			reverse_iterator tmp = *this;
-			--_base;
-			return (tmp);};
-
-		reverse_iterator& operator--(){
-			_base++;
-			return *this;};
-			
-		reverse_iterator  operator--(int){
-			reverse_iterator tmp = *this;
-			++_base;
-			return tmp;};
-
-		//Relational operator
-  		friend bool operator== (const reverse_iterator& lhs, const reverse_iterator& rhs){
-			return (lhs._base == rhs._base);};
-  		friend bool operator!= (const reverse_iterator& lhs, const reverse_iterator& rhs){
-			return (lhs._base != rhs._base);};
-  		friend bool operator<  (const reverse_iterator& lhs, const reverse_iterator& rhs){
-			return (lhs._base > rhs._base);};
-  		friend bool operator<= (const reverse_iterator& lhs, const reverse_iterator& rhs){
-			return (lhs._base >= rhs._base);};
-  		friend bool operator>  (const reverse_iterator& lhs, const reverse_iterator& rhs){
-			return (lhs._base < rhs._base);};
-  		friend bool operator>= (const reverse_iterator& lhs, const reverse_iterator& rhs){
-			return (lhs._base <= rhs._base);};
-
-	protected :
-		iterator_type _base;
-		
 };
 
 }; //namespace ft

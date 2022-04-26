@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/04/19 15:39:56 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/04/26 14:54:41 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,10 @@ int main()
 	//--------------------------------------
 	
 	ft::map<int, int>	empty_map;
+	ft::map<int, int>::iterator	it_empty_map;
+	
+	int lol = it_empty_map->first;
+	std::cout << lol << std::endl;
 	// std::map<int, int>::iterator it = empty_map.end();
 	// std::cout << "second : "<<std::endl;
 	// std::cout << "end = " << (empty_map.end())->second << std::endl;

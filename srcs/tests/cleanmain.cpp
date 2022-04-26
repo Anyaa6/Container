@@ -14,6 +14,7 @@
 	#define TESTING "Testing with ft library"
 	#include "../utils/metafunctions.hpp"
 	#include "../iterators/iterator.hpp"
+	#include "../iterators/reverse_iterator.hpp"
 	#include "../containers/vector.hpp"
 	#include "../containers/stack.hpp"
 	#include "../containers/map.hpp"
