@@ -42,7 +42,8 @@ elif [ "$1" == "tester" ]; then
 
 #Special main "map_tests" to test how map works
 elif [ "$1" == "map" ]; then
-	make re std
+	make fclean
+	make std
 	./Container > output_std
 	echo 
 	cat output_std

@@ -6,39 +6,42 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 12:35:23 by abonnel           #+#    #+#             */
-/*   Updated: 2022/04/26 16:38:24 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/04/27 17:17:52 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef NODE_HPP
 #define NODE_HPP
 
+enum RBtree { RED, BLACK };
+
 namespace ft {
 	
-template <typename Pair>
+template <typename Pair >
 struct node {
 	
-	typedef	Pair	value_type;
+	typedef	Pair					value_type;
+	typedef std::allocator< Pair >	allocator_type;
 	
-	value_type		*value;
+	allocator_type	val_alloc;
+	value_type		*val_ptr;
+	node 			*parent;
 	node 			*left;
 	node 			*right;
-	node 			*parent;
 	bool			color;
 
 	//CONSTRUCTOR
-	
-	// node(Pair &data) : value(data) {
-		// left = right = parent = NULL;
-		// std::cout << "LOOOOL" << std::endl;
-		// color = RED;	//create enum for RED and BLACK
-	// };
+	//New node constructor - new nodes are always red
+	node(const value_type &data, node *parent) 
+	: parent(parent), color(RED) {
+		val_ptr = val_alloc.allocate(1);
+		val_alloc.construct(val_ptr, data);
+		left = right = NULL;
+	};
 
+	//Random parent/child node constructor
 	node(){
-		value = NULL;
-		left = right = parent = NULL;
-		//color = XX;
-		std::cout << "HAAAAA" << std::endl;
+		//color = XX; BLACK ? only for node
 	};
 
 	~node(){};//a definir

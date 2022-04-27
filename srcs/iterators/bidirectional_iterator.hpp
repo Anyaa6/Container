@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 12:10:41 by abonnel           #+#    #+#             */
-/*   Updated: 2022/04/26 16:38:42 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/04/27 17:06:31 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ class bidirectional_iterator : public ft::iterator<ft::bidirectional_iterator_ta
 
 		//Dereference
 		//Return value_type (pair) for the std::map
-		value_type &operator*(void) const {return *_p->value;};
+		value_type &operator*(void) const {return *_p->val_ptr;};
 		pointer operator->() const {return &(operator*());};
 		
 		// Increment && decrement
@@ -100,7 +100,7 @@ class bidirectional_iterator : public ft::iterator<ft::bidirectional_iterator_ta
 				while (_p->right)
 					_p = _p->right;
 			}
-			else if (_p->parent)
+			else if (_p->parent)//do only "else" not "else if" so that next stuff are done no matter what and will give segfault when going before begin
 			{
 				//go up looking for parent with a left child
 				//decrement should segfault if goes before begin -> YES if root has random value for parent

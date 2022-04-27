@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 12:29:39 by abonnel           #+#    #+#             */
-/*   Updated: 2022/04/26 16:36:01 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/04/27 17:01:12 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,16 +25,19 @@ int main()
 {
 	std::map<int, int>		simple_map;
 
+	std::map<int, int>::iterator		it_start = simple_map.begin();
+	
+	
 	for (int i = 0; i < 22; i++)
 		simple_map.insert(std::make_pair(i, i + 2));
 
-	std::map<int, int>::iterator		it_simple_map = simple_map.begin();
+	std::map<int, int>::iterator		it_simple_map = simple_map.end();
 	
-	for (; it_simple_map != simple_map.end(); it_simple_map++)
+	for (; it_simple_map != simple_map.begin(); it_simple_map--)
 		std::cout << "begin key = " << it_simple_map->first << " value =  "<< it_simple_map->second << std::endl;
 
-	std::cout << "Incrementing after end" << std::endl;
-	it_simple_map++;
+	std::cout << "Incrementing before begin" << std::endl;
+	// it_simple_map--;
 	// std::cout << "begin key = " << it_simple_map->first << " value =  "<< it_simple_map->second << std::endl;
 	// it_simple_map->
 	// std::map<int, int>::iterator::pointer 	lol;
