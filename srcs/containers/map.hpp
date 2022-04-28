@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:21 by abonnel           #+#    #+#             */
-/*   Updated: 2022/04/27 17:32:05 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/04/28 15:26:36 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@
 #include "../utils/pair.hpp"
 #include "../utils/node.hpp"
 #include "../iterators/bidirectional_iterator.hpp"
+#define RESET 		  "\033[0m"
+#define BLACK_COLOR   "\033[30m"      /* Black */
+#define RED_COLOR     "\033[31m"      /* Red */
 
 namespace ft 
 {
@@ -78,13 +81,11 @@ namespace ft
 		map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _root(NULL), _size(0), _alloc(alloc), _comp(comp), _val_comp(value_comp()) 
 		{
 			//_node() gives random values to parent/right/left so that it will segfault when going after end()
-			_construct_node(&_end, _node());
-			_end->val_ptr = _alloc.allocate(1);
-			_end->color = BLACK;
+			_construct_node(&_end, _node(END_NODE));
+			std::cout << "_END ADRESS = " << _end << std::endl;
 			_end->parent = _root;
-			//Value is allocated but not constructed
 			_root = _end;
-			_begin = NULL;
+			_begin = NULL; //do begin == end and change begin == NULL condition in insert_node_at
 		};
 		
 		~map(){
@@ -114,7 +115,7 @@ namespace ft
 		//link is not made between root and next ones
 		//seems like begin has not parent
 		pair<iterator,bool> insert (const value_type& val) {
-			return (_insert(val, _root, NULL));
+			return (_insert(val, _root, _root));
 		};
 		
 		// iterator insert (iterator position, const value_type& val);
@@ -123,7 +124,7 @@ namespace ft
 		// void insert (InputIterator first, InputIterator last);
 
 		
-	private:
+	//private:
 		_node 			*_root;
 		_node			*_end;
 		_node			*_begin; //smallest key
@@ -133,34 +134,83 @@ namespace ft
 		key_compare		_comp;
 		value_compare	_val_comp;
 
-		void _construct_node(_node **position, const _node &node) {
+		//alloc et construct NODE + pair 
+		//handles parent, childs and color
+		void _construct_node(_node **position, const _node &new_node) {
 			*position = _node_alloc.allocate(1);
-			_node_alloc.construct(*position, node);
+			_node_alloc.construct(*position, new_node);
 		};
 		
+		pair<iterator,bool>	_insert(const value_type& val, _node *current, _node *parent) {
+			if (_root == _end){ //at beginning
+				std::cout << "Adding first node between root and parent" << std::endl;
+				_construct_node(&current, _node(val, parent));
+				current->right = _end;
+				_end->parent = current;
+				_root = current;
+				_begin = current;
+				return (make_pair(iterator(current), true));
+			}
+			std::cout << "adding subsequent nodes" << std::endl;
+			if (current == NULL) {
+				std::cout << "current == NULL" << std::endl;
+				_construct_node(&current, _node(val, parent));
+				parent->right = current;//NEED TO KNOW IF LEFT OR RIGHT
+				return (make_pair(iterator(current), true));
+			}
+			if (current == _end) {
+				std::cout << "current == _end" << std::endl;
+				_construct_node(&current, _node(val, parent));
+				parent->right = current;//NEED TO KNOW IF LEFT OR RIGHT
+				current->right = _end;
+				_end->parent = current;
+				return (make_pair(iterator(current), true));
+			}
+			
+			if (_val_comp(val, *current->val_ptr)) //insert to the left
+				return (_insert(val, current->left, current));
+			else if (_val_comp(*current->val_ptr, val)) //insert to the right
+				return (_insert(val, current->right, current));
+			else //keys are same
+				return (make_pair(iterator(current), false));
+			
+			(void)parent;
+			return (make_pair(iterator(current), false));//a enlever
+			
+		};
+
+		/*
 		//!!! When going before begin() shoudl segfault so ROOT should have a random value for parent OR should just go to NULL
-		void _insert_node_at(_node *position, _node *parent, const value_type &val){
-			//create fun for 2 next lines, can be used with _end as well if sending _node(XXX)
-			//alloc et construct NODE + pair 
-			//handles parent, childs and color
-			_construct_node(&position, _node(val, parent));
+		void _insert_node_at(_node **position, _node *parent, const value_type &val){
+			_construct_node(position, _node(val, parent));
+			// std::cout << "current adress\t" << *position << std::endl; //is set to begin but not linked to the next ones
+			// std::cout << "_end adres\t" << _end << std::endl;
+			// std::cout << "_root adres\t" << _root << std::endl;
+		
+			// _print_tree(_root, NULL, 0, _end);//linkind with root not done?
 
 			//Handle _end : if position was end, then added node and end have same parent
 			if (parent == _end->parent) {
-				position->right = _end;
-				_end->parent = position;
+				std::cout << "parent = end" << std::endl;
+				(*position)->right = _end;
+				// (*position)->parent = _root; //??
+				_end->parent = *position;
 			}
 			//Handle _begin
-			if (_begin == NULL || _val_comp(*position->val_ptr, *_begin->val_ptr))
-				_begin = position;
+			if (_begin == NULL || _val_comp(*(*position)->val_ptr, *_begin->val_ptr))
+				_begin = *position;
+			// std::cout << "Value when just inserting : " << (*position)->val_ptr->first << std::endl;
 		};
 
+		//ISSUE WITH LINKING NODES TO ONE ANOTHER
 		pair<iterator,bool>	_insert(const value_type& val, _node *current, _node *parent) {
 			if (current == _end || current == NULL) {
-				_insert_node_at(current, parent, val);
+				_insert_node_at(&current, parent, val);
+				// std::cout << "Value when out of function : " << current->val_ptr->first << std::endl;
 				//balance
 				return (make_pair(iterator(current), true));
 			}
+			std::cout << "LOOKS FOR LEAF" << std::endl;
 			if (_val_comp(val, *current->val_ptr)) //insert to the left
 				return (_insert(val, current->left, current));
 			else if (_val_comp(*current->val_ptr, val)) //insert to the right
@@ -168,7 +218,74 @@ namespace ft
 			else //keys are same
 				return (make_pair(iterator(current), false));
 		};
+		*/
 		
+
+		//-------------------------------------------------------------------------------------
+		//-------------------------------------------------------------------------------------
+		//print tree
+		struct Trunk
+		{
+			Trunk 		*prev;
+			std::string str;
+		
+			Trunk(Trunk *prev, std::string str)
+			{
+				this->prev = prev;
+				this->str = str;
+			}
+		};
+		
+		// Helper function to print branches of the binary tree
+		void _show_trunks(Trunk *p)
+		{
+			if (p == NULL) {
+				return;
+			}
+		
+			_show_trunks(p->prev);
+			std::cout << p->str;
+		}
+		
+		void _print_tree(_node *root, Trunk *prev, bool is_left, _node *end)
+		{
+			// std::cout << "Printing tree" << std::endl;
+			if (root == NULL || root == end) {
+				return;
+			}
+		
+			std::string prev_str = "    ";
+			Trunk *trunk = new Trunk(prev, prev_str);
+		
+			_print_tree(root->right, trunk, true, end);
+		
+			if (!prev) {
+				trunk->str = "———";
+			}
+			else if (is_left)
+			{
+				trunk->str = ".———";
+				prev_str = "   |";
+			}
+			else {
+				trunk->str = "`———";
+				prev->str = prev_str;
+			}
+		
+			_show_trunks(trunk);
+			if (root->color == 0)
+				std::cout << " " << RED_COLOR << root->get_key() << RESET << std::endl;
+			else
+				std::cout << " " << root->get_key() << std::endl;
+			if (prev) {
+				prev->str = prev_str;
+			}
+			trunk->str = "   |";
+		
+			_print_tree(root->left, trunk, false, end);
+			delete	trunk;
+		}
+
 
 };
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bidirectional_iterator.hpp                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 12:10:41 by abonnel           #+#    #+#             */
-/*   Updated: 2022/04/27 17:06:31 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/04/28 13:04:00 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ class bidirectional_iterator : public ft::iterator<ft::bidirectional_iterator_ta
 			this->decrement();
 			return (tmp);};
 
-	protected :
+	//protected :
 		Node		*_p;
 
 		void _increment() {
@@ -79,8 +79,9 @@ class bidirectional_iterator : public ft::iterator<ft::bidirectional_iterator_ta
 			if (_p->right) 
 			{
 				_p = _p->right;
-				while (_p->left)
+				while (_p->left) {
 					_p = _p->left;
+				}
 			}
 			else if (_p->parent)
 			{

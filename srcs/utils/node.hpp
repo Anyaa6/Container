@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   node.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 12:35:23 by abonnel           #+#    #+#             */
-/*   Updated: 2022/04/27 17:17:52 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/04/28 12:40:05 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #define NODE_HPP
 
 enum RBtree { RED, BLACK };
+enum node_constructor_flag { END_NODE };
 
 namespace ft {
 	
@@ -22,6 +23,7 @@ struct node {
 	
 	typedef	Pair					value_type;
 	typedef std::allocator< Pair >	allocator_type;
+	typedef typename Pair::first_type		key_type;
 	
 	allocator_type	val_alloc;
 	value_type		*val_ptr;
@@ -39,12 +41,26 @@ struct node {
 		left = right = NULL;
 	};
 
+	node(int flag) {
+		if (flag == END_NODE) {
+			//Value is allocated but not constructed
+			// std::cout << val_ptr->first << std::endl;
+			// val_ptr = val_alloc.allocate(1); //VALUE IS NOT ALLOCATED IN END NODE OF STD
+			color = BLACK;
+			left = NULL;
+			right = NULL;
+		}
+	};
 	//Random parent/child node constructor
 	node(){
 		//color = XX; BLACK ? only for node
 	};
 
 	~node(){};//a definir
+
+	key_type get_key() {
+		return (val_ptr->first);
+	};
 };
 
 }
