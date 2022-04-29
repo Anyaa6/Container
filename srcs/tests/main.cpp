@@ -6,7 +6,7 @@
 /*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/04/28 13:03:36 by ariane           ###   ########.fr       */
+/*   Updated: 2022/04/29 09:41:14 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,17 +40,17 @@ int main()
 	ft::pair<ft::map<int, int>::iterator, bool> result;
 	
 
-	std::cout << "\nCHECKING that empty map has already end attached to root" << std::endl;
-	ft::map<int, int>::iterator		it_empty = empty_map.end();
-	std::cout << "end key = " << it_empty->first << " value =  "<< it_empty->second << std::endl;
-	std::cout << "end parent = " << it_empty._p->parent << std::endl;
+	// std::cout << "\nCHECKING that empty map has already end attached to root" << std::endl;
+	// ft::map<int, int>::iterator		it_empty = empty_map.end();
+	// std::cout << "end key = " << it_empty->first << " value =  "<< it_empty->second << std::endl;
+	// std::cout << "end parent = " << it_empty._p->parent << std::endl;
 	
 	// for (int i = 12; i >= 0; i--) {
 		// result = empty_map.insert(ft::make_pair(i, i + 2));
 		// std::cout << "result of adding " << result.first->first << " worked : " << std::boolalpha << result.second << std::endl;
 	// }
 
-	for (int i = 0; i < 12; i++) {
+	for (int i = 0; i < 5; i++) {
 		result = empty_map.insert(ft::make_pair(i, i + 2));
 		std::cout << result.first->first << std::endl;
 	}

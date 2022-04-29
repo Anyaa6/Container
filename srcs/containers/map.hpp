@@ -6,7 +6,7 @@
 /*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:21 by abonnel           #+#    #+#             */
-/*   Updated: 2022/04/28 15:26:36 by ariane           ###   ########.fr       */
+/*   Updated: 2022/04/29 10:05:59 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,7 @@ namespace ft
 		map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _root(NULL), _size(0), _alloc(alloc), _comp(comp), _val_comp(value_comp()) 
 		{
 			//_node() gives random values to parent/right/left so that it will segfault when going after end()
-			_construct_node(&_end, _node(END_NODE));
-			std::cout << "_END ADRESS = " << _end << std::endl;
+			_construct_node(_end, _node(END_NODE));
 			_end->parent = _root;
 			_root = _end;
 			_begin = NULL; //do begin == end and change begin == NULL condition in insert_node_at
@@ -135,60 +134,45 @@ namespace ft
 		value_compare	_val_comp;
 
 		//alloc et construct NODE + pair 
-		//handles parent, childs and color
-		void _construct_node(_node **position, const _node &new_node) {
-			*position = _node_alloc.allocate(1);
-			_node_alloc.construct(*position, new_node);
+		void _construct_node(_node *&position, const _node &new_node) {
+			//addhandling of _begin
+			position = _node_alloc.allocate(1);
+			_node_alloc.construct(position, new_node);
+
+			
+			// _size++; //depends if _end
 		};
 		
-		pair<iterator,bool>	_insert(const value_type& val, _node *current, _node *parent) {
+		pair<iterator,bool>	_insert(const value_type& val, _node *&current, _node *&parent) {
 			if (_root == _end){ //at beginning
-				std::cout << "Adding first node between root and parent" << std::endl;
-				_construct_node(&current, _node(val, parent));
+				_construct_node(current, _node(val, parent));
 				current->right = _end;
 				_end->parent = current;
 				_root = current;
 				_begin = current;
 				return (make_pair(iterator(current), true));
 			}
-			std::cout << "adding subsequent nodes" << std::endl;
 			if (current == NULL) {
-				std::cout << "current == NULL" << std::endl;
-				_construct_node(&current, _node(val, parent));
-				parent->right = current;//NEED TO KNOW IF LEFT OR RIGHT
+				_construct_node(current, _node(val, parent));
 				return (make_pair(iterator(current), true));
 			}
-			if (current == _end) {
-				std::cout << "current == _end" << std::endl;
-				_construct_node(&current, _node(val, parent));
-				parent->right = current;//NEED TO KNOW IF LEFT OR RIGHT
+			if (current == _end) {//beginning or when leaf at outmost right
+				_construct_node(current, _node(val, parent));
 				current->right = _end;
 				_end->parent = current;
 				return (make_pair(iterator(current), true));
 			}
-			
-			if (_val_comp(val, *current->val_ptr)) //insert to the left
+			if (_val_comp(val, *current->val_ptr))
 				return (_insert(val, current->left, current));
-			else if (_val_comp(*current->val_ptr, val)) //insert to the right
+			else if (_val_comp(*current->val_ptr, val))
 				return (_insert(val, current->right, current));
-			else //keys are same
-				return (make_pair(iterator(current), false));
-			
-			(void)parent;
-			return (make_pair(iterator(current), false));//a enlever
-			
+			return (make_pair(iterator(current), false)); //keys are same
 		};
 
 		/*
 		//!!! When going before begin() shoudl segfault so ROOT should have a random value for parent OR should just go to NULL
 		void _insert_node_at(_node **position, _node *parent, const value_type &val){
 			_construct_node(position, _node(val, parent));
-			// std::cout << "current adress\t" << *position << std::endl; //is set to begin but not linked to the next ones
-			// std::cout << "_end adres\t" << _end << std::endl;
-			// std::cout << "_root adres\t" << _root << std::endl;
-		
-			// _print_tree(_root, NULL, 0, _end);//linkind with root not done?
-
 			//Handle _end : if position was end, then added node and end have same parent
 			if (parent == _end->parent) {
 				std::cout << "parent = end" << std::endl;
