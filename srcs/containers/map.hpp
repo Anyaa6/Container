@@ -6,7 +6,7 @@
 /*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:21 by abonnel           #+#    #+#             */
-/*   Updated: 2022/04/29 10:05:59 by ariane           ###   ########.fr       */
+/*   Updated: 2022/04/29 11:58:33 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,10 @@ namespace ft
 			//or return (_size == 0);
 			return (_root == _end);
 		};
+
+		size_type size() const {
+			return (_size);
+		};
 		
 		//begin & end
 		iterator begin() {
@@ -133,33 +137,36 @@ namespace ft
 		key_compare		_comp;
 		value_compare	_val_comp;
 
-		//alloc et construct NODE + pair 
 		void _construct_node(_node *&position, const _node &new_node) {
-			//addhandling of _begin
+			
 			position = _node_alloc.allocate(1);
 			_node_alloc.construct(position, new_node);
-
-			
-			// _size++; //depends if _end
+			if (position != _end)
+				_size++;
 		};
+
+		void	_insert_do_end_root_begin(_node *&current, const _node &new_node) {
+			int is_end = (current == _end);
+			int is_root = (current == _root);
+			int is_begin = (is_root || _val_comp(*new_node.val_ptr, *_begin->val_ptr));
+			
+			_construct_node(current, new_node);
+			if (is_end)
+			{
+				current->right = _end;
+				_end->parent = current;
+			}
+			if (is_root)
+				_root = current;
+			if (is_begin)
+				_begin = current;
+		};
+
 		
 		pair<iterator,bool>	_insert(const value_type& val, _node *&current, _node *&parent) {
-			if (_root == _end){ //at beginning
-				_construct_node(current, _node(val, parent));
-				current->right = _end;
-				_end->parent = current;
-				_root = current;
-				_begin = current;
-				return (make_pair(iterator(current), true));
-			}
-			if (current == NULL) {
-				_construct_node(current, _node(val, parent));
-				return (make_pair(iterator(current), true));
-			}
-			if (current == _end) {//beginning or when leaf at outmost right
-				_construct_node(current, _node(val, parent));
-				current->right = _end;
-				_end->parent = current;
+			if (current == _end || current == NULL) {
+				_insert_do_end_root_begin(current, _node(val, parent));
+				//balance
 				return (make_pair(iterator(current), true));
 			}
 			if (_val_comp(val, *current->val_ptr))
@@ -170,6 +177,26 @@ namespace ft
 		};
 
 		/*
+
+			// if (_root == _end){ //at beginning
+				// _construct_node(current, _node(val, parent));
+				// current->right = _end;
+				// _end->parent = current;
+				// _root = current;
+				// return (make_pair(iterator(current), true));
+			// }
+			// if (current == NULL) {
+				// _construct_node(current, _node(val, parent));
+				// return (make_pair(iterator(current), true));
+			// }
+			// if (current == _end) {//beginning or when leaf at outmost right
+				// _construct_node(current, _node(val, parent));
+				// current->right = _end;
+				// _end->parent = current;
+				// return (make_pair(iterator(current), true));
+			// }
+
+			
 		//!!! When going before begin() shoudl segfault so ROOT should have a random value for parent OR should just go to NULL
 		void _insert_node_at(_node **position, _node *parent, const value_type &val){
 			_construct_node(position, _node(val, parent));

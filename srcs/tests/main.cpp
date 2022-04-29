@@ -6,7 +6,7 @@
 /*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/04/29 09:41:14 by ariane           ###   ########.fr       */
+/*   Updated: 2022/04/29 11:49:35 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,15 +50,17 @@ int main()
 		// std::cout << "result of adding " << result.first->first << " worked : " << std::boolalpha << result.second << std::endl;
 	// }
 
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 5; i++)
 		result = empty_map.insert(ft::make_pair(i, i + 2));
-		std::cout << result.first->first << std::endl;
-	}
+
+	result = empty_map.insert(ft::make_pair(-5, 2));
 
 	ft::map<int, int>::iterator		it_em = empty_map.begin();
 
 	for (; it_em != empty_map.end(); it_em++)
 		std::cout << "begin key = " << it_em->first << " value =  "<< it_em->second << std::endl;
+
+	std::cout << empty_map.size() << std::endl;
 		
 	// std::map<int, int>::iterator it = empty_map.end();
 	// std::cout << "second : "<<std::endl;
