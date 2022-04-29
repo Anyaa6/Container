@@ -6,7 +6,7 @@
 /*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:21 by abonnel           #+#    #+#             */
-/*   Updated: 2022/04/29 11:58:33 by ariane           ###   ########.fr       */
+/*   Updated: 2022/04/29 12:32:01 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,10 @@ namespace ft
 			return (_comp);
 		};
 
+		allocator_type get_allocator() const {
+			return (_alloc);
+		};
+
 		//CONSTRUCTOR
 		map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _root(NULL), _size(0), _alloc(alloc), _comp(comp), _val_comp(value_comp()) 
 		{
@@ -88,7 +92,8 @@ namespace ft
 		};
 		
 		~map(){
-			//destroy_tree;
+			//clear()
+			//delete end_node()
 		};
 
 		bool empty() const {
@@ -100,7 +105,7 @@ namespace ft
 			return (_size);
 		};
 		
-		//begin & end
+		//begin & end &rbegin &rend
 		iterator begin() {
 			return (iterator(_begin));
 		};
@@ -114,9 +119,22 @@ namespace ft
 			return (const_iterator(_end));
 		};
 		
+		//DOES NOT WORK with dereferencing
+		reverse_iterator rbegin() {
+			return (reverse_iterator(_end));
+		};
+		const_reverse_iterator rbegin() const {
+			return (const_reverse_iterator(_end));
+		};
+		reverse_iterator rend() {
+			return (reverse_iterator(_begin));
+		};
+		const_reverse_iterator rend() const {
+			return (const_reverse_iterator(_begin));
+		};
+		
+		
 		//INSERT
-		//link is not made between root and next ones
-		//seems like begin has not parent
 		pair<iterator,bool> insert (const value_type& val) {
 			return (_insert(val, _root, _root));
 		};
@@ -166,7 +184,7 @@ namespace ft
 		pair<iterator,bool>	_insert(const value_type& val, _node *&current, _node *&parent) {
 			if (current == _end || current == NULL) {
 				_insert_do_end_root_begin(current, _node(val, parent));
-				//balance
+				//balance ! to not change current for return value
 				return (make_pair(iterator(current), true));
 			}
 			if (_val_comp(val, *current->val_ptr))
@@ -175,61 +193,6 @@ namespace ft
 				return (_insert(val, current->right, current));
 			return (make_pair(iterator(current), false)); //keys are same
 		};
-
-		/*
-
-			// if (_root == _end){ //at beginning
-				// _construct_node(current, _node(val, parent));
-				// current->right = _end;
-				// _end->parent = current;
-				// _root = current;
-				// return (make_pair(iterator(current), true));
-			// }
-			// if (current == NULL) {
-				// _construct_node(current, _node(val, parent));
-				// return (make_pair(iterator(current), true));
-			// }
-			// if (current == _end) {//beginning or when leaf at outmost right
-				// _construct_node(current, _node(val, parent));
-				// current->right = _end;
-				// _end->parent = current;
-				// return (make_pair(iterator(current), true));
-			// }
-
-			
-		//!!! When going before begin() shoudl segfault so ROOT should have a random value for parent OR should just go to NULL
-		void _insert_node_at(_node **position, _node *parent, const value_type &val){
-			_construct_node(position, _node(val, parent));
-			//Handle _end : if position was end, then added node and end have same parent
-			if (parent == _end->parent) {
-				std::cout << "parent = end" << std::endl;
-				(*position)->right = _end;
-				// (*position)->parent = _root; //??
-				_end->parent = *position;
-			}
-			//Handle _begin
-			if (_begin == NULL || _val_comp(*(*position)->val_ptr, *_begin->val_ptr))
-				_begin = *position;
-			// std::cout << "Value when just inserting : " << (*position)->val_ptr->first << std::endl;
-		};
-
-		//ISSUE WITH LINKING NODES TO ONE ANOTHER
-		pair<iterator,bool>	_insert(const value_type& val, _node *current, _node *parent) {
-			if (current == _end || current == NULL) {
-				_insert_node_at(&current, parent, val);
-				// std::cout << "Value when out of function : " << current->val_ptr->first << std::endl;
-				//balance
-				return (make_pair(iterator(current), true));
-			}
-			std::cout << "LOOKS FOR LEAF" << std::endl;
-			if (_val_comp(val, *current->val_ptr)) //insert to the left
-				return (_insert(val, current->left, current));
-			else if (_val_comp(*current->val_ptr, val)) //insert to the right
-				return (_insert(val, current->right, current));
-			else //keys are same
-				return (make_pair(iterator(current), false));
-		};
-		*/
 		
 
 		//-------------------------------------------------------------------------------------
@@ -316,6 +279,61 @@ namespace ft
 	2) Puis alloc et construct VALUE
 	tmp->value = _alloc.allocate(1);
 	_alloc.construct(tmp->value, value_type(key_type(), mapped_type()));
+*/
+
+/* BROUILLON INSERT
+
+	// if (_root == _end){ //at beginning
+		// _construct_node(current, _node(val, parent));
+		// current->right = _end;
+		// _end->parent = current;
+		// _root = current;
+		// return (make_pair(iterator(current), true));
+	// }
+	// if (current == NULL) {
+		// _construct_node(current, _node(val, parent));
+		// return (make_pair(iterator(current), true));
+	// }
+	// if (current == _end) {//beginning or when leaf at outmost right
+		// _construct_node(current, _node(val, parent));
+		// current->right = _end;
+		// _end->parent = current;
+		// return (make_pair(iterator(current), true));
+	// }
+
+	
+//!!! When going before begin() shoudl segfault so ROOT should have a random value for parent OR should just go to NULL
+void _insert_node_at(_node **position, _node *parent, const value_type &val){
+	_construct_node(position, _node(val, parent));
+	//Handle _end : if position was end, then added node and end have same parent
+	if (parent == _end->parent) {
+		std::cout << "parent = end" << std::endl;
+		(*position)->right = _end;
+		// (*position)->parent = _root; //??
+		_end->parent = *position;
+	}
+	//Handle _begin
+	if (_begin == NULL || _val_comp(*(*position)->val_ptr, *_begin->val_ptr))
+		_begin = *position;
+	// std::cout << "Value when just inserting : " << (*position)->val_ptr->first << std::endl;
+};
+
+//ISSUE WITH LINKING NODES TO ONE ANOTHER
+pair<iterator,bool>	_insert(const value_type& val, _node *current, _node *parent) {
+	if (current == _end || current == NULL) {
+		_insert_node_at(&current, parent, val);
+		// std::cout << "Value when out of function : " << current->val_ptr->first << std::endl;
+		//balance
+		return (make_pair(iterator(current), true));
+	}
+	std::cout << "LOOKS FOR LEAF" << std::endl;
+	if (_val_comp(val, *current->val_ptr)) //insert to the left
+		return (_insert(val, current->left, current));
+	else if (_val_comp(*current->val_ptr, val)) //insert to the right
+		return (_insert(val, current->right, current));
+	else //keys are same
+		return (make_pair(iterator(current), false));
+};
 */
 
 #endif //MAP_HPP

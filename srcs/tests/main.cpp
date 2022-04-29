@@ -6,7 +6,7 @@
 /*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/04/29 11:49:35 by ariane           ###   ########.fr       */
+/*   Updated: 2022/04/29 12:48:49 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,31 +36,27 @@ int main()
 	std::cout << TESTING << std::endl;
 	//--------------------------------------
 	
-	ft::map<int, int>	empty_map;
-	ft::pair<ft::map<int, int>::iterator, bool> result;
+	ft::map<int, int>	simple_inserts;
 	
-
-	// std::cout << "\nCHECKING that empty map has already end attached to root" << std::endl;
-	// ft::map<int, int>::iterator		it_empty = empty_map.end();
-	// std::cout << "end key = " << it_empty->first << " value =  "<< it_empty->second << std::endl;
-	// std::cout << "end parent = " << it_empty._p->parent << std::endl;
-	
-	// for (int i = 12; i >= 0; i--) {
-		// result = empty_map.insert(ft::make_pair(i, i + 2));
-		// std::cout << "result of adding " << result.first->first << " worked : " << std::boolalpha << result.second << std::endl;
-	// }
-
+	for (int i = 12; i >= 0; i--)
+		simple_inserts.insert(ft::make_pair(i, i + 2));
 	for (int i = 0; i < 5; i++)
-		result = empty_map.insert(ft::make_pair(i, i + 2));
+		simple_inserts.insert(ft::make_pair(i, i + 2));
 
-	result = empty_map.insert(ft::make_pair(-5, 2));
+	simple_inserts.insert(ft::make_pair(-5, 2));
 
-	ft::map<int, int>::iterator		it_em = empty_map.begin();
+	ft::map<int, int>::iterator		it_em = simple_inserts.begin();
 
-	for (; it_em != empty_map.end(); it_em++)
+	for (; it_em != simple_inserts.end(); it_em++)
 		std::cout << "begin key = " << it_em->first << " value =  "<< it_em->second << std::endl;
 
-	std::cout << empty_map.size() << std::endl;
+	std::cout << "\n REVERSE" << std::endl;
+	ft::map<int, int>::reverse_iterator		rit_em = simple_inserts.rbegin();
+		// 
+	for (; rit_em != simple_inserts.rend(); rit_em++)
+		std::cout << "begin key = " << rit_em->first << " value =  "<< rit_em->second << std::endl;
+
+	std::cout << simple_inserts.size() << std::endl;
 		
 	// std::map<int, int>::iterator it = empty_map.end();
 	// std::cout << "second : "<<std::endl;

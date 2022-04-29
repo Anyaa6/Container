@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   reverse_iterator_hpp                               :+:      :+:    :+:   */
+/*   reverse_iterator.hpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 12:13:25 by abonnel           #+#    #+#             */
-/*   Updated: 2022/04/26 12:14:06 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/04/29 15:10:29 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,10 @@ class reverse_iterator
 
 		//Dereference and []
 		reference operator*() const {
-			return *(_base - 1);};
+			iterator_type tmp = _base;
+			tmp--;
+			return *(tmp);};
+
 
 		reference operator[] (difference_type n) const {
 			return (*(_base - n - 1));};

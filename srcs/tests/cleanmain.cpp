@@ -778,6 +778,30 @@ void pair_tests() {
 	std::cout << (pairinstance >= paircopy) << std::endl;
 };
 
+void map_tests() {
+	ft::map<int, int>	simple_inserts;
+	
+	for (int i = 12; i >= 0; i--)
+		simple_inserts.insert(ft::make_pair(i, i + 2));
+	for (int i = 0; i < 5; i++)
+		simple_inserts.insert(ft::make_pair(i, i + 2));
+
+	simple_inserts.insert(ft::make_pair(-5, 2));
+
+	ft::map<int, int>::iterator		it_em = simple_inserts.begin();
+
+	for (; it_em != simple_inserts.end(); it_em++)
+		std::cout << "begin key = " << it_em->first << " value =  "<< it_em->second << std::endl;
+
+	std::cout << "\n REVERSE" << std::endl;
+	ft::map<int, int>::reverse_iterator		rit_em = simple_inserts.rbegin();
+	
+	for (; rit_em != simple_inserts.rend(); rit_em++)
+		std::cout << "begin key = " << rit_em->first << " value =  "<< rit_em->second << std::endl;
+
+	std::cout << simple_inserts.size() << std::endl;
+};
+
 int main()
 {
 	const clock_t start_time = clock();
@@ -785,6 +809,7 @@ int main()
 	vector_functions();
 	stack_tests();
 	pair_tests();
+	map_tests();
 	//-------------------------------------------------------------------
 	std::cout << "Tester : " << TESTING << std::endl;
 	float time = float(clock () - start_time) / CLOCKS_PER_SEC;

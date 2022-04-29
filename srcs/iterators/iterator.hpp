@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   iterator.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 11:36:32 by ariane            #+#    #+#             */
-/*   Updated: 2022/04/26 12:19:13 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/04/29 12:19:03 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ class iterator_traits<T*>
     typedef T                           	value_type;
     typedef	T*	                			pointer;
     typedef T&                 				reference;
-    typedef std::random_access_iterator_tag iterator_category;
+    typedef ft::random_access_iterator_tag iterator_category;
 };
 
 template <class T> 
@@ -77,7 +77,7 @@ class iterator_traits<const T*>
     typedef T                           value_type;
     typedef	const value_type*	        pointer;
     typedef const value_type&           reference;
-    typedef std::random_access_iterator_tag  iterator_category;
+    typedef ft::random_access_iterator_tag  iterator_category;
 };
 
 }; //namespace ft

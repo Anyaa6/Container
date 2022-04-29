@@ -6,7 +6,7 @@
 /*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 12:10:41 by abonnel           #+#    #+#             */
-/*   Updated: 2022/04/28 13:04:00 by ariane           ###   ########.fr       */
+/*   Updated: 2022/04/29 15:10:13 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ class bidirectional_iterator : public ft::iterator<ft::bidirectional_iterator_ta
 		
 		bidirectional_iterator operator--(int){
 			bidirectional_iterator tmp(_p);
-			this->decrement();
+			this->_decrement();
 			return (tmp);};
 
 	//protected :
