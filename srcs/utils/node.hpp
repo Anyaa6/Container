@@ -6,7 +6,7 @@
 /*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 12:35:23 by abonnel           #+#    #+#             */
-/*   Updated: 2022/04/29 10:20:26 by ariane           ###   ########.fr       */
+/*   Updated: 2022/04/29 16:39:05 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,34 @@ struct node {
 			right = NULL;
 		}
 	};
+
+	node(const node &to_copy) {
+		val_ptr = val_alloc.allocate(1);
+		val_alloc.construct(val_ptr, *(to_copy.val_ptr));
+		left = to_copy.left;
+		right = to_copy.right;
+		parent = to_copy.parent;
+		color = to_copy.color;
+	};
+	
+	node &operator=(const node &to_copy) {
+		val_ptr = val_alloc.allocate(1);
+		val_alloc.construct(val_ptr, *(to_copy.val_ptr));
+		left = to_copy.left;
+		right = to_copy.right;
+		parent = to_copy.parent;
+		color = to_copy.color;
+	};
 	//Random parent/child node constructor
 	node(){
 		//color = XX; BLACK ? only for node
 	};
 
-	~node(){};//a definir
+	~node(){
+		// std::cout << "destroy " <<  val_ptr->first << " and " << val_ptr->second << std::endl;
+		// val_alloc.destroy(val_ptr);
+		// val_alloc.deallocate(val_ptr, 1);
+	};//a definir
 
 	key_type get_key() {
 		return (val_ptr->first);

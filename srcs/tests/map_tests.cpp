@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map_tests.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 12:29:39 by abonnel           #+#    #+#             */
-/*   Updated: 2022/04/27 17:01:12 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/04/29 15:38:08 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,22 +27,17 @@ int main()
 
 	std::map<int, int>::iterator		it_start = simple_map.begin();
 	
+	std::cout << "begin key = " << it_start->first << " value =  "<< it_start->second << std::endl;
+	std::cout << "adreses = " << &it_start << std::endl;
 	
-	for (int i = 0; i < 22; i++)
+	for (int i = 0; i < 3; i++)
 		simple_map.insert(std::make_pair(i, i + 2));
 
-	std::map<int, int>::iterator		it_simple_map = simple_map.end();
-	
-	for (; it_simple_map != simple_map.begin(); it_simple_map--)
-		std::cout << "begin key = " << it_simple_map->first << " value =  "<< it_simple_map->second << std::endl;
+	simple_map.clear();
 
-	std::cout << "Incrementing before begin" << std::endl;
-	// it_simple_map--;
-	// std::cout << "begin key = " << it_simple_map->first << " value =  "<< it_simple_map->second << std::endl;
-	// it_simple_map->
-	// std::map<int, int>::iterator::pointer 	lol;
-	// std::map<int, int>::iterator::value_type 	lol;
-	// lol = *it_simple_map;
+	it_start = simple_map.begin();
+	std::cout << "after clear\nbegin key = " << it_start->first << " value =  "<< it_start->second << std::endl;
+	std::cout << "adreses = " << &it_start << std::endl;
 
 	return 0;
 }

@@ -6,7 +6,7 @@
 /*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:21 by abonnel           #+#    #+#             */
-/*   Updated: 2022/04/29 12:32:01 by ariane           ###   ########.fr       */
+/*   Updated: 2022/04/29 16:58:58 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,19 +81,44 @@ namespace ft
 			return (_alloc);
 		};
 
+		void clear() {
+			_clear_tree(_root);
+			_root = _begin = _end;
+		};
+
+		void	_clear_tree(_node *root) {
+			if (root == NULL || root == _end)
+				return;
+			_delete_node(root->left);
+			_delete_node(root->right);
+			_delete_node(root);
+		}
+		
+		//SEGFAULTS
+		void _delete_node(_node *node_to_destroy) {
+			std::cout << "Enters _delete_node" << std::endl;
+			//next 2 lines are causing segfault
+			// _alloc.destroy((node_to_destroy)->val_ptr);
+			// _alloc.deallocate((node_to_destroy)->val_ptr, 1);
+			std::cout << "finishes _delete_node" << std::endl;
+			_node_alloc.destroy(node_to_destroy);
+			_node_alloc.deallocate(node_to_destroy, 1);
+		};
+
+
 		//CONSTRUCTOR
 		map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _root(NULL), _size(0), _alloc(alloc), _comp(comp), _val_comp(value_comp()) 
 		{
 			//_node() gives random values to parent/right/left so that it will segfault when going after end()
 			_construct_node(_end, _node(END_NODE));
 			_end->parent = _root;
-			_root = _end;
-			_begin = NULL; //do begin == end and change begin == NULL condition in insert_node_at
+			_root = _begin = _end;
 		};
 		
 		~map(){
-			//clear()
-			//delete end_node()
+			clear();
+			_node_alloc.destroy(_end);
+			_node_alloc.deallocate(_end, 1);
 		};
 
 		bool empty() const {
@@ -105,7 +130,8 @@ namespace ft
 			return (_size);
 		};
 		
-		//begin & end &rbegin &rend
+		//-------------------------------------------------------------------------------------
+		//ITERATORS
 		iterator begin() {
 			return (iterator(_begin));
 		};
@@ -118,8 +144,6 @@ namespace ft
 		const_iterator end() const {
 			return (const_iterator(_end));
 		};
-		
-		//DOES NOT WORK with dereferencing
 		reverse_iterator rbegin() {
 			return (reverse_iterator(_end));
 		};
@@ -142,10 +166,13 @@ namespace ft
 		// iterator insert (iterator position, const value_type& val);
 		
 		// template <class InputIterator>
-		// void insert (InputIterator first, InputIterator last);
+		// void insert (InputIterator first, InputIterator last) {
+			// for (; first != last; first++)
+				// this->insert(XXX);
+		// };
 
 		
-	//private:
+	private:
 		_node 			*_root;
 		_node			*_end;
 		_node			*_begin; //smallest key
@@ -180,7 +207,7 @@ namespace ft
 				_begin = current;
 		};
 
-		
+		//!! Segfaults when val already exists
 		pair<iterator,bool>	_insert(const value_type& val, _node *&current, _node *&parent) {
 			if (current == _end || current == NULL) {
 				_insert_do_end_root_begin(current, _node(val, parent));
