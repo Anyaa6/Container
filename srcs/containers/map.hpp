@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:21 by abonnel           #+#    #+#             */
-/*   Updated: 2022/04/29 20:20:53 by ariane           ###   ########.fr       */
+/*   Updated: 2022/05/02 14:44:21 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,31 +81,6 @@ namespace ft
 			return (_alloc);
 		};
 
-		void clear() {
-			_clear_tree(_root);
-			_root = _begin = _end;
-		};
-
-		void	_clear_tree(_node *root) {
-			if (root == NULL || root == _end)
-				return;
-			_delete_node(root->left);
-			_delete_node(root->right);
-			_delete_node(root);
-		}
-		
-		//SEGFAULTS
-		void _delete_node(_node *node_to_destroy) {
-			std::cout << "Enters _delete_node" << std::endl;
-			//next 2 lines are causing segfault
-			// _alloc.destroy((node_to_destroy)->val_ptr);
-			// _alloc.deallocate((node_to_destroy)->val_ptr, 1);
-			_node_alloc.destroy(node_to_destroy);
-			_node_alloc.deallocate(node_to_destroy, 1);
-			std::cout << "finishes _delete_node" << std::endl;
-		};
-
-
 		//CONSTRUCTOR
 		map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _root(NULL), _size(0), _alloc(alloc), _comp(comp), _val_comp(value_comp()) 
 		{
@@ -119,6 +94,27 @@ namespace ft
 			clear();
 			_node_alloc.destroy(_end);
 			_node_alloc.deallocate(_end, 1);
+		};
+
+
+		void clear() {
+			_clear_tree(_root);
+			_root = _begin = _end;
+		};
+
+		void	_clear_tree(_node *current) {
+			if (current == NULL || current == _end)
+				return;
+			_clear_tree(current->left);
+			_clear_tree(current->right);
+			_delete_node(current);
+		}
+		
+		void _delete_node(_node *node_to_destroy) {
+			_alloc.destroy((node_to_destroy)->val_ptr);
+			_alloc.deallocate((node_to_destroy)->val_ptr, 1);
+			_node_alloc.destroy(node_to_destroy);
+			_node_alloc.deallocate(node_to_destroy, 1);
 		};
 
 		bool empty() const {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   node.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 12:35:23 by abonnel           #+#    #+#             */
-/*   Updated: 2022/04/29 20:19:18 by ariane           ###   ########.fr       */
+/*   Updated: 2022/05/02 14:45:49 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,36 +39,19 @@ struct node {
 		val_ptr = val_alloc.allocate(1);
 		val_alloc.construct(val_ptr, data);
 		left = right = NULL;
+		std::cout << sizeof(value_type) << std::endl;
 	};
 
 	node(int flag) {
 		if (flag == END_NODE) {
-			//Value is allocated but not constructed
-			// std::cout << val_ptr->first << std::endl;
-			// val_ptr = val_alloc.allocate(1); //VALUE IS NOT ALLOCATED IN END NODE OF STD
+			//VALUE IS NOT EVEN ALLOCATED IN END NODE OF STD NOR CONSTRUCTED
+			// val_ptr = val_alloc.allocate(1); 
 			color = BLACK;
 			left = NULL;
 			right = NULL;
 		}
 	};
 
-	node(const node &to_copy) {
-		val_ptr = val_alloc.allocate(1);
-		val_alloc.construct(val_ptr, *(to_copy.val_ptr));
-		left = to_copy.left;
-		right = to_copy.right;
-		parent = to_copy.parent;
-		color = to_copy.color;
-	};
-	
-	node &operator=(const node &to_copy) {
-		val_ptr = val_alloc.allocate(1);
-		val_alloc.construct(val_ptr, *(to_copy.val_ptr));
-		left = to_copy.left;
-		right = to_copy.right;
-		parent = to_copy.parent;
-		color = to_copy.color;
-	};
 	//Random parent/child node constructor
 	node(){
 		//color = XX; BLACK ? only for node
@@ -89,3 +72,24 @@ struct node {
 }
 
 #endif //NODE_HPP
+
+/*
+
+	// node(const node &to_copy) {
+	// 	val_ptr = val_alloc.allocate(1);
+	// 	val_alloc.construct(val_ptr, *(to_copy.val_ptr));
+	// 	left = to_copy.left;
+	// 	right = to_copy.right;
+	// 	parent = to_copy.parent;
+	// 	color = to_copy.color;
+	// };
+	
+	// node &operator=(const node &to_copy) {
+	// 	val_ptr = val_alloc.allocate(1);
+	// 	val_alloc.construct(val_ptr, *(to_copy.val_ptr));
+	// 	left = to_copy.left;
+	// 	right = to_copy.right;
+	// 	parent = to_copy.parent;
+	// 	color = to_copy.color;
+	// };
+*/
