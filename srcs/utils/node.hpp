@@ -6,7 +6,7 @@
 /*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 12:35:23 by abonnel           #+#    #+#             */
-/*   Updated: 2022/04/29 16:39:05 by ariane           ###   ########.fr       */
+/*   Updated: 2022/04/29 20:19:18 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ struct node {
 		// std::cout << "destroy " <<  val_ptr->first << " and " << val_ptr->second << std::endl;
 		// val_alloc.destroy(val_ptr);
 		// val_alloc.deallocate(val_ptr, 1);
+		std::cout << "Destroy node" << std::endl;
 	};//a definir
 
 	key_type get_key() {

@@ -6,7 +6,7 @@
 /*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:21 by abonnel           #+#    #+#             */
-/*   Updated: 2022/04/29 16:58:58 by ariane           ###   ########.fr       */
+/*   Updated: 2022/04/29 20:20:53 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,9 +100,9 @@ namespace ft
 			//next 2 lines are causing segfault
 			// _alloc.destroy((node_to_destroy)->val_ptr);
 			// _alloc.deallocate((node_to_destroy)->val_ptr, 1);
-			std::cout << "finishes _delete_node" << std::endl;
 			_node_alloc.destroy(node_to_destroy);
 			_node_alloc.deallocate(node_to_destroy, 1);
+			std::cout << "finishes _delete_node" << std::endl;
 		};
 
 
