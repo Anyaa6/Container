@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:21 by abonnel           #+#    #+#             */
-/*   Updated: 2022/05/02 14:44:21 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/05/02 18:58:31 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #include <memory>
 #include <functional>
+#include <limits>
 #include "../utils/pair.hpp"
 #include "../utils/node.hpp"
 #include "../iterators/bidirectional_iterator.hpp"
@@ -69,6 +70,50 @@ namespace ft
 				}
 		};
 
+		//-------------------------------------------------------------------------------------
+		//CONSTRUCTOR && DESTRUCTORS
+
+		map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _size(0), _alloc(alloc), _comp(comp), _val_comp(value_comp()) 
+		{
+			_construct_link_end_node();
+		};
+			
+		template <class InputIterator>
+		map (InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _size(0), _alloc(alloc), _comp(comp), _val_comp(value_comp()) 
+		{
+			_construct_link_end_node();
+			this->insert(first, last);
+		};
+		
+		map (const map& x) : _size(0), _alloc(x._alloc), _comp(x._comp), _val_comp(x._val_comp) {
+			_construct_link_end_node();
+			_map_by_copy(x._root, x._end, this->_root, this->_root);
+		};
+		
+		map& operator= (const map& x) {
+			_size = 0;
+			_alloc = x._alloc;
+			_comp = x._comp;
+			_val_comp = x._val_comp;
+			_construct_link_end_node();
+			_map_by_copy(x._root, x._end, this->_root, this->_root);
+			return (*this);
+		};
+		
+		~map(){
+			clear();
+			_node_alloc.destroy(_end);
+			_node_alloc.deallocate(_end, 1);
+		};
+
+		void clear() {
+			_clear_tree(_root);
+			_root = _begin = _end;
+		};
+
+		//-------------------------------------------------------------------------------------
+		//GETTERS && INFOS && RANDOM
+
 		value_compare value_comp() const {
 			return (_val_comp);
 		};
@@ -80,51 +125,20 @@ namespace ft
 		allocator_type get_allocator() const {
 			return (_alloc);
 		};
-
-		//CONSTRUCTOR
-		map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _root(NULL), _size(0), _alloc(alloc), _comp(comp), _val_comp(value_comp()) 
-		{
-			//_node() gives random values to parent/right/left so that it will segfault when going after end()
-			_construct_node(_end, _node(END_NODE));
-			_end->parent = _root;
-			_root = _begin = _end;
-		};
-		
-		~map(){
-			clear();
-			_node_alloc.destroy(_end);
-			_node_alloc.deallocate(_end, 1);
-		};
-
-
-		void clear() {
-			_clear_tree(_root);
-			_root = _begin = _end;
-		};
-
-		void	_clear_tree(_node *current) {
-			if (current == NULL || current == _end)
-				return;
-			_clear_tree(current->left);
-			_clear_tree(current->right);
-			_delete_node(current);
-		}
-		
-		void _delete_node(_node *node_to_destroy) {
-			_alloc.destroy((node_to_destroy)->val_ptr);
-			_alloc.deallocate((node_to_destroy)->val_ptr, 1);
-			_node_alloc.destroy(node_to_destroy);
-			_node_alloc.deallocate(node_to_destroy, 1);
-		};
-
-		bool empty() const {
-			//or return (_size == 0);
-			return (_root == _end);
-		};
-
 		size_type size() const {
 			return (_size);
 		};
+
+		bool empty() const {
+			return (_size == 0);
+		};
+
+		// size_type max_size() const {
+			// return (std::numeric_limits<size_type>::max() / sizeof(map<Key, T>));
+		// };
+
+		// void swap (map& x) {
+		// }
 		
 		//-------------------------------------------------------------------------------------
 		//ITERATORS
@@ -153,21 +167,55 @@ namespace ft
 			return (const_reverse_iterator(_begin));
 		};
 		
+		//-------------------------------------------------------------------------------------
+		//FIND
 		
+		// mapped_type& operator[] (const key_type& k);
+		
+		//-------------------------------------------------------------------------------------
 		//INSERT
 		pair<iterator,bool> insert (const value_type& val) {
 			return (_insert(val, _root, _root));
 		};
 		
+		//!!! also has 2 param so need enable_if for templated one ?
 		// iterator insert (iterator position, const value_type& val);
 		
-		// template <class InputIterator>
-		// void insert (InputIterator first, InputIterator last) {
-			// for (; first != last; first++)
-				// this->insert(XXX);
-		// };
+		template <class InputIterator>
+		void insert (InputIterator first, InputIterator last) {
+			for (; first != last; first++)
+				this->insert(*first);
+		};
 
+		//-------------------------------------------------------------------------------------
+		//ERASE
+
+		// void erase (iterator position);
+		// size_type erase (const key_type& k);
+		// void erase (iterator first, iterator last);
 		
+		//-------------------------------------------------------------------------------------
+		//OPERATIONS
+		
+		//MAKE SURE methods that have const version are basically also const
+		// iterator find (const key_type& k);
+		// const_iterator find (const key_type& k) const;
+
+		// size_type count (const key_type& k) const;
+
+		// iterator lower_bound (const key_type& k);
+		// const_iterator lower_bound (const key_type& k) const;
+
+		// iterator upper_bound (const key_type& k);
+		// const_iterator upper_bound (const key_type& k) const;
+
+		// pair<const_iterator,const_iterator> equal_range (const key_type& k) const;
+		// pair<iterator,iterator>             equal_range (const key_type& k);
+
+		//TO DELEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEETE
+		void print_tree() {
+			_print_tree(_root, NULL, false, _end);}
+			
 	private:
 		_node 			*_root;
 		_node			*_end;
@@ -178,6 +226,16 @@ namespace ft
 		key_compare		_comp;
 		value_compare	_val_comp;
 
+		
+		void	_construct_link_end_node() {
+			_construct_node(_end, _node(END_NODE));
+			_end->parent = _root;
+			_root = _begin = _end;
+		};
+		
+		//-------------------------------------------------------------------------------------
+		//INSERT
+		
 		void _construct_node(_node *&position, const _node &new_node) {
 			
 			position = _node_alloc.allocate(1);
@@ -187,9 +245,9 @@ namespace ft
 		};
 
 		void	_insert_do_end_root_begin(_node *&current, const _node &new_node) {
-			int is_end = (current == _end);
-			int is_root = (current == _root);
-			int is_begin = (is_root || _val_comp(*new_node.val_ptr, *_begin->val_ptr));
+			bool is_end = (current == _end);
+			bool is_root = (current == _root);
+			bool is_begin = (is_root || _val_comp(*new_node.val_ptr, *_begin->val_ptr));
 			
 			_construct_node(current, new_node);
 			if (is_end)
@@ -203,11 +261,10 @@ namespace ft
 				_begin = current;
 		};
 
-		//!! Segfaults when val already exists
 		pair<iterator,bool>	_insert(const value_type& val, _node *&current, _node *&parent) {
 			if (current == _end || current == NULL) {
 				_insert_do_end_root_begin(current, _node(val, parent));
-				//balance ! to not change current for return value
+				//balance - beware to not change current for return value
 				return (make_pair(iterator(current), true));
 			}
 			if (_val_comp(val, *current->val_ptr))
@@ -216,9 +273,35 @@ namespace ft
 				return (_insert(val, current->right, current));
 			return (make_pair(iterator(current), false)); //keys are same
 		};
-		
 
 		//-------------------------------------------------------------------------------------
+		//CLEAR DELETE COPY
+		void	_clear_tree(_node *current) {
+			if (current == NULL || current == _end)
+				return;
+			_clear_tree(current->left);
+			_clear_tree(current->right);
+			_delete_node(current);
+		}
+		
+		void _delete_node(_node *node_to_destroy) {
+			_alloc.destroy((node_to_destroy)->val_ptr);
+			_alloc.deallocate((node_to_destroy)->val_ptr, 1);
+			_node_alloc.destroy(node_to_destroy);
+			_node_alloc.deallocate(node_to_destroy, 1);
+			_size--;
+		};
+
+		void	_map_by_copy(_node *x_current, _node *x_end, _node *&this_current, _node *&this_parent) {
+			if (x_current == NULL || x_current == x_end)
+				return;
+			_insert_do_end_root_begin(this_current, _node(*x_current->val_ptr, this_parent));
+			_map_by_copy(x_current->left, x_end, this_current->left, this_current);
+			_map_by_copy(x_current->right, x_end, this_current->right, this_current);
+		};
+
+		
+
 		//-------------------------------------------------------------------------------------
 		//print tree
 		struct Trunk
@@ -239,7 +322,6 @@ namespace ft
 			if (p == NULL) {
 				return;
 			}
-		
 			_show_trunks(p->prev);
 			std::cout << p->str;
 		}
@@ -287,22 +369,6 @@ namespace ft
 };
 
 }
-
-/* Random infos
-
-	rend() segfault quand on essaye de l'imprimer 
-
-	
-	Ex de ce qu'il faut pour creer reellement un node
-	_node		*tmp
-	1) D'abord alloc et construct NODE
-	tmp = _node_alloc.allocate(1);
-	_node_alloc.construct(tmp, _node());
-	
-	2) Puis alloc et construct VALUE
-	tmp->value = _alloc.allocate(1);
-	_alloc.construct(tmp->value, value_type(key_type(), mapped_type()));
-*/
 
 /* BROUILLON INSERT
 
@@ -358,5 +424,4 @@ pair<iterator,bool>	_insert(const value_type& val, _node *current, _node *parent
 		return (make_pair(iterator(current), false));
 };
 */
-
 #endif //MAP_HPP

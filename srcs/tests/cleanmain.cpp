@@ -800,6 +800,51 @@ void map_tests() {
 		std::cout << "begin key = " << rit_em->first << " value =  "<< rit_em->second << std::endl;
 
 	std::cout << simple_inserts.size() << std::endl;
+
+	std::cout << std::boolalpha << "Simple_insert is empty : " << simple_inserts.empty() << std::endl;
+	
+	std::cout << "simple inserts cleared" << std::endl;
+	simple_inserts.clear();
+	std::cout << simple_inserts.size() << std::endl;
+	std::cout << std::boolalpha << "Simple_insert is empty : " << simple_inserts.empty() << std::endl;
+
+	ft::map<int, int>	range_insert;
+	
+	for (int i = -5; i < 0; i++)
+		range_insert.insert(ft::make_pair(i, i + 2));
+	
+	ft::vector< ft::pair<int, int> > 	range_for_insert;
+	for (int i = 0; i < 12; i++)
+		range_for_insert.push_back(ft::make_pair(i, i + 3));
+	
+	range_insert.insert(range_for_insert.begin(), range_for_insert.end());
+	std::cout<< range_insert.size() << std::endl;
+	// range_insert.print_tree();
+
+	ft::map<int, int>	map_const_range(range_for_insert.begin(), range_for_insert.end());
+
+	// map_const_range.print_tree();
+	
+	ft::map<int, int>	map_by_copy(range_insert);
+	// map_by_copy.print_tree();
+	std::cout << map_by_copy.size() << std::endl;
+
+	ft::map<int, int>::iterator		it_range_copy = map_by_copy.begin();
+
+	for (; it_range_copy != map_by_copy.end(); it_range_copy++)
+		std::cout << "begin key = " << it_range_copy->first << " value =  "<< it_range_copy->second << std::endl;
+
+	it_range_copy = range_insert.begin();
+
+	for (; it_range_copy != range_insert.end(); it_range_copy++)
+		std::cout << "begin key = " << it_range_copy->first << " value =  "<< it_range_copy->second << std::endl;
+
+	ft::map<int, int>	map_assign_overload = range_insert;
+
+	it_range_copy = map_assign_overload.begin();
+
+	for (; it_range_copy != map_assign_overload.end(); it_range_copy++)
+		std::cout << "begin key = " << it_range_copy->first << " value =  "<< it_range_copy->second << std::endl;
 };
 
 int main()

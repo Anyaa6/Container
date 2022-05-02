@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 12:35:23 by abonnel           #+#    #+#             */
-/*   Updated: 2022/05/02 14:45:49 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/05/02 15:41:01 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,11 @@ struct node {
 		val_ptr = val_alloc.allocate(1);
 		val_alloc.construct(val_ptr, data);
 		left = right = NULL;
-		std::cout << sizeof(value_type) << std::endl;
 	};
 
-	node(int flag) {
+	node(bool flag) {
 		if (flag == END_NODE) {
 			//VALUE IS NOT EVEN ALLOCATED IN END NODE OF STD NOR CONSTRUCTED
-			// val_ptr = val_alloc.allocate(1); 
 			color = BLACK;
 			left = NULL;
 			right = NULL;
@@ -58,11 +56,8 @@ struct node {
 	};
 
 	~node(){
-		// std::cout << "destroy " <<  val_ptr->first << " and " << val_ptr->second << std::endl;
-		// val_alloc.destroy(val_ptr);
-		// val_alloc.deallocate(val_ptr, 1);
-		std::cout << "Destroy node" << std::endl;
-	};//a definir
+		// std::cout << "Destroy node" << std::endl;
+	};
 
 	key_type get_key() {
 		return (val_ptr->first);
