@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:21 by abonnel           #+#    #+#             */
-/*   Updated: 2022/05/02 18:58:31 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/05/03 15:45:19 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,8 +137,13 @@ namespace ft
 			// return (std::numeric_limits<size_type>::max() / sizeof(map<Key, T>));
 		// };
 
-		// void swap (map& x) {
-		// }
+		void swap (map& x) {
+			map		tmp(x);
+			map		*tmp_ptr = &tmp;
+
+			x = *this;
+			*this = *tmp_ptr;
+		}
 		
 		//-------------------------------------------------------------------------------------
 		//ITERATORS
@@ -170,16 +175,22 @@ namespace ft
 		//-------------------------------------------------------------------------------------
 		//FIND
 		
-		// mapped_type& operator[] (const key_type& k);
+		mapped_type& operator[] (const key_type& k) {
+			return ((*((this->insert(make_pair(k,mapped_type()))).first)).second);
+		};
 		
 		//-------------------------------------------------------------------------------------
 		//INSERT
 		pair<iterator,bool> insert (const value_type& val) {
-			return (_insert(val, _root, _root));
+			return (_insert_from_root(val, _root, _root));
 		};
 		
-		//!!! also has 2 param so need enable_if for templated one ?
-		// iterator insert (iterator position, const value_type& val);
+		iterator insert (iterator position, const value_type& val) {
+			//friend not authorised 
+			//eventhough real map uses it to access node pointer inside of iterator 
+			(void)position;
+			return (this->insert(val).first);
+		};
 		
 		template <class InputIterator>
 		void insert (InputIterator first, InputIterator last) {
@@ -196,21 +207,65 @@ namespace ft
 		
 		//-------------------------------------------------------------------------------------
 		//OPERATIONS
+
+		iterator find (const key_type& k) {
+			return (_find_from_root(_root, k));
+		};
 		
-		//MAKE SURE methods that have const version are basically also const
-		// iterator find (const key_type& k);
-		// const_iterator find (const key_type& k) const;
+		const_iterator find (const key_type& k) const {
+			return (_find_from_root(_root, k));
+		};
 
-		// size_type count (const key_type& k) const;
+		size_type count (const key_type& k) const {
+			if (_find_from_root(_root, k) == _end)
+				return (0);
+			return (1);
+		};
+		
+		iterator lower_bound (const key_type& k) {
+			iterator it = begin();
+			
+			while (_comp(it->first, k) && it != _end)
+				it++;
+			return (it);
+		};
+		
+		const_iterator lower_bound (const key_type& k) const {
+			iterator it = begin();
+			
+			while (_comp(it->first, k) && it != _end)
+				it++;
+			return (it);
+		};
 
-		// iterator lower_bound (const key_type& k);
-		// const_iterator lower_bound (const key_type& k) const;
+		iterator upper_bound (const key_type& k) {
+			iterator it = begin();
+			
+			while (_comp(it->first, k) && it != _end)
+				it++;
+			//if it key is == to k then we need to go to next one
+			while (_comp(it->first, k) == false && _comp(k, it->first) == false)
+				return (++it);
+			return (it);
+		};
+		
+		const_iterator upper_bound (const key_type& k) const {
+			iterator it = begin();
+			
+			while (_comp(it->first, k) && it != _end)
+				it++;
+			//if it key is == to k then we need to go to next one
+			while (_comp(it->first, k) == false && _comp(k, it->first) == false)
+				return (++it);
+			return (it);
+		};
 
-		// iterator upper_bound (const key_type& k);
-		// const_iterator upper_bound (const key_type& k) const;
-
-		// pair<const_iterator,const_iterator> equal_range (const key_type& k) const;
-		// pair<iterator,iterator>             equal_range (const key_type& k);
+		pair<iterator,iterator> equal_range (const key_type& k) {
+			return (ft::make_pair(lower_bound(k), upper_bound(k)));
+		};
+		pair<const_iterator,const_iterator> equal_range (const key_type& k) const {
+			return (ft::make_pair(lower_bound(k), upper_bound(k)));
+		};
 
 		//TO DELEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEETE
 		void print_tree() {
@@ -261,16 +316,16 @@ namespace ft
 				_begin = current;
 		};
 
-		pair<iterator,bool>	_insert(const value_type& val, _node *&current, _node *&parent) {
+		pair<iterator,bool>	_insert_from_root(const value_type& val, _node *&current, _node *&parent) {
 			if (current == _end || current == NULL) {
 				_insert_do_end_root_begin(current, _node(val, parent));
 				//balance - beware to not change current for return value
 				return (make_pair(iterator(current), true));
 			}
 			if (_val_comp(val, *current->val_ptr))
-				return (_insert(val, current->left, current));
+				return (_insert_from_root(val, current->left, current));
 			else if (_val_comp(*current->val_ptr, val))
-				return (_insert(val, current->right, current));
+				return (_insert_from_root(val, current->right, current));
 			return (make_pair(iterator(current), false)); //keys are same
 		};
 
@@ -300,8 +355,29 @@ namespace ft
 			_map_by_copy(x_current->right, x_end, this_current->right, this_current);
 		};
 
+		//-------------------------------------------------------------------------------------
+		//OPERATIONS
 		
+		iterator	_lower_bound_from_root(_node *current, const key_type& key) const {
+			if (current == NULL || current == _end)
+				return (iterator(_end));
+			if (_comp(key, current->val_ptr->first) && current->left && _comp(key, current->left->val_ptr->first))
+				return (_lower_bound_from_root(current->left, key));
+			else if (_comp(current->val_ptr->first, key))
+				return (_lower_bound_from_root(current->right, key));
+			return (iterator(current));
+		};
 
+		iterator	_find_from_root(_node *current, const key_type& key) const {
+			if (current == NULL || current == _end)
+				return (iterator(_end));
+			if (_comp(key, current->val_ptr->first))
+				return (_find_from_root(current->left, key));
+			else if (_comp(current->val_ptr->first, key))
+				return (_find_from_root(current->right, key));
+			return (iterator(current));
+		};
+		
 		//-------------------------------------------------------------------------------------
 		//print tree
 		struct Trunk

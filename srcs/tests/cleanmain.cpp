@@ -778,7 +778,8 @@ void pair_tests() {
 	std::cout << (pairinstance >= paircopy) << std::endl;
 };
 
-void map_tests() {
+//missing max_size
+void map_other_functions() {
 	ft::map<int, int>	simple_inserts;
 	
 	for (int i = 12; i >= 0; i--)
@@ -845,6 +846,128 @@ void map_tests() {
 
 	for (; it_range_copy != map_assign_overload.end(); it_range_copy++)
 		std::cout << "begin key = " << it_range_copy->first << " value =  "<< it_range_copy->second << std::endl;
+
+	//adding new values to range_insert so that it is different than map_by_copy
+	for (int i = -12; i < -5; i++)
+		range_insert.insert(ft::make_pair(i, i + 2));
+	
+	std::cout << "\nRANGE INSERT" << std::endl;
+	it_range_copy = range_insert.begin();
+	for (; it_range_copy != range_insert.end(); it_range_copy++)
+		std::cout << "begin key = " << it_range_copy->first << " value =  "<< it_range_copy->second << std::endl;
+
+	std::cout << "\nMAP_BY_COPY" << std::endl;
+	it_range_copy = map_by_copy.begin();
+	for (; it_range_copy != map_by_copy.end(); it_range_copy++)
+		std::cout << "begin key = " << it_range_copy->first << " value =  "<< it_range_copy->second << std::endl;
+
+	std::cout << "\nSWAP" << std::endl;
+	range_insert.swap(map_by_copy);
+	
+	std::cout << "\nRANGE INSERT" << std::endl;
+	it_range_copy = range_insert.begin();
+	for (; it_range_copy != range_insert.end(); it_range_copy++)
+		std::cout << "begin key = " << it_range_copy->first << " value =  "<< it_range_copy->second << std::endl;
+
+	std::cout << "\nMAP_BY_COPY" << std::endl;
+	it_range_copy = map_by_copy.begin();
+	for (; it_range_copy != map_by_copy.end(); it_range_copy++)
+		std::cout << "begin key = " << it_range_copy->first << " value =  "<< it_range_copy->second << std::endl;
+
+	for (int i = -20; i < -12; i++)
+		range_insert.insert(ft::make_pair(i, i + 2));
+	std::cout << "\nRANGE INSERT" << std::endl;
+	it_range_copy = range_insert.begin();
+	for (; it_range_copy != range_insert.end(); it_range_copy++)
+		std::cout << "begin key = " << it_range_copy->first << " value =  "<< it_range_copy->second << std::endl;
+
+	ft::map<int, int>		simple_map;
+
+	for (int i = 0; i < 12; i++)
+		simple_map.insert( ft::make_pair(i, i-2));
+	
+	ft::map<int, int>::iterator		it_simple_map = simple_map.begin();
+	for (int i = 0; i < 4; i++)
+		it_simple_map++;
+
+	ft::map<int, int>::iterator		return_value;
+	return_value = simple_map.insert(it_simple_map, ft::make_pair(12, 12));
+	std::cout << "return_value->first = " << return_value->first << " second = " << return_value->second << std::endl;
+}
+
+void map_operations() {
+	ft::map<int, int>	map_for_operations;
+	
+	for (int i = -5; i < 0; i++)
+		map_for_operations.insert(ft::make_pair(i, i + 2));
+	
+	ft::vector< ft::pair<int, int> > 	range_for_insert;
+	for (int i = 0; i < 9; i++)
+		range_for_insert.push_back(ft::make_pair(i, i + 3));
+	
+	map_for_operations.insert(range_for_insert.begin(), range_for_insert.end());
+	std::cout<< map_for_operations.size() << std::endl;
+
+	ft::map<int, int>::iterator	it_operations;
+	it_operations = map_for_operations.find(6);
+	std::cout << "it operations == end ? " << std::boolalpha << (it_operations == map_for_operations.end()) << std::endl;
+	
+	it_operations = map_for_operations.find(-50);
+	std::cout << "it operations == end ? " << std::boolalpha << (it_operations == map_for_operations.end()) << std::endl;
+
+	std::cout << "Count for key == 6 : " << map_for_operations.count(6) << " Count for key == -50 : " << map_for_operations.count(-50) << std::endl;
+	
+	for (int i = -12; i < -5; i++)
+		map_for_operations.insert(ft::make_pair(i, i + 2));
+
+	for (int i = -12; i > -25; i -= 2)
+		map_for_operations.insert(ft::make_pair(i, i + 2));
+	// map_for_operations.print_tree();
+
+	it_operations = map_for_operations.lower_bound(-18);
+	std::cout << "it operations == end ? " << std::boolalpha << (it_operations == map_for_operations.end()) << std::endl;
+	std::cout << "lower bound(-18) == " << it_operations->first << std::endl; 
+	
+	it_operations = map_for_operations.lower_bound(-19);
+	std::cout << "it operations == end ? " << std::boolalpha << (it_operations == map_for_operations.end()) << std::endl;
+	std::cout << "lower bound(-19) == " << it_operations->first << std::endl; 
+	
+	it_operations = map_for_operations.upper_bound(-18);
+	std::cout << "it operations == end ? " << std::boolalpha << (it_operations == map_for_operations.end()) << std::endl;
+	std::cout << "upper_bound(-18) == " << it_operations->first << std::endl; 
+	
+	it_operations = map_for_operations.upper_bound(-19);
+	std::cout << "it operations == end ? " << std::boolalpha << (it_operations == map_for_operations.end()) << std::endl;
+	std::cout << "upper_bound(-19) == " << it_operations->first << std::endl; 
+
+	it_operations = map_for_operations.upper_bound(-24);
+	std::cout << "it operations == end ? " << std::boolalpha << (it_operations == map_for_operations.end()) << std::endl;
+	std::cout << "upper_bound(-24) == " << it_operations->first << std::endl; 
+
+	it_operations = map_for_operations.upper_bound(-29);
+	std::cout << "it operations == end ? " << std::boolalpha << (it_operations == map_for_operations.end()) << std::endl;
+	std::cout << "upper_bound(-29) == " << it_operations->first << std::endl; 
+
+	ft::map<char,int> mymap;
+	
+	mymap['a']=10;
+	mymap['b']=20;
+	mymap['c']=30;
+	
+	ft::pair<ft::map<char,int>::iterator,ft::map<char,int>::iterator> ret;
+	ret = mymap.equal_range('b');
+	
+	std::cout << "lower bound points to: ";
+	std::cout << ret.first->first << " => " << ret.first->second << '\n';
+	
+	std::cout << "upper bound points to: ";
+	std::cout << ret.second->first << " => " << ret.second->second << '\n';
+}
+
+void map_tests() {
+	map_operations();
+	// map_erase();
+	map_other_functions();
 };
 
 int main()

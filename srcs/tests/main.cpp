@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/05/02 18:58:25 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/05/03 15:45:28 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,6 @@ int main()
 	std::cout << TESTING << std::endl;
 	//--------------------------------------
 	
-	ft::map<char *, float> 		check_max_size;
 
-	std::cout << check_max_size.max_size() << std::endl;
 	return 0;
 }

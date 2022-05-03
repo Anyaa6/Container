@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 12:35:23 by abonnel           #+#    #+#             */
-/*   Updated: 2022/05/02 15:41:01 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/05/03 12:45:14 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ struct node {
 	node(bool flag) {
 		if (flag == END_NODE) {
 			//VALUE IS NOT EVEN ALLOCATED IN END NODE OF STD NOR CONSTRUCTED
+			val_ptr = val_alloc.allocate(1);
 			color = BLACK;
 			left = NULL;
 			right = NULL;
