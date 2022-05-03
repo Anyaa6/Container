@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:21 by abonnel           #+#    #+#             */
-/*   Updated: 2022/05/03 15:45:19 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/05/03 16:13:34 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ namespace ft
 		};
 
 		// size_type max_size() const {
-			// return (std::numeric_limits<size_type>::max() / sizeof(map<Key, T>));
+			// return (_node_alloc.max_size());
 		// };
 
 		void swap (map& x) {
@@ -174,7 +174,6 @@ namespace ft
 		
 		//-------------------------------------------------------------------------------------
 		//FIND
-		
 		mapped_type& operator[] (const key_type& k) {
 			return ((*((this->insert(make_pair(k,mapped_type()))).first)).second);
 		};
@@ -201,7 +200,16 @@ namespace ft
 		//-------------------------------------------------------------------------------------
 		//ERASE
 
-		// void erase (iterator position);
+		void erase (iterator position) {
+			if (_root == _end)
+				return;
+			//function to convert position to node
+			//if node has no child, set parent's pointer to null and get back memory
+			//if node had 1 child, bridge between its parent and its child and get back memory
+			//if node has 2 childs, choose biggest of left side or smallest of right side instead of him
+				//get back memory for him and set pointers previously pointing to switch element to null
+			//balance tree from position?
+		};
 		// size_type erase (const key_type& k);
 		// void erase (iterator first, iterator last);
 		
