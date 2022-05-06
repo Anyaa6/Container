@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:21 by abonnel           #+#    #+#             */
-/*   Updated: 2022/05/03 16:13:34 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/05/06 16:40:20 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,17 +199,74 @@ namespace ft
 
 		//-------------------------------------------------------------------------------------
 		//ERASE
+		
+		_node *_convert_iterator_to_node(_node *current, const iterator &position) {
+			if (current == _end || current == NULL)
+				return (_end);
+			if (_val_comp(*current->val_ptr, *position))
+				return (_convert_iterator_to_node(current->right, position));
+			if (_val_comp(*position, *current->val_ptr))
+				return (_convert_iterator_to_node(current->left, position));
+			return (current);
+		};
+		
+		/*
+		//links are not well made in the new route and deleted node gets deleted twice
+		void _erase_node_1_or_no_childs(_node *to_delete) {
+			_node *tmp = to_delete;
+			bool is_end = 0;
+
+			if ((to_delete)->left) {
+				to_delete = (to_delete)->left;
+			}
+			else {
+				std::cout << "(to_delete)->right == _end ? " << ((to_delete)->right == _end) << std::endl;
+				is_end = ((to_delete)->right == _end);
+				to_delete = (to_delete)->right;
+				std::cout << "to_delete = " << to_delete->val_ptr->first << std::endl;
+				// tmp = (to_delete)->right;
+			}
+			_delete_node(tmp);
+			// to_delete = tmp;
+			if (is_end)
+				_end = to_delete;
+			// std::cout << "printing tree in function " << std::endl;
+			// this->print_tree();
+		};
+		*/
 
 		void erase (iterator position) {
 			if (_root == _end)
 				return;
 			//function to convert position to node
-			//if node has no child, set parent's pointer to null and get back memory
-			//if node had 1 child, bridge between its parent and its child and get back memory
+			_node *to_delete = _convert_iterator_to_node(_root, position);
+			if (to_delete == _end)
+				return;
 			//if node has 2 childs, choose biggest of left side or smallest of right side instead of him
 				//get back memory for him and set pointers previously pointing to switch element to null
+			if (to_delete->right && to_delete->left) {
+				std::cout << "node has 2 childs" << std::endl;
+				// return;
+			}
+			//if node has no child, set parent's pointer to null and get back memory
+			//if node had 1 child, bridge between its parent and its child and get back memory
+			else {
+				
+				std::cout << "erase node with 1 or no child" << std::endl;
+				// _erase_node_1_or_no_childs(to_delete);
+			}
 			//balance tree from position?
 		};
+	
+		/*
+		//in std even if you use the iterator of another map, as long as it finds a corresponding key, then
+		//it will delete this node which will mess up the entire map structure
+		//but it is because it has access directly to the underlying pointer that the iterator holds
+		//map.erase(iterator_of_other_map)
+		//so here even if you call erase on "map" then it will actually destroy the node from "other_map"
+		//bc that is the map that the iterator belongs to
+		//since we do not have access to underlying pointer, behaviour will be different */
+		
 		// size_type erase (const key_type& k);
 		// void erase (iterator first, iterator last);
 		
@@ -347,7 +404,8 @@ namespace ft
 			_delete_node(current);
 		}
 		
-		void _delete_node(_node *node_to_destroy) {
+		void _delete_node(_node *&node_to_destroy) {
+			std::cout << "deleting " << node_to_destroy->val_ptr->first << std::endl;
 			_alloc.destroy((node_to_destroy)->val_ptr);
 			_alloc.deallocate((node_to_destroy)->val_ptr, 1);
 			_node_alloc.destroy(node_to_destroy);
