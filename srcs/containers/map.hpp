@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:21 by abonnel           #+#    #+#             */
-/*   Updated: 2022/05/06 16:40:20 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/05/10 09:05:17 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ namespace ft
 		
 		~map(){
 			clear();
+			_alloc.deallocate(_end->val_ptr, 1);
 			_node_alloc.destroy(_end);
 			_node_alloc.deallocate(_end, 1);
 		};
