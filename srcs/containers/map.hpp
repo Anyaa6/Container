@@ -6,7 +6,7 @@
 /*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:21 by abonnel           #+#    #+#             */
-/*   Updated: 2022/05/10 13:02:35 by ariane           ###   ########.fr       */
+/*   Updated: 2022/05/10 13:39:27 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,104 +206,7 @@ namespace ft
 
 		//-------------------------------------------------------------------------------------
 		//ERASE
-		
-		_node *_convert_iterator_to_node(_node *current, const iterator &position) {
-			if (current == _end || current == NULL)
-				return (_end);
-			if (_val_comp(*current->val_ptr, *position))
-				return (_convert_iterator_to_node(current->right, position));
-			if (_val_comp(*position, *current->val_ptr))
-				return (_convert_iterator_to_node(current->left, position));
-			return (current);
-		};
-		
-		/*
-		//links are not well made in the new route and deleted node gets deleted twice
-		void _erase_node_1_or_no_childs(_node *to_delete) {
-			_node *tmp = to_delete;
-			bool is_end = 0;
 
-			if ((to_delete)->left) {
-				to_delete = (to_delete)->left;
-			}
-			else {
-				std::cout << "(to_delete)->right == _end ? " << ((to_delete)->right == _end) << std::endl;
-				is_end = ((to_delete)->right == _end);
-				to_delete = (to_delete)->right;
-				std::cout << "to_delete = " << to_delete->val_ptr->first << std::endl;
-				// tmp = (to_delete)->right;
-			}
-			_delete_node(tmp);
-			// to_delete = tmp;
-			if (is_end)
-				_end = to_delete;
-			// std::cout << "printing tree in function " << std::endl;
-			// this->print_tree();
-		};
-		*/
-
-		_node **get_parent_ptr(_node const *to_delete) {
-			if (to_delete == _root)
-				return (&_root);
-				
-			_node *parent = to_delete->parent;
-			
-			if (parent->left == to_delete)
-				return (&parent->left);
-			//is right child - also takes _end
-			return (&parent->right);
-		};
-		
-		_node *get_child_ptr(_node const *to_delete) {
-			if (to_delete->left)
-				return (to_delete->left);
-			return (to_delete->right);
-		};
-
-		_node *get_next_smaller(_node const *to_delete) {
-			_node *next_smaller = to_delete->left;
-
-			while (next_smaller->right)
-				next_smaller = next_smaller->right;
-			return (next_smaller);
-		};
-		
-		//bridge from = adress of parent pointer to child to_delete
-		//bridge to = pointer to to_delete's child
-		//if node has 1 or no child, bridge between parent and child of deleted node
-		void	_erase_node_1_or_no_childs(_node *to_delete, bool erased_node) {
-			_node **bridge_from = get_parent_ptr(to_delete);
-			_node *bridge_to = get_child_ptr(to_delete); //no double pointer cause value changed is derived from ptr ->parent
-
-			if (to_delete == _begin)
-				((bridge_to == NULL) ? (_begin = to_delete->parent) : (_begin = bridge_to));
-			*bridge_from = bridge_to;
-			if (bridge_to != NULL)
-				bridge_to->parent = to_delete->parent;
-			if (erased_node == DELETE)
-				_delete_node(to_delete);
-		};		
-		
-		void	_replace_node(_node *former_node, _node *replacing_node, _node **at) {
-			*at = replacing_node;
-			
-			replacing_node->right = former_node->right;
-			replacing_node->left = former_node->left;
-			former_node->right->parent = replacing_node;
-			former_node->left->parent = replacing_node;			
-		};
-		
-		//if node has 2 childs, choose biggest of left side to replace it
-			//(not smallest of right side bc it could be _end)
-		void	_erase_node_2_childs(_node *to_delete) {
-			_node **bridge_from = get_parent_ptr(to_delete);
-			_node *replaces_deleted = get_next_smaller(to_delete);
-
-			_erase_node_1_or_no_childs(replaces_deleted, KEEP_NODE);
-			_replace_node(to_delete, replaces_deleted, bridge_from);
-			_delete_node(to_delete);
-		};
-		
 		void erase (iterator position) {
 			if (_root == _end)
 				return;
@@ -316,18 +219,20 @@ namespace ft
 				_erase_node_1_or_no_childs(to_delete, DELETE);
 			//balance tree (from position?)
 		};
-	
-		/*
-		//in std even if you use the iterator of another map, as long as it finds a corresponding key, then
-		//it will delete this node which will mess up the entire map structure
-		//but it is because it has access directly to the underlying pointer that the iterator holds
-		//map.erase(iterator_of_other_map)
-		//so here even if you call erase on "map" then it will actually destroy the node from "other_map"
-		//bc that is the map that the iterator belongs to
-		//since we do not have access to underlying pointer, behaviour will be different */
 		
-		// size_type erase (const key_type& k);
-		// void erase (iterator first, iterator last);
+		size_type erase (const key_type& k) {
+			iterator from_key = find(k);
+
+			if (from_key == end())
+				return 0;
+			this->erase(from_key);
+			return 1;
+		};
+
+		void erase (iterator first, iterator last) {
+			for (; first != last; first++)
+				this->erase(first);
+		};
 		
 		//-------------------------------------------------------------------------------------
 		//OPERATIONS
@@ -453,6 +358,91 @@ namespace ft
 			return (make_pair(iterator(current), false)); //keys are same
 		};
 
+		//-------------------------------------------------------------------------------------
+		//ERASE
+		/* in std even if you use the iterator of another map, as long as it finds a corresponding 
+		key, then it will delete this node which will mess up the entire map structure
+		but it is because it has access directly to the underlying pointer that the iterator holds
+		map.erase(iterator_of_other_map)
+		so here even if you call erase on "map" then it will actually destroy the node from "other_map"
+		bc that is the map that the iterator belongs to
+		since we do not have access to underlying pointer, behaviour will be different */
+		
+		_node *_convert_iterator_to_node(_node *current, const iterator &position) {
+			if (current == _end || current == NULL)
+				return (_end);
+			if (_val_comp(*current->val_ptr, *position))
+				return (_convert_iterator_to_node(current->right, position));
+			if (_val_comp(*position, *current->val_ptr))
+				return (_convert_iterator_to_node(current->left, position));
+			return (current);
+		};
+
+		_node **_get_parent_ptr(_node const *to_delete) {
+			if (to_delete == _root)
+				return (&_root);
+				
+			_node *parent = to_delete->parent;
+			
+			if (parent->left == to_delete)
+				return (&parent->left);
+			//is right child - also takes _end
+			return (&parent->right);
+		};
+		
+		_node *_get_child_ptr(_node const *to_delete) {
+			if (to_delete->left)
+				return (to_delete->left);
+			return (to_delete->right);
+		};
+
+		_node *_get_next_smaller(_node const *to_delete) {
+			_node *next_smaller = to_delete->left;
+
+			while (next_smaller->right)
+				next_smaller = next_smaller->right;
+			return (next_smaller);
+		};
+		
+		//bridge from = adress of parent pointer to child to_delete
+		//bridge to = pointer to to_delete's child
+		//if node has 1 or no child, bridge between parent and child of deleted node
+		void	_erase_node_1_or_no_childs(_node *to_delete, bool erased_node) {
+			_node **bridge_from = _get_parent_ptr(to_delete);
+			_node *bridge_to = _get_child_ptr(to_delete); //no double pointer cause value changed is derived from ptr ->parent
+
+			if (to_delete == _begin && erased_node == DELETE)
+				((bridge_to == NULL) ? (_begin = to_delete->parent) : (_begin = bridge_to));
+			*bridge_from = bridge_to;
+			if (bridge_to != NULL)
+				bridge_to->parent = to_delete->parent;
+			if (erased_node == DELETE)
+				_delete_node(to_delete);
+		};		
+		
+		void	_replace_node(_node const *former_node, _node *replacing_node, _node **at) {
+			*at = replacing_node;
+			
+			replacing_node->parent = former_node->parent;
+			replacing_node->right = former_node->right;
+			replacing_node->left = former_node->left;
+			if (replacing_node->right)
+				replacing_node->right->parent = replacing_node;
+			if (replacing_node->left)
+				replacing_node->left->parent = replacing_node;
+		};
+		
+		//if node has 2 childs, choose biggest of left side to replace it
+			//(not smallest of right side bc it could be _end)
+		void	_erase_node_2_childs(_node *to_delete) {
+			_node **bridge_from = _get_parent_ptr(to_delete);
+			_node *replaces_deleted = _get_next_smaller(to_delete);
+
+			_erase_node_1_or_no_childs(replaces_deleted, KEEP_NODE);
+			_replace_node(to_delete, replaces_deleted, bridge_from);
+			_delete_node(to_delete);
+		};
+		
 		//-------------------------------------------------------------------------------------
 		//CLEAR DELETE COPY
 		void	_clear_tree(_node *current) {
