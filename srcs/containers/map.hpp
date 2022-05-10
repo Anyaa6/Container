@@ -6,7 +6,7 @@
 /*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:21 by abonnel           #+#    #+#             */
-/*   Updated: 2022/05/10 09:05:17 by ariane           ###   ########.fr       */
+/*   Updated: 2022/05/10 13:02:35 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@
 #define RESET 		  "\033[0m"
 #define BLACK_COLOR   "\033[30m"      /* Black */
 #define RED_COLOR     "\033[31m"      /* Red */
+
+enum erase { DELETE = 1, KEEP_NODE = 0 };
 
 namespace ft 
 {
@@ -138,12 +140,16 @@ namespace ft
 			// return (_node_alloc.max_size());
 		// };
 
+		//LEEEAAAAAAKS
+		//PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
 		void swap (map& x) {
 			map		tmp(x);
 			map		*tmp_ptr = &tmp;
 
 			x = *this;
 			*this = *tmp_ptr;
+
+			// tmp.~map();
 		}
 		
 		//-------------------------------------------------------------------------------------
@@ -236,27 +242,79 @@ namespace ft
 		};
 		*/
 
+		_node **get_parent_ptr(_node const *to_delete) {
+			if (to_delete == _root)
+				return (&_root);
+				
+			_node *parent = to_delete->parent;
+			
+			if (parent->left == to_delete)
+				return (&parent->left);
+			//is right child - also takes _end
+			return (&parent->right);
+		};
+		
+		_node *get_child_ptr(_node const *to_delete) {
+			if (to_delete->left)
+				return (to_delete->left);
+			return (to_delete->right);
+		};
+
+		_node *get_next_smaller(_node const *to_delete) {
+			_node *next_smaller = to_delete->left;
+
+			while (next_smaller->right)
+				next_smaller = next_smaller->right;
+			return (next_smaller);
+		};
+		
+		//bridge from = adress of parent pointer to child to_delete
+		//bridge to = pointer to to_delete's child
+		//if node has 1 or no child, bridge between parent and child of deleted node
+		void	_erase_node_1_or_no_childs(_node *to_delete, bool erased_node) {
+			_node **bridge_from = get_parent_ptr(to_delete);
+			_node *bridge_to = get_child_ptr(to_delete); //no double pointer cause value changed is derived from ptr ->parent
+
+			if (to_delete == _begin)
+				((bridge_to == NULL) ? (_begin = to_delete->parent) : (_begin = bridge_to));
+			*bridge_from = bridge_to;
+			if (bridge_to != NULL)
+				bridge_to->parent = to_delete->parent;
+			if (erased_node == DELETE)
+				_delete_node(to_delete);
+		};		
+		
+		void	_replace_node(_node *former_node, _node *replacing_node, _node **at) {
+			*at = replacing_node;
+			
+			replacing_node->right = former_node->right;
+			replacing_node->left = former_node->left;
+			former_node->right->parent = replacing_node;
+			former_node->left->parent = replacing_node;			
+		};
+		
+		//if node has 2 childs, choose biggest of left side to replace it
+			//(not smallest of right side bc it could be _end)
+		void	_erase_node_2_childs(_node *to_delete) {
+			_node **bridge_from = get_parent_ptr(to_delete);
+			_node *replaces_deleted = get_next_smaller(to_delete);
+
+			_erase_node_1_or_no_childs(replaces_deleted, KEEP_NODE);
+			_replace_node(to_delete, replaces_deleted, bridge_from);
+			_delete_node(to_delete);
+		};
+		
 		void erase (iterator position) {
 			if (_root == _end)
 				return;
-			//function to convert position to node
 			_node *to_delete = _convert_iterator_to_node(_root, position);
 			if (to_delete == _end)
 				return;
-			//if node has 2 childs, choose biggest of left side or smallest of right side instead of him
-				//get back memory for him and set pointers previously pointing to switch element to null
-			if (to_delete->right && to_delete->left) {
-				std::cout << "node has 2 childs" << std::endl;
-				// return;
-			}
-			//if node has no child, set parent's pointer to null and get back memory
-			//if node had 1 child, bridge between its parent and its child and get back memory
-			else {
-				
-				std::cout << "erase node with 1 or no child" << std::endl;
-				// _erase_node_1_or_no_childs(to_delete);
-			}
-			//balance tree from position?
+			if (to_delete->right && to_delete->left)
+				_erase_node_2_childs(to_delete);
+			else
+				_erase_node_1_or_no_childs(to_delete, DELETE);
+			//balance tree (from position?)
 		};
 	
 		/*
@@ -406,7 +464,7 @@ namespace ft
 		}
 		
 		void _delete_node(_node *&node_to_destroy) {
-			std::cout << "deleting " << node_to_destroy->val_ptr->first << std::endl;
+			// std::cout << "deleting " << node_to_destroy->val_ptr->first << std::endl;
 			_alloc.destroy((node_to_destroy)->val_ptr);
 			_alloc.deallocate((node_to_destroy)->val_ptr, 1);
 			_node_alloc.destroy(node_to_destroy);

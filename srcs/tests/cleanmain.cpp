@@ -861,8 +861,8 @@ void map_other_functions() {
 	for (; it_range_copy != map_by_copy.end(); it_range_copy++)
 		std::cout << "begin key = " << it_range_copy->first << " value =  "<< it_range_copy->second << std::endl;
 
-	std::cout << "\nSWAP" << std::endl;
-	range_insert.swap(map_by_copy);
+	// std::cout << "\nSWAP" << std::endl;
+	// range_insert.swap(map_by_copy);
 	
 	std::cout << "\nRANGE INSERT" << std::endl;
 	it_range_copy = range_insert.begin();
@@ -964,9 +964,72 @@ void map_operations() {
 	std::cout << ret.second->first << " => " << ret.second->second << '\n';
 }
 
+void	map_erase() {
+	ft::map<int, int> 	map_erase_test;
+
+	for (int i = 0; i < 5; i++)
+		map_erase_test.insert(ft::make_pair(i, i+2));
+	
+	std::cout << "\nPrinting map_erase" <<std::endl;
+	for (ft::map<int, int>::iterator it_map_erase = map_erase_test.begin(); it_map_erase != map_erase_test.end(); it_map_erase++)
+		std::cout << "it->first = " << it_map_erase->first << std::endl;
+	std::cout << "\n\n" << std::endl;
+
+	ft::map<int, int>::iterator it_erase;
+	it_erase = ++map_erase_test.begin();
+	std::cout << "key to delete is : " << it_erase->first << std::endl;
+	map_erase_test.erase(it_erase);
+
+	for (ft::map<int, int>::iterator it_map_erase = map_erase_test.begin(); it_map_erase != map_erase_test.end(); it_map_erase++)
+		std::cout << "it->first = " << it_map_erase->first << std::endl;
+
+	it_erase = (----(map_erase_test.end()));
+	map_erase_test.erase(it_erase);
+
+	for (ft::map<int, int>::iterator it_map_erase = map_erase_test.begin(); it_map_erase != map_erase_test.end(); it_map_erase++)
+		std::cout << "it->first = " << it_map_erase->first << std::endl;
+
+	for (int i = -5; i < 0; i++)
+		map_erase_test.insert(ft::make_pair(i, i+2));
+		
+	for (int i = -6; i > -10; i--)
+		map_erase_test.insert(ft::make_pair(i, i+2));
+
+	ft::map<int, int>::iterator it = map_erase_test.begin();
+	for (int i = 0; i < 6; i++)
+		it++;
+	
+	std::cout << "\nPrinting map_erase" <<std::endl;
+	std::cout << "key to delete is : " << it->first << std::endl;
+	map_erase_test.erase(it);
+	
+
+	std::cout << "\nPrinting map_erase" <<std::endl;
+	std::cout << "key to delete is : " << (map_erase_test.begin())->first << std::endl;
+	map_erase_test.erase(map_erase_test.begin());
+
+	std::cout << "\nPrinting map_erase" <<std::endl;
+	std::cout << "key to delete is : " << (--map_erase_test.end())->first << std::endl;
+	map_erase_test.erase(--map_erase_test.end());
+
+	std::cout << "\nPrinting map_erase" <<std::endl;
+	std::cout << "key to delete is : " << (--map_erase_test.end())->first << std::endl;
+	map_erase_test.erase(--map_erase_test.end());
+
+	it_erase = ++map_erase_test.begin();
+	std::cout << "key to delete is : " << it_erase->first << std::endl;
+	map_erase_test.erase(it_erase);
+
+	it_erase = (----(map_erase_test.end()));
+	map_erase_test.erase(it_erase);
+
+	for (ft::map<int, int>::iterator it_map_erase = map_erase_test.begin(); it_map_erase != map_erase_test.end(); it_map_erase++)
+		std::cout << "it->first = " << it_map_erase->first << std::endl;
+};
+
 void map_tests() {
 	map_operations();
-	// map_erase();
+	map_erase();
 	map_other_functions();
 };
 
