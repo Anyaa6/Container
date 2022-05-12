@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:21 by abonnel           #+#    #+#             */
-/*   Updated: 2022/05/10 13:39:27 by ariane           ###   ########.fr       */
+/*   Updated: 2022/05/12 13:48:10 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,9 +104,11 @@ namespace ft
 		
 		~map(){
 			clear();
-			_alloc.deallocate(_end->val_ptr, 1);
-			_node_alloc.destroy(_end);
-			_node_alloc.deallocate(_end, 1);
+			if (_end) {
+				_alloc.deallocate(_end->val_ptr, 1);
+				_node_alloc.destroy(_end);
+				_node_alloc.deallocate(_end, 1);
+			}
 		};
 
 		void clear() {
@@ -136,21 +138,40 @@ namespace ft
 			return (_size == 0);
 		};
 
-		// size_type max_size() const {
-			// return (_node_alloc.max_size());
-		// };
+		//depends on map implementation so cannot be same as std since _node_size will be different
+		size_type max_size() const {
+			return std::numeric_limits<difference_type>::max();
+		};
 
-		//LEEEAAAAAAKS
-		//PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+		void	_swap_between(map &x, map &y) {
+			x._root = y._root;
+			x._end = y._end;
+			x._begin = y._begin;
+			x._size = y._size;
+			x._alloc = y._alloc;
+			x._node_alloc = y._node_alloc;
+			x._comp = y._comp;
+			x._val_comp = y._val_comp;
+		};
+
+		void _set_to_zero(map *tmp) {
+			tmp->_root = NULL;
+			tmp->_end = NULL;
+			tmp->_begin = NULL;
+		};
+			
 		void swap (map& x) {
-			map		tmp(x);
-			map		*tmp_ptr = &tmp;
+			map tmp;
 
-			x = *this;
-			*this = *tmp_ptr;
-
-			// tmp.~map();
-		}
+			_alloc.deallocate(tmp._end->val_ptr, 1);
+			_node_alloc.destroy(tmp._end);
+			_node_alloc.deallocate(tmp._end, 1);
+			
+			_swap_between(tmp, *this);
+			_swap_between(*this, x);
+			_swap_between(x, tmp);
+			_set_to_zero(&tmp);
+		};
 		
 		//-------------------------------------------------------------------------------------
 		//ITERATORS
@@ -217,7 +238,7 @@ namespace ft
 				_erase_node_2_childs(to_delete);
 			else
 				_erase_node_1_or_no_childs(to_delete, DELETE);
-			//balance tree (from position?)
+			//BALANCE TREE (from position?)
 		};
 		
 		size_type erase (const key_type& k) {
@@ -226,12 +247,14 @@ namespace ft
 			if (from_key == end())
 				return 0;
 			this->erase(from_key);
+			//BALANCE TREE (from position?)
 			return 1;
 		};
 
 		void erase (iterator first, iterator last) {
 			for (; first != last; first++)
 				this->erase(first);
+			//BALANCE TREE (from position?)
 		};
 		
 		//-------------------------------------------------------------------------------------
@@ -348,7 +371,7 @@ namespace ft
 		pair<iterator,bool>	_insert_from_root(const value_type& val, _node *&current, _node *&parent) {
 			if (current == _end || current == NULL) {
 				_insert_do_end_root_begin(current, _node(val, parent));
-				//balance - beware to not change current for return value
+				//BALANCE TREE - beware to not change current for return value
 				return (make_pair(iterator(current), true));
 			}
 			if (_val_comp(val, *current->val_ptr))

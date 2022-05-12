@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 12:29:39 by abonnel           #+#    #+#             */
-/*   Updated: 2022/05/03 10:57:10 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/05/12 11:36:32 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,13 @@ int main()
 	// std::cout << simple_map.end()->first << std::endl;
 	
 	
-	std::map<int, int>::iterator		it_simple_map = begin();
+	std::map<int, int>::iterator		it_simple_map = simple_map.begin();
 	for (int i = 0; i < 4; i++)
 		it_simple_map++;
 
 	simple_map.insert(it_simple_map, std::make_pair(12, 12));
+
+	simple_map.swap(simple_map);
 
 	return 0;
 }

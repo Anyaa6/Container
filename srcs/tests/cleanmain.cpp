@@ -778,7 +778,6 @@ void pair_tests() {
 	std::cout << (pairinstance >= paircopy) << std::endl;
 };
 
-//missing max_size
 void map_other_functions() {
 	ft::map<int, int>	simple_inserts;
 	
@@ -861,8 +860,8 @@ void map_other_functions() {
 	for (; it_range_copy != map_by_copy.end(); it_range_copy++)
 		std::cout << "begin key = " << it_range_copy->first << " value =  "<< it_range_copy->second << std::endl;
 
-	// std::cout << "\nSWAP" << std::endl;
-	// range_insert.swap(map_by_copy);
+	std::cout << "\nSWAP" << std::endl;
+	range_insert.swap(map_by_copy);
 	
 	std::cout << "\nRANGE INSERT" << std::endl;
 	it_range_copy = range_insert.begin();

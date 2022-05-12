@@ -31,12 +31,12 @@ elif [ "$1" == "tester" ]; then
 	rm -f output_ft output_std
 
 	make fclean
-	make tester DFLAGS=-Dstd_lib=0
-	./Container > output_ft
-	
-	make fclean
 	make tester DFLAGS=-Dstd_lib=1
 	./Container > output_std
+
+	make fclean
+	make tester DFLAGS=-Dstd_lib=0
+	./Container > output_ft
 	
 	diff output_ft output_std
 
