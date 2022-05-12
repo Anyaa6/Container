@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/05/12 13:44:13 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/05/12 13:51:17 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,6 @@ int main()
 {
 	std::cout << TESTING << std::endl;
 	//--------------------------------------
-	//TEST ON MQAP WITH A SINGLE NODE
-	ft::map<int, int> 	map_erase_test;
-
-	// for (int i = 0; i < 5; i++)
-		// map_erase_test.insert(ft::make_pair(i, i+2));
-// 
-	// for (int i = -5; i < 0; i++)
-		// map_erase_test.insert(ft::make_pair(i, i+2));
-		// 
-	// for (int i = -6; i > -10; i--)
-		// map_erase_test.insert(ft::make_pair(i, i+2));
-
-	std::cout << map_erase_test.max_size() << std::endl;
+	
 	return 0;
 }
