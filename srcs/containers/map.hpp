@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:21 by abonnel           #+#    #+#             */
-/*   Updated: 2022/05/16 16:37:07 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/05/16 16:56:28 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -370,11 +370,11 @@ namespace ft
 			std::cout << "grandparent->right->second = " << grandparent->right->val_ptr->second << std::endl;
 			std::cout << "_end->first = " << _end->val_ptr->first << std::endl;
 			std::cout << "_end->second = " << _end->val_ptr->second << std::endl;
-			*/
 			if (uncle == NULL)
 				std::cout << "UNCLE is NULL" << std::endl;
 			else
 				std::cout << "uncle = " << uncle->val_ptr->first << std::endl;
+			*/
 			
 			if (uncle == NULL)
 				return BLACK;
@@ -401,8 +401,8 @@ namespace ft
 		}
 
 		void _left_rotate(_node *down, _node *up, _node* switch_parent) {
-			std::cout << "down = " << down->val_ptr->first << std::endl;
-			std::cout << "up = " << up->val_ptr->first << std::endl;
+			// std::cout << "down = " << down->val_ptr->first << std::endl;
+			// std::cout << "up = " << up->val_ptr->first << std::endl;
 			
 			if (down == _root)
 				_root = up;
@@ -421,8 +421,8 @@ namespace ft
 		};
 
 		void _right_rotate(_node *down, _node *up, _node* switch_parent) {
-			std::cout << "down = " << down->val_ptr->first << std::endl;
-			std::cout << "up = " << up->val_ptr->first << std::endl;
+			// std::cout << "down = " << down->val_ptr->first << std::endl;
+			// std::cout << "up = " << up->val_ptr->first << std::endl;
 			
 			if (down == _root)
 				_root = up;
@@ -440,7 +440,42 @@ namespace ft
 			up->right = down;
 		};
 		
-		//granparent always exist bc even if one node then it does a loop : node -> root -> node -> root
+
+		void _black_uncle_violation(_node *current, _node *parent, _node *grandparent) {
+			int node_alignement = _nodes_alignement(current, parent, grandparent);
+			
+			if (node_alignement <= LINE) {
+				if (node_alignement == LINE_RIGHT)
+					_left_rotate(grandparent, parent, parent->left);
+				if (node_alignement == LINE_LEFT)
+					_right_rotate(grandparent, parent, parent->right);
+				_switch_color(grandparent, parent, NULL);
+			}
+			else if (node_alignement >= TRIANGLE) {
+				if (node_alignement == TRIANGLE_RIGHT)
+					_right_rotate(parent, current, current->right);
+				if (node_alignement == TRIANGLE_LEFT)
+					_left_rotate(parent, current, current->left);
+				_balance_insertion(parent, parent->parent, parent->parent->parent);
+			}
+		};
+		
+		void _balance_insertion(_node *current, _node *parent, _node *grandparent) {
+			if (_root == current)
+				current->color = BLACK;
+ 			else if (parent->color == RED)
+			{
+				bool uncle_color = _get_uncle_color(parent, grandparent);
+				if (uncle_color == RED){
+					_switch_color(grandparent, grandparent->left, grandparent->right);
+					_balance_insertion(grandparent, grandparent->parent, grandparent->parent->parent);
+				}
+				else if (uncle_color == BLACK)
+					_black_uncle_violation(current, parent, grandparent);
+			}
+		};
+
+		/*
 		void _balance_insertion(_node *current, _node *parent, _node *grandparent) {
 			//if added node is root then color it in black
 			if (_root == current)
@@ -482,17 +517,17 @@ namespace ft
 					}
 				}				
 			}
-		};
+		};*/
 
 		pair<iterator,bool>	_insert_from_root(const value_type& val, _node *&current, _node *&parent) {
 			if (current == _end || current == NULL) {
 				_insert_do_end_root_begin(current, _node(val, parent));
 				//BALANCE TREE - beware to not change current for return value
 				// std::cout << "before " << current->val_ptr->first << std::endl;
-				print_tree();
+				// print_tree();
 				_balance_insertion(current, current->parent, current->parent->parent);
-				print_tree();
-				std::cout << "\n\n" << std::endl;
+				// print_tree();
+				// std::cout << "\n\n" << std::endl;
 				// std::cout << "after " << current->val_ptr->first << std::endl;
 				return (make_pair(iterator(current), true));
 			}
