@@ -6,14 +6,14 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 12:35:23 by abonnel           #+#    #+#             */
-/*   Updated: 2022/05/03 12:45:14 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/05/16 15:03:47 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef NODE_HPP
 #define NODE_HPP
 
-enum RBtree { RED, BLACK };
+enum RBtree_color { RED = 0, BLACK = 1};
 enum node_constructor_flag { END_NODE };
 
 namespace ft {

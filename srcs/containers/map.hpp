@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:21 by abonnel           #+#    #+#             */
-/*   Updated: 2022/05/12 13:51:09 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/05/16 16:37:07 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 #include <memory>
 #include <functional>
 #include <limits>
-#include <map>//DELEEEETE
 #include "../utils/pair.hpp"
 #include "../utils/node.hpp"
 #include "../iterators/bidirectional_iterator.hpp"
@@ -25,6 +24,7 @@
 #define RED_COLOR     "\033[31m"      /* Red */
 
 enum erase { DELETE = 1, KEEP_NODE = 0 };
+enum node_alignement {LINE_LEFT, LINE_RIGHT, LINE, TRIANGLE, TRIANGLE_LEFT, TRIANGLE_RIGHT};
 
 namespace ft 
 {
@@ -142,23 +142,6 @@ namespace ft
 		//depends on map implementation so cannot be same as std since _node_size will be different
 		size_type max_size() const {
 			return std::numeric_limits<difference_type>::max();
-		};
-
-		void	_swap_between(map &x, map &y) {
-			x._root = y._root;
-			x._end = y._end;
-			x._begin = y._begin;
-			x._size = y._size;
-			x._alloc = y._alloc;
-			x._node_alloc = y._node_alloc;
-			x._comp = y._comp;
-			x._val_comp = y._val_comp;
-		};
-
-		void _set_to_zero(map *tmp) {
-			tmp->_root = NULL;
-			tmp->_end = NULL;
-			tmp->_begin = NULL;
 		};
 			
 		void swap (map& x) {
@@ -323,7 +306,10 @@ namespace ft
 		//TO DELEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEETE
 		void print_tree() {
 			_print_tree(_root, NULL, false, _end);}
-			
+
+	
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++		
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++		
 	private:
 		_node 			*_root;
 		_node			*_end;
@@ -369,10 +355,145 @@ namespace ft
 				_begin = current;
 		};
 
+		bool _get_uncle_color(_node *parent, _node *grandparent) {
+			_node *uncle;
+
+			if (grandparent->left == parent)
+				uncle = grandparent->right;
+			else
+				uncle = grandparent->left;
+			
+			/*
+			std::cout << "parent = " << parent->val_ptr->first << std::endl;
+			std::cout << "grandparent = " << grandparent->val_ptr->first << std::endl;
+			std::cout << "grandparent->right->first = " << grandparent->right->val_ptr->first << std::endl;
+			std::cout << "grandparent->right->second = " << grandparent->right->val_ptr->second << std::endl;
+			std::cout << "_end->first = " << _end->val_ptr->first << std::endl;
+			std::cout << "_end->second = " << _end->val_ptr->second << std::endl;
+			*/
+			if (uncle == NULL)
+				std::cout << "UNCLE is NULL" << std::endl;
+			else
+				std::cout << "uncle = " << uncle->val_ptr->first << std::endl;
+			
+			if (uncle == NULL)
+				return BLACK;
+			return uncle->color;
+		};
+
+		void	_switch_color(_node *grandparent, _node *left_child, _node *right_child) {
+			if (grandparent)
+				grandparent->color = !grandparent->color;
+			if (left_child)
+				left_child->color = !left_child->color;
+			if (right_child)
+				right_child->color = !right_child->color;
+		};
+
+		int _nodes_alignement(_node const *current, _node const *parent, _node const *grandparent) {
+			if (grandparent->left == parent && parent->left == current) 
+				return LINE_LEFT;
+			else if (grandparent->right == parent && parent->right == current)
+				return LINE_RIGHT;
+			else if (grandparent->right == parent && parent->left == current)
+				return TRIANGLE_RIGHT;
+			return TRIANGLE_LEFT;
+		}
+
+		void _left_rotate(_node *down, _node *up, _node* switch_parent) {
+			std::cout << "down = " << down->val_ptr->first << std::endl;
+			std::cout << "up = " << up->val_ptr->first << std::endl;
+			
+			if (down == _root)
+				_root = up;
+			else if (down->parent->right == down) 
+				down->parent->right = up;
+			else
+				down->parent->left = up;
+			up->parent = down->parent;
+			
+			down->right = switch_parent;
+			if (switch_parent)
+				switch_parent->parent = down;
+			
+			down->parent = up;
+			up->left = down;
+		};
+
+		void _right_rotate(_node *down, _node *up, _node* switch_parent) {
+			std::cout << "down = " << down->val_ptr->first << std::endl;
+			std::cout << "up = " << up->val_ptr->first << std::endl;
+			
+			if (down == _root)
+				_root = up;
+			else if (down->parent->right == down) 
+				down->parent->right = up;
+			else
+				down->parent->left = up;
+			up->parent = down->parent;
+			
+			down->left = switch_parent;
+			if (switch_parent)
+				switch_parent->parent = down;
+			
+			down->parent = up;
+			up->right = down;
+		};
+		
+		//granparent always exist bc even if one node then it does a loop : node -> root -> node -> root
+		void _balance_insertion(_node *current, _node *parent, _node *grandparent) {
+			//if added node is root then color it in black
+			if (_root == current)
+				current->color = BLACK;
+			//if parent is RED -> violation
+ 			else if (parent->color == RED)
+			{
+				bool uncle_color = _get_uncle_color(parent, grandparent);
+				std::cout << "For current = " << current->val_ptr->first << " with color = " << (current->color == RED ? "RED" : "BLACK") << "\nuncle_color = " << (uncle_color == RED ? "RED\n" : "BLACK\n") << std::endl;
+				
+				//if uncle is also red do recoloring and then set GRANDPARENT
+				//as the node to be checked for violations recursively
+				if (uncle_color == RED){
+					_switch_color(grandparent, grandparent->left, grandparent->right);
+					_balance_insertion(grandparent, grandparent->parent, grandparent->parent->parent);
+				}
+				//if uncle is black
+				else if (uncle_color == BLACK) {
+					int node_alignement = _nodes_alignement(current, parent, grandparent);
+					//if line shape then rotate GRANDPARENT to the opposite side of node so that parent becomes top 
+					//and recolor PARENT and GRANDPARENT
+					if (node_alignement <= LINE) {
+						std::cout << "LINE" << std::endl;
+						if (node_alignement == LINE_RIGHT)
+							_left_rotate(grandparent, parent, parent->left);
+						if (node_alignement == LINE_LEFT)
+							_right_rotate(grandparent, parent, parent->right);
+						_switch_color(grandparent, parent, NULL);
+					}
+					//if triangle formation then rotate PARENT to the opposite side of node so that becomes line shape, with PARENT
+					//being now the VIOLATING node, so call balancing recursively on HIM/PARENT
+					else if (node_alignement >= TRIANGLE) {
+						std::cout << "TRIANGLE" << std::endl;
+						if (node_alignement == TRIANGLE_RIGHT)
+							_right_rotate(parent, current, current->right);
+						if (node_alignement == TRIANGLE_LEFT)
+							_left_rotate(parent, current, current->left);
+						_balance_insertion(parent, parent->parent, parent->parent->parent);
+					}
+				}				
+			}
+		};
+
 		pair<iterator,bool>	_insert_from_root(const value_type& val, _node *&current, _node *&parent) {
 			if (current == _end || current == NULL) {
 				_insert_do_end_root_begin(current, _node(val, parent));
 				//BALANCE TREE - beware to not change current for return value
+				// std::cout << "before " << current->val_ptr->first << std::endl;
+				print_tree();
+				_balance_insertion(current, current->parent, current->parent->parent);
+				print_tree();
+				std::cout << "\n\n" << std::endl;
+				// std::cout << "after " << current->val_ptr->first << std::endl;
 				return (make_pair(iterator(current), true));
 			}
 			if (_val_comp(val, *current->val_ptr))
@@ -468,7 +589,7 @@ namespace ft
 		};
 		
 		//-------------------------------------------------------------------------------------
-		//CLEAR DELETE COPY
+		//CLEAR DELETE COPY SWAP
 		void	_clear_tree(_node *current) {
 			if (current == NULL || current == _end)
 				return;
@@ -492,6 +613,23 @@ namespace ft
 			_insert_do_end_root_begin(this_current, _node(*x_current->val_ptr, this_parent));
 			_map_by_copy(x_current->left, x_end, this_current->left, this_current);
 			_map_by_copy(x_current->right, x_end, this_current->right, this_current);
+		};
+
+		void	_swap_between(map &x, map &y) {
+			x._root = y._root;
+			x._end = y._end;
+			x._begin = y._begin;
+			x._size = y._size;
+			x._alloc = y._alloc;
+			x._node_alloc = y._node_alloc;
+			x._comp = y._comp;
+			x._val_comp = y._val_comp;
+		};
+
+		void _set_to_zero(map *tmp) {
+			tmp->_root = NULL;
+			tmp->_end = NULL;
+			tmp->_begin = NULL;
 		};
 
 		//-------------------------------------------------------------------------------------

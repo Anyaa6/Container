@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/05/12 13:51:17 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/05/16 16:38:29 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,28 @@ int main()
 {
 	std::cout << TESTING << std::endl;
 	//--------------------------------------
+	//tester les retours de insert avec et sans balancing pour voir si current modifié
+	ft::map<int, int>		balance_test;
+
+	for (int i = 0; i < 2; i++)
+		balance_test.insert(ft::make_pair(i, i+2));
+
+	balance_test.insert(ft::make_pair(-2, -2+2));
+	balance_test.insert(ft::make_pair(2, 2+2));
+	balance_test.insert(ft::make_pair(7, 3+2));
+	balance_test.insert(ft::make_pair(4, 3+2));
+	balance_test.insert(ft::make_pair(5, 3+2));
+	balance_test.insert(ft::make_pair(7, 3+2));
+	balance_test.insert(ft::make_pair(4, 4+2));
+	balance_test.insert(ft::make_pair(5, 4+2));
+	balance_test.insert(ft::make_pair(6, 4+2));
+	balance_test.insert(ft::make_pair(7, 4+2));
+	
+	//left side
+	balance_test.insert(ft::make_pair(-3, 4+2));
+	balance_test.insert(ft::make_pair(-4, 4+2));
+	balance_test.insert(ft::make_pair(-8, 4+2));
+	balance_test.print_tree();
 	
 	return 0;
 }
