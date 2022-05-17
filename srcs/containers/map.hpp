@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:21 by abonnel           #+#    #+#             */
-/*   Updated: 2022/05/17 15:56:15 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/05/17 17:46:28 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,9 @@
 #define BLACK_COLOR   "\033[30m"      /* Black */
 #define RED_COLOR     "\033[31m"      /* Red */
 
-enum erase { DELETE = 1, KEEP_NODE = 0 };
-enum node_alignement {LINE_LEFT, LINE_RIGHT, LINE, TRIANGLE, TRIANGLE_LEFT, TRIANGLE_RIGHT};
+enum e_erase { DELETE = 1, KEEP_NODE = 0 };
+enum e_sibling_children_situation { BOTH_BLACK, RED_CHILD_LINE, RED_CHILD_TRIANGLE };
+enum e_node_alignement {LINE_LEFT, LINE_RIGHT, LINE, TRIANGLE, TRIANGLE_LEFT, TRIANGLE_RIGHT};
 
 namespace ft 
 {
@@ -296,24 +297,100 @@ namespace ft
 			return (replaces_deleted);
 		};
 
+		_node *_get_sibling(_node *current, _node *parent) {
+			if (parent->left == current)
+				return (parent->right);
+			return (parent->left);
+		};
+
+		bool _is_on_right(_node *child) {
+			if (child->parent->right == child)
+				return true;
+			return false;
+		};
+
+		bool _is_on_left(_node *child) {
+			if (child->parent->left == child)
+				return true;
+			return false;
+		};
+
+		bool _childs_are_black(_node *sibling) {
+			if ((sibling->left == NULL || sibling->left->color == BLACK)
+			&& (sibling->right == NULL || sibling->right->color == BLACK))
+				return true;
+			return false;
+		};
+		
+		_node *_inner_child(_node *sibling) {
+			if (_is_on_left(sibling))
+				return (sibling->right);
+			return (sibling->left);
+		};
+
+		_node *_outer_child(_node *sibling) {
+			if (_is_on_left(sibling))
+				return (sibling->left);
+			return (sibling->right);
+		};
+
+
+		bool _outer_child_is_black(_node *sibling) {
+			if ((_is_on_right(sibling) && (sibling->right == NULL || sibling->right->color == BLACK))
+				|| (_is_on_left(sibling) && (sibling->left == NULL || sibling->left->color == BLACK)))
+				return true;
+			return false;			
+		};
+
+		bool _outer_child_is_red(_node *sibling) {
+			if ((_is_on_right(sibling) && (sibling->right != NULL || sibling->right->color == RED))
+				|| (_is_on_left(sibling) && (sibling->right != NULL || sibling->left->color == RED)))
+				return true;
+			return false;
+		};
+
+		//SEEMS LIKE THERE IS ISSUE WHEN CURRENT GETS TO ROOT, DOES NOT BALANCE ?
 		void _balance_erase(_node *current, _node *parent) {
-			if (parent->left == current) {
-				std::cout << "is left child" << std::endl;
-				std::cout << "parent->left =\t" << parent->left << "\ncurrent =\t " << current << std::endl;
+			// this->print_tree();
+			
+			//if current == RED ou current == _root then color in BLACK and exit
+			if (current == _root) {
+				std::cout << "current is root" << std::endl;
+				current->color = BLACK;
+				return;
 			}
-			else if (parent->right == current){
-				std::cout << "is right child" << std::endl;
-				std::cout << "parent->right =\t" << parent->right << "\ncurrent =\t " << current << std::endl;
-			}
-			else {
-				std::cout << "parent->left =\t" << parent->left << "\ncurrent =\t " << current << std::endl;
-				std::cout << "parent->right =\t" << parent->right << "\ncurrent =\t " << current << std::endl;
+			if (current && current->color == RED) {
+				std::cout << "current = " << current->val_ptr->first << std::endl;
+				std::cout << "current is red" << std::endl;
+				current->color = BLACK;
+				std::cout << "AFTER" << std::endl;
+				return;
 			}
 			
-			//if current == root then exit
-			//if current == RED then BLACK and exit
-				
+			std::cout << "ENTERS BALANCING" << std::endl;
+			if (current)
+				std::cout << "current = " << current->val_ptr->first << std::endl;
+			else
+				std::cout << "current = NULL"<< std::endl;
+
+			if (parent)
+				std::cout << " parent = " << parent->val_ptr->first << std::endl;
+			else
+				std::cout << "parent = NULL"<< std::endl;
+			//No need for link between parent and current, we only need to know WHERE SIBLING LIES and if parent has
+			//both NULL children then sibling will be NULL and will enter condition to recurse directly on parent
+			
+			//https://www.geeksforgeeks.org/red-black-tree-set-3-delete-2/?ref=lbp
+			//https://www.codesdope.com/course/data-structures-red-black-trees-deletion/
+			//https://www.youtube.com/watch?v=BIflee1rLDY
+
+			//https://www.youtube.com/watch?v=_ybZCHNSFOY
+			
+			
 			//if no sibling then recurse on PARENT (if parent is red, becomes black and exit, else is a double black)
+			_node *sibling = _get_sibling(current, parent);
+			if (sibling == NULL)
+				_balance_erase(parent, parent->parent);
 			
 			//case 1 : sibling == RED
 				//PARENT takes SIBLING COLOR == RED && SIBLING becomes black
@@ -321,26 +398,70 @@ namespace ft
 				//	-> if sibling is on the right of parent then left rotate PARENT
 				//	-> if sibling is on the left of parent then right rotate PARENT
 				//recursive on CURRENT (will lead to cases where SIBLING == BLACK)
-			//SIBLING == BLACK
+			else if (sibling->color == RED)
+			{
+				std::cout << "SIBLING = " << sibling->val_ptr->first << " IS RED" << std::endl;
+				parent->color = RED;
+				sibling->color = BLACK;
+				if (_is_on_right(sibling))
+					_left_rotate(parent);
+				else
+					_right_rotate(parent);
+				_balance_erase(current, parent);
+			}
+			else 
+			{
+				std::cout << "SIBLING = " << sibling->val_ptr->first << "  IS BLACK" << std::endl;
 				//case 2 : if (CHILDRENS are both BLACK)
 					//SWITCH colors of SIBLING && PARENT
 					//recursive on PARENT (if became red then will be colored black at begin and exit)
+				if (_childs_are_black(sibling)) {
+					std::cout << "BOTH CHILDS ARE BLACK" << std::endl;
+					_switch_color(parent, sibling, NULL);
+					_balance_erase(parent, parent->parent);
+				}
 				//case 3 : else if (OUTER CHILD IS BLACK) == TRIANGLE for nodes of interest
 					//SWITCH color of SIBLING and it's INNER CHILD
 					//move sibling DOWN	and away from CURRENT
 					//	-> if sibling is on the right of parent then right rotate SIBLING
 					//	-> if sibling is on the left of parent then left rotate SIBLING
 					// recursive on current (will go to case 4)
+				else if (_outer_child_is_black(sibling)) 
+				{
+					std::cout << "OUTER CHILD IS BLACK" << std::endl;
+					_switch_color(sibling, _inner_child(sibling), NULL);
+					if (_is_on_right(sibling))
+						_right_rotate(sibling);
+					else
+						_left_rotate(sibling);
+					_balance_erase(current, parent);
+				}
 				//case 4 : else if (OUTER CHILD IS RED) == LINE for nodes of interest
 					//SIBLING take color of PARENT and PARENT + OUTER CHILD becomes BLACK
 					//move sibling UP 	
 					//	-> if sibling is on the right of parent then left rotate PARENT
 					//	-> if sibling is on the left of parent then right rotate PARENT
 					//TERMINAL SITUATION
+				else if (_outer_child_is_red(sibling))
+				{
+					std::cout << "OUTER CHILD IS RED" << std::endl;
+					sibling->color = parent->color;
+					parent->color = _outer_child(sibling)->color = BLACK;
+					if (_is_on_right(sibling))
+						_left_rotate(parent);
+					else
+						_right_rotate(parent);
+				}
 			
+			}
 		};
+		//enum e_sibling_children_situation { BOTH_BLACK, RED_CHILD_LINE, RED_CHILD_TRIANGLE };
 
 		void erase (iterator position) {
+			std::cout << "========================================================" << std::endl;
+			std::cout << "========================================================" << std::endl;
+			std::cout << "Erasing = " << position->first << std::endl;
+			// this->print_tree();
 			_node *to_delete = _convert_iterator_to_node(_root, position);
 			_node *replacing_node = NULL;
 			_node *to_delete_parent = to_delete->parent;
@@ -359,8 +480,14 @@ namespace ft
 			}
 			//if replacing_node is red then will be changed to black and exit
 			//so only case where rebalancing happens is if delete and replacing are black
+			// if (replacing_node)
+				// std::cout << "replacing node = " << replacing_node->val_ptr->first << std::endl;
+			// if (to_delete_parent)
+				// std::cout << "to_delete_parent node = " << to_delete_parent->val_ptr->first << std::endl;
+			//check when deleting the only node existing
 			if (to_delete_color == BLACK)
 				_balance_erase(replacing_node, to_delete_parent);
+			std::cout << "finished balancing" << std::endl;
 		};
 		
 		size_type erase (const key_type& k) {
