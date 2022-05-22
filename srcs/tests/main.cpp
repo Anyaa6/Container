@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/05/17 17:47:18 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/05/22 15:24:41 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 #include "tester_class.hpp"
+#define NUMBER_OF_RANDOM 50
 
 int main()
 {
@@ -82,18 +83,18 @@ int main()
 	// balance_test.print_tree();
 	*/
 	
-	for (int i = 0; i < 200; i++) {
-		int random = rand() % 200;
+	for (int i = 0; i < NUMBER_OF_RANDOM; i++) {
+		int random = rand() % NUMBER_OF_RANDOM;
 		balance_test.insert(ft::make_pair(random, random + 2));
 	}
 	
 	balance_test.print_tree();
 	// for (ft::map<int, int>::iterator it = balance_test.begin(); it != balance_test.end(); it++)
 		// std::cout << it->first << " " << it->second << std::endl;
-		
+	
 	int erased_nodes = 0;
-	for (int i = 0; i < 250; i++) {
-		int random = rand() % 200;
+	for (int i = 0; i < NUMBER_OF_RANDOM; i++) {
+		int random = rand() % NUMBER_OF_RANDOM;
 		// std::cout << "ERASE " << random << std::endl;
 		if (balance_test.erase(random) == 1)
 			erased_nodes++;
@@ -103,6 +104,17 @@ int main()
 	// for (ft::map<int, int>::iterator it = balance_test.begin(); it != balance_test.end(); it++)
 		// std::cout << it->first << " " << it->second << std::endl;
 	std::cout << "\nNumber of erased nodes = " << erased_nodes << std::endl;
+
+	for (int i = 0; i < 10; i++) {
+		int random = rand() % NUMBER_OF_RANDOM;
+		balance_test.insert(ft::make_pair(random, random + 2));
+	}
+	
+	balance_test.print_tree();
+	// for (ft::map<int, int>::iterator it = balance_test.begin(); it != balance_test.end(); it++)
+		// std::cout << it->first << " " << it->second << std::endl;
+
+	std::cout << "Nodes added" << std::endl;
 
 	return 0;
 }

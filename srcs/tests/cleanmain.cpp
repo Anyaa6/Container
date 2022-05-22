@@ -877,6 +877,7 @@ void map_other_functions() {
 		range_insert.insert(ft::make_pair(i, i + 2));
 	std::cout << "\nRANGE INSERT" << std::endl;
 	it_range_copy = range_insert.begin();
+		std::cout << "BEGIN = begin key = " << it_range_copy->first << " value =  "<< it_range_copy->second << std::endl;
 	for (; it_range_copy != range_insert.end(); it_range_copy++)
 		std::cout << "begin key = " << it_range_copy->first << " value =  "<< it_range_copy->second << std::endl;
 

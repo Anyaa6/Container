@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:21 by abonnel           #+#    #+#             */
-/*   Updated: 2022/05/17 17:46:28 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/05/22 15:40:01 by ariane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@
 #define RED_COLOR     "\033[31m"      /* Red */
 
 enum e_erase { DELETE = 1, KEEP_NODE = 0 };
-enum e_sibling_children_situation { BOTH_BLACK, RED_CHILD_LINE, RED_CHILD_TRIANGLE };
 enum e_node_alignement {LINE_LEFT, LINE_RIGHT, LINE, TRIANGLE, TRIANGLE_LEFT, TRIANGLE_RIGHT};
 
 namespace ft 
@@ -194,6 +193,10 @@ namespace ft
 		//-------------------------------------------------------------------------------------
 		//INSERT
 		pair<iterator,bool> insert (const value_type& val) {
+			// std::cout << "root == root->parent " << (_root == _root->parent ? "YES" : "NO") << std::endl;
+			// std::cout << "root->first == root->parent->first " << (_root->val_ptr->first == _root->parent->val_ptr->first ? "YES" : "NO") << std::endl;
+			// std::cout << "root = " << _root << "\nroot->parent = " << _root->parent << std::endl;
+			// std::cout << "root = " << _root->val_ptr->first << "\nroot->parent = " << _root->parent->val_ptr->first << std::endl;
 			return (_insert_from_root(val, _root, _root));
 		};
 		
@@ -353,20 +356,22 @@ namespace ft
 		void _balance_erase(_node *current, _node *parent) {
 			// this->print_tree();
 			
-			//if current == RED ou current == _root then color in BLACK and exit
+			/*
+			// if current == RED ou current == _root then color in BLACK and exit
 			if (current == _root) {
 				std::cout << "current is root" << std::endl;
 				current->color = BLACK;
 				return;
-			}
-			if (current && current->color == RED) {
-				std::cout << "current = " << current->val_ptr->first << std::endl;
-				std::cout << "current is red" << std::endl;
+			}*/
+			if (current && (current == _root || current->color == RED)) {
+				// std::cout << "current = " << current->val_ptr->first << std::endl;
+				// std::cout << "current is red or root" << std::endl;
 				current->color = BLACK;
-				std::cout << "AFTER" << std::endl;
+				// std::cout << "AFTER" << std::endl;
 				return;
 			}
 			
+			/*
 			std::cout << "ENTERS BALANCING" << std::endl;
 			if (current)
 				std::cout << "current = " << current->val_ptr->first << std::endl;
@@ -377,6 +382,7 @@ namespace ft
 				std::cout << " parent = " << parent->val_ptr->first << std::endl;
 			else
 				std::cout << "parent = NULL"<< std::endl;
+			*/
 			//No need for link between parent and current, we only need to know WHERE SIBLING LIES and if parent has
 			//both NULL children then sibling will be NULL and will enter condition to recurse directly on parent
 			
@@ -389,8 +395,10 @@ namespace ft
 			
 			//if no sibling then recurse on PARENT (if parent is red, becomes black and exit, else is a double black)
 			_node *sibling = _get_sibling(current, parent);
-			if (sibling == NULL)
+			if (sibling == NULL) {
+				// std::cout << "NO SIBLING" << std::endl;
 				_balance_erase(parent, parent->parent);
+			}
 			
 			//case 1 : sibling == RED
 				//PARENT takes SIBLING COLOR == RED && SIBLING becomes black
@@ -400,26 +408,70 @@ namespace ft
 				//recursive on CURRENT (will lead to cases where SIBLING == BLACK)
 			else if (sibling->color == RED)
 			{
-				std::cout << "SIBLING = " << sibling->val_ptr->first << " IS RED" << std::endl;
+				// std::cout << "SIBLING = " << sibling->val_ptr->first << " IS RED" << std::endl;
 				parent->color = RED;
 				sibling->color = BLACK;
 				if (_is_on_right(sibling))
 					_left_rotate(parent);
 				else
 					_right_rotate(parent);
-				_balance_erase(current, parent);
+				_balance_erase(current, parent); //cannot do current->parent in case CURRENT is NULL
 			}
-			else 
+			else //sibling is black
 			{
-				std::cout << "SIBLING = " << sibling->val_ptr->first << "  IS BLACK" << std::endl;
+				// std::cout << "SIBLING = " << sibling->val_ptr->first << "  IS BLACK" << std::endl;
 				//case 2 : if (CHILDRENS are both BLACK)
 					//SWITCH colors of SIBLING && PARENT
 					//recursive on PARENT (if became red then will be colored black at begin and exit)
 				if (_childs_are_black(sibling)) {
-					std::cout << "BOTH CHILDS ARE BLACK" << std::endl;
-					_switch_color(parent, sibling, NULL);
+					// std::cout << "BOTH CHILDS ARE BLACK" << std::endl;
+					sibling->color = RED;
+					if (parent->color == BLACK)
+						_balance_erase(parent, parent->parent);
+					else
+						parent->color = BLACK;
+					// _switch_color(parent, sibling, NULL);
 					_balance_erase(parent, parent->parent);
 				}
+				/*
+				else 
+				{
+					if (sibling->left != NULL and sibling->left->color == RED) 
+					{
+						if (_is_on_left(sibling)) 
+						{
+							// left left
+							sibling->left->color = sibling->color;
+							sibling->color = parent->color;
+							_right_rotate(parent);
+						} 
+						else {
+							// right left
+							sibling->left->color = parent->color;
+							_right_rotate(sibling);
+							_left_rotate(parent);
+						}
+					} 
+					else 
+					{
+						if (_is_on_left(sibling))
+						{
+							// left right
+							sibling->right->color = parent->color;
+							_left_rotate(sibling);
+							_right_rotate(parent);
+						} 
+						else 
+						{
+							// right right
+							sibling->right->color = sibling->color;
+							sibling->color = parent->color;
+							_left_rotate(parent);
+						}
+					}
+					parent->color = BLACK;
+				}
+				*/
 				//case 3 : else if (OUTER CHILD IS BLACK) == TRIANGLE for nodes of interest
 					//SWITCH color of SIBLING and it's INNER CHILD
 					//move sibling DOWN	and away from CURRENT
@@ -428,7 +480,7 @@ namespace ft
 					// recursive on current (will go to case 4)
 				else if (_outer_child_is_black(sibling)) 
 				{
-					std::cout << "OUTER CHILD IS BLACK" << std::endl;
+					// std::cout << "OUTER CHILD IS BLACK" << std::endl;
 					_switch_color(sibling, _inner_child(sibling), NULL);
 					if (_is_on_right(sibling))
 						_right_rotate(sibling);
@@ -444,7 +496,7 @@ namespace ft
 					//TERMINAL SITUATION
 				else if (_outer_child_is_red(sibling))
 				{
-					std::cout << "OUTER CHILD IS RED" << std::endl;
+					// std::cout << "OUTER CHILD IS RED" << std::endl;
 					sibling->color = parent->color;
 					parent->color = _outer_child(sibling)->color = BLACK;
 					if (_is_on_right(sibling))
@@ -452,23 +504,27 @@ namespace ft
 					else
 						_right_rotate(parent);
 				}
-			
 			}
 		};
-		//enum e_sibling_children_situation { BOTH_BLACK, RED_CHILD_LINE, RED_CHILD_TRIANGLE };
-
+		
 		void erase (iterator position) {
-			std::cout << "========================================================" << std::endl;
-			std::cout << "========================================================" << std::endl;
-			std::cout << "Erasing = " << position->first << std::endl;
+			// std::cout << "========================================================" << std::endl;
+			// std::cout << "========================================================" << std::endl;
+			std::cout << "\nErasing = " << position->first << std::endl;
 			// this->print_tree();
 			_node *to_delete = _convert_iterator_to_node(_root, position);
 			_node *replacing_node = NULL;
 			_node *to_delete_parent = to_delete->parent;
 			bool to_delete_color = to_delete->color;
+			bool deleting_root = false;
 			
 			if (to_delete == _end)
 				return;
+
+			if (to_delete == _root) {
+				deleting_root = true;
+				// std::cout << "deleting ROOT - DOWN" << std::endl;
+			}
 				
 			if (to_delete->right && to_delete->left)
 				replacing_node = _erase_node_2_childs(to_delete);
@@ -478,6 +534,12 @@ namespace ft
 				replacing_node = _remove_node_from_tree(to_delete);
 				_delete_node(to_delete);
 			}
+			
+			if (deleting_root) {
+				_root = replacing_node;
+				replacing_node->parent = _root;
+			}
+			
 			//if replacing_node is red then will be changed to black and exit
 			//so only case where rebalancing happens is if delete and replacing are black
 			// if (replacing_node)
@@ -487,7 +549,14 @@ namespace ft
 			//check when deleting the only node existing
 			if (to_delete_color == BLACK)
 				_balance_erase(replacing_node, to_delete_parent);
-			std::cout << "finished balancing" << std::endl;
+			// std::cout << "finished balancing" << std::endl;
+
+			/*
+			std::cout << "root == root->parent " << (_root == _root->parent ? "YES" : "NO") << std::endl;
+			std::cout << "root->first == root->parent->first " << (_root->val_ptr->first == _root->parent->val_ptr->first ? "YES" : "NO") << std::endl;
+			// std::cout << "root = " << _root << "\nroot->parent = " << _root->parent << std::endl;
+			std::cout << "root = " << _root->val_ptr->first << "\nroot->parent = " << _root->parent->val_ptr->first << std::endl;
+			*/
 		};
 		
 		size_type erase (const key_type& k) {
@@ -588,35 +657,11 @@ namespace ft
 			_construct_node(_end, _node(END_NODE));
 			_end->parent = _root;
 			_root = _begin = _end;
+			_root->parent = _root;
 		};
 		
 		//-------------------------------------------------------------------------------------
 		//INSERT
-		
-		void _construct_node(_node *&position, const _node &new_node) {
-			
-			position = _node_alloc.allocate(1);
-			_node_alloc.construct(position, new_node);
-			if (position != _end)
-				_size++;
-		};
-
-		void	_insert_do_end_root_begin(_node *&current, const _node &new_node) {
-			bool is_end = (current == _end);
-			bool is_root = (current == _root);
-			bool is_begin = (is_root || _val_comp(*new_node.val_ptr, *_begin->val_ptr));
-			
-			_construct_node(current, new_node);
-			if (is_end)
-			{
-				current->right = _end;
-				_end->parent = current;
-			}
-			if (is_root)
-				_root = current;
-			if (is_begin)
-				_begin = current;
-		};
 
 		bool _get_uncle_color(_node *parent, _node *grandparent) {
 			_node *uncle;
@@ -656,13 +701,24 @@ namespace ft
 			_node* up = down->right;
 			_node* switch_parent = up->left;
 			
-			if (down == _root)
+			if (down == _root) {
+				/*
+				std::cout << "DOWN->parent == ROOT " << (down->parent == _root ? "yes" : "no") << std::endl;
+				std::cout << "DOWN->parent == _end " << (down->parent == _end ? "yes" : "no") << std::endl;
+				std::cout << "DOWN->parent = " << down->parent->val_ptr->first << " down = " << down->val_ptr->first << std::endl;
+				*/
 				_root = up;
-			else if (down->parent->right == down) 
-				down->parent->right = up;
-			else
-				down->parent->left = up;
-			up->parent = down->parent;
+				up->parent = _root;
+				//was not set like this before, was doing up->parent = down->parent; but seems like down->parent
+				//was not properly set to _root
+			}
+			else {
+				if (_is_on_right(down)) 
+					down->parent->right = up;
+				else
+					down->parent->left = up;
+				up->parent = down->parent;
+			}
 			
 			down->right = switch_parent;
 			if (switch_parent)
@@ -679,13 +735,17 @@ namespace ft
 			_node* up = down->left;
 			_node* switch_parent = up->right;
 			
-			if (down == _root)
+			if (down == _root) {
 				_root = up;
-			else if (down->parent->right == down) 
-				down->parent->right = up;
-			else
-				down->parent->left = up;
-			up->parent = down->parent;
+				up->parent = _root;
+			}
+			else {
+				if (_is_on_right(down)) 
+					down->parent->right = up;
+				else
+					down->parent->left = up;
+				up->parent = down->parent;
+			}
 			
 			down->left = switch_parent;
 			if (switch_parent)
@@ -729,14 +789,45 @@ namespace ft
 					_black_uncle_violation(current, parent, grandparent);
 			}
 		};
+		
+		void _construct_node(_node *&position, const _node &new_node) {
+			position = _node_alloc.allocate(1);
+			_node_alloc.construct(position, new_node);
+			if (position != _end)
+				_size++;
 
+		};
+
+		void	_insert_do_end_root_begin(_node *&current, const _node &new_node) {
+			bool is_end = (current == _end);
+			bool is_root = (current == _root);
+			bool is_begin = (is_root || _val_comp(*new_node.val_ptr, *_begin->val_ptr));
+			
+			_construct_node(current, new_node);
+			if (is_end)
+			{
+				current->right = _end;
+				_end->parent = current;
+			}
+			if (is_root) {
+				_root = current;
+				//if root then current->parent should be root, NOT _END
+				current->parent = _root;
+			}
+			if (is_begin)
+				_begin = current;
+		};
+		
 		pair<iterator,bool>	_insert_from_root(const value_type& val, _node *&current, _node *&parent) {
 			if (current == _end || current == NULL) {
 				_insert_do_end_root_begin(current, _node(val, parent));
 				//BALANCE TREE - beware to not change current for return value
 				// std::cout << "before " << current->val_ptr->first << std::endl;
 				// print_tree();
+				
+				//PROBLEM WITH BALANCE INSERTION HERE, WILL NOT SET BEGIN PROPERLY AT SOME POINT
 				_balance_insertion(current, current->parent, current->parent->parent);
+
 				// print_tree();
 				// std::cout << "\n\n" << std::endl;
 				// std::cout << "after " << current->val_ptr->first << std::endl;
