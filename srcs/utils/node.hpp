@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 12:35:23 by abonnel           #+#    #+#             */
-/*   Updated: 2022/05/16 15:03:47 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/05/30 15:41:53 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ struct node {
 
 	node(bool flag) {
 		if (flag == END_NODE) {
-			//VALUE IS NOT EVEN ALLOCATED IN END NODE OF STD NOR CONSTRUCTED
 			val_ptr = val_alloc.allocate(1);
 			color = BLACK;
 			left = NULL;
@@ -51,41 +50,11 @@ struct node {
 		}
 	};
 
-	//Random parent/child node constructor
-	node(){
-		//color = XX; BLACK ? only for node
-	};
+	node(){};
 
-	~node(){
-		// std::cout << "Destroy node" << std::endl;
-	};
-
-	key_type get_key() {
-		return (val_ptr->first);
-	};
+	~node(){};
 };
 
 }
 
 #endif //NODE_HPP
-
-/*
-
-	// node(const node &to_copy) {
-	// 	val_ptr = val_alloc.allocate(1);
-	// 	val_alloc.construct(val_ptr, *(to_copy.val_ptr));
-	// 	left = to_copy.left;
-	// 	right = to_copy.right;
-	// 	parent = to_copy.parent;
-	// 	color = to_copy.color;
-	// };
-	
-	// node &operator=(const node &to_copy) {
-	// 	val_ptr = val_alloc.allocate(1);
-	// 	val_alloc.construct(val_ptr, *(to_copy.val_ptr));
-	// 	left = to_copy.left;
-	// 	right = to_copy.right;
-	// 	parent = to_copy.parent;
-	// 	color = to_copy.color;
-	// };
-*/

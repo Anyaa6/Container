@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/04/26 12:15:58 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/05/30 15:43:21 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ namespace ft
 		//Constructors --> construction goes from _array[0] to _array[n] in forward movement
 		explicit vector (const allocator_type& alloc = allocator_type()) : _array(NULL), _size(0), _capacity(0), _alloc(alloc) {};
 
-		//tested with classes as value including allocated memory -> OK
 		explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _size(n), _capacity(n), _alloc(alloc)
 		{
 			if (_size > max_size())
@@ -157,10 +156,9 @@ namespace ft
 		};
 		void 		reserve(size_type n) {
 			if (n > _capacity)
-				_array = _realloc(n);//, NULL);
+				_array = _realloc(n);
 		};
 
-		//Element access OK : [] Does segfault in real vector if out of bound, whereas at() checks if in the range
 		reference operator[] (size_type n) {
 			return _array[n];
 		};
@@ -179,7 +177,6 @@ namespace ft
 			return _array[n];
 		};
 		
-		//tested front() & back() on empty container and NON empty one VS std::vector --> OK
 		reference front() {
 			return *_array;
 		};
@@ -268,7 +265,6 @@ namespace ft
 			}
 		};
 		
-		//tested at end and beginning and at the end, works
 		iterator insert (iterator position, const value_type& val) {
 			size_type	n = 1; //nb of inserted elements
 			size_type	pos_index = _distance_between_it(begin(), position);
@@ -414,10 +410,6 @@ namespace ft
 		size_type	_capacity;
 		allocator_type	_alloc;
 		
-		//	std::vector<int> resize_test(3, 42);
-		// resize_test.reserve(-(resize_test.max_size()));
-		//gives uncaught exception of type std::length_error: allocator<T>::allocate(size_t n) 'n' exceeds maximum supported size
-		//When reallocating and re-constructing elements, goes in <-- motion
 		value_type *_realloc(size_type n)
 		{
 			value_type *tmp;

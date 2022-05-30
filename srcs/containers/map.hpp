@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:21 by abonnel           #+#    #+#             */
-/*   Updated: 2022/05/30 15:22:48 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/05/30 15:46:05 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ namespace ft
 			friend class map;
 			protected:
 				Compare comp;
-				value_compare (Compare c) : comp(c) {}  // constructed with map's comparison object
+				value_compare (Compare c) : comp(c) {}
 				
 			public:
 				typedef bool result_type;
@@ -193,16 +193,10 @@ namespace ft
 		//-------------------------------------------------------------------------------------
 		//INSERT
 		pair<iterator,bool> insert (const value_type& val) {
-			// std::cout << "root == root->parent " << (_root == _root->parent ? "YES" : "NO") << std::endl;
-			// std::cout << "root->first == root->parent->first " << (_root->val_ptr->first == _root->parent->val_ptr->first ? "YES" : "NO") << std::endl;
-			// std::cout << "root = " << _root << "\nroot->parent = " << _root->parent << std::endl;
-			// std::cout << "root = " << _root->val_ptr->first << "\nroot->parent = " << _root->parent->val_ptr->first << std::endl;
 			return (_insert_from_root(val, _root, _root));
 		};
 		
 		iterator insert (iterator position, const value_type& val) {
-			//friend not authorised 
-			//eventhough real map uses it to access node pointer inside of iterator 
 			(void)position;
 			return (this->insert(val).first);
 		};
@@ -215,270 +209,22 @@ namespace ft
 
 		//-------------------------------------------------------------------------------------
 		//ERASE
-
-		//-------------------------------------------------------------------------------------
-		//ERASE
-		/* in std even if you use the iterator of another map, as long as it finds a corresponding 
-		key, then it will delete this node which will mess up the entire map structure
-		but it is because it has access directly to the underlying pointer that the iterator holds
-		map.erase(iterator_of_other_map)
-		so here even if you call erase on "map" then it will actually destroy the node from "other_map"
-		bc that is the map that the iterator belongs to
-		since we do not have access to underlying pointer, behaviour will be different */
-		
-		_node *_convert_iterator_to_node(_node *current, const iterator &position) {
-			if (current == _end || current == NULL)
-				return (_end);
-			if (_val_comp(*current->val_ptr, *position))
-				return (_convert_iterator_to_node(current->right, position));
-			if (_val_comp(*position, *current->val_ptr))
-				return (_convert_iterator_to_node(current->left, position));
-			return (current);
-		};
-
-		_node **_get_parent_ptr(_node const *to_delete) {
-			if (to_delete == _root)
-				return (&_root);
-				
-			_node *parent = to_delete->parent;
-			
-			if (parent->left == to_delete)
-				return (&parent->left);
-			//is right child - also takes _end
-			return (&parent->right);
-		};
-		
-		_node *_get_child_ptr(_node const *to_delete) {
-			if (to_delete->left)
-				return (to_delete->left);
-			return (to_delete->right);
-		};
-
-		_node *_get_predecessor(_node const *to_delete) {
-			_node *next_smaller = to_delete->left;
-
-			while (next_smaller && next_smaller->right)
-				next_smaller = next_smaller->right;
-			return (next_smaller);
-		};
-		
-		//bridge from = adress of parent pointer to child to_delete
-		//bridge to = pointer to to_delete's child
-		//function if node has 1 or no child - bridge between parent and child of deleted node
-		_node	*_remove_node_from_tree(_node *to_remove) {
-			_node **bridge_from = _get_parent_ptr(to_remove);
-			_node *bridge_to = _get_child_ptr(to_remove);
-
-			*bridge_from = bridge_to;
-			if (bridge_to != NULL)
-				bridge_to->parent = to_remove->parent;
-			return (bridge_to);
-		};		
-		
-		void	_replace_node(_node const *former_node, _node *replacing_node, _node **at) {
-			*at = replacing_node;
-
-			// replacing_node->color = former_node->color;
-			replacing_node->parent = former_node->parent;
-			replacing_node->right = former_node->right;
-			replacing_node->left = former_node->left;
-			if (replacing_node->right)
-				replacing_node->right->parent = replacing_node;
-			if (replacing_node->left)
-				replacing_node->left->parent = replacing_node;
-		};
-		
-		//if node has 2 childs, choose biggest of left side to replace it
-			//(not smallest of right side bc it could be _end)
-		_node	*_erase_node_2_childs(_node *to_delete) {
-			_node **bridge_from = _get_parent_ptr(to_delete);
-			_node *replaces_deleted = _get_predecessor(to_delete);
-			_node *balance_from = NULL;
-			
-			// std::cout << "predecessor = " << replaces_deleted->val_ptr->first << std::endl;
-			balance_from = _remove_node_from_tree(replaces_deleted);
-			_replace_node(to_delete, replaces_deleted, bridge_from);
-			_delete_node(to_delete);
-			return (balance_from);
-		};
-
-		_node *_get_sibling(_node *current, _node *parent) {
-			if (parent->left == current)
-				return (parent->right);
-			return (parent->left);
-		};
-
-		bool _is_on_right(_node *child) {
-			if (child->parent->right == child)
-				return true;
-			return false;
-		};
-
-		bool _is_on_left(_node *child) {
-			if (child->parent->left == child)
-				return true;
-			return false;
-		};
-
-		bool _childs_are_black(_node *sibling) {
-			if ((sibling->left == NULL || sibling->left->color == BLACK)
-			&& (sibling->right == NULL || sibling->right->color == BLACK))
-				return true;
-			return false;
-		};
-		
-		_node *_inner_child(_node *sibling) {
-			if (_is_on_left(sibling))
-				return (sibling->right);
-			return (sibling->left);
-		};
-
-		_node *_outer_child(_node *sibling) {
-			if (_is_on_left(sibling))
-				return (sibling->left);
-			return (sibling->right);
-		};
-
-		bool _outer_child_is_black(_node *sibling) {
-			if (_is_on_right(sibling) && (sibling->right == NULL || sibling->right->color == BLACK))
-				return true;
-			if (_is_on_left(sibling) && (sibling->left == NULL || sibling->left->color == BLACK))
-				return true;
-			return false;			
-		};
-
-		//Il Y avait des erreurs DANS CETTE FONCTION que j'ai fix, VERIFIER LES AUTRES
-		bool _outer_child_is_red(_node *sibling) {
-			if (_is_on_right(sibling) && sibling->right && sibling->right->color == RED)
-				return true;
-			if (_is_on_left(sibling) && sibling->left && sibling->left->color == RED)
-				return true;
-			return false;
-		};
-
-		//SEEMS LIKE THERE IS ISSUE WHEN CURRENT GETS TO ROOT, DOES NOT BALANCE ?
-		void _balance_erase(_node *current, _node *parent) {
-			// std::cout << "BALANCE ERASE" << std::endl;
-			// this->print_tree();
-			
-			// if current == RED ??
-			//ou current == _root then color in BLACK and exit
-			if (current == _root) {
-				// std::cout << "current is root" << std::endl;
-				current->color = BLACK;
-				return;
-			}
-			
-			//if no sibling then recurse on PARENT (if parent is red, becomes black and exit, else is a double black)
-			// parent->color = BLACK;???
-			_node *sibling = _get_sibling(current, parent);
-			if (sibling == NULL) {
-				// std::cout << "Case : no sibling" << std::endl;
-				_balance_erase(parent, parent->parent);
-			}
-			
-			else if (sibling->color == RED)
-			{
-				// std::cout << "Case SIBLING is RED and = " << sibling->val_ptr->first << std::endl;
-				//EXCHANGE P AND S COLOR ?? OR S->BLACK and P->red
-				sibling->color = BLACK;
-				parent->color = RED;
-				if (_is_on_right(sibling))
-					_left_rotate(parent);
-				else
-					_right_rotate(parent);
-				_balance_erase(current, parent); //cannot do current->parent in case CURRENT is NULL
-			}
-			else //sibling is black
-			{
-				// std::cout << "Cases SIBLING is BLACK and = " << sibling->val_ptr->first << std::endl;
-				if (_childs_are_black(sibling)) {
-					// std::cout << "Subcase : BOTH CHILDS ARE BLACK" << std::endl;
-					sibling->color = RED;
-					if (parent->color == BLACK)
-						_balance_erase(parent, parent->parent);
-					else
-						parent->color = BLACK;
-				}
-				else if (_outer_child_is_black(sibling)) 
-				{
-					// std::cout << "Subcase : OUTER CHILD IS BLACK" << std::endl;
-					_switch_color(sibling, _inner_child(sibling), NULL);
-					if (_is_on_right(sibling))
-						_right_rotate(sibling);
-					else
-						_left_rotate(sibling);
-					_balance_erase(current, parent);
-					
-				}
-				else if (_outer_child_is_red(sibling))
-				{
-					// std::cout << "Subcase : OUTER CHILD IS RED" << std::endl;
-					sibling->color = parent->color;
-					parent->color = _outer_child(sibling)->color = BLACK;
-					if (_is_on_right(sibling))
-						_left_rotate(parent);
-					else
-						_right_rotate(parent);
-				}
-			}
-		};
-		
-		void _swap_values(_node *predecessor, _node *to_delete) {
-			value_type		*tmp = predecessor->val_ptr;
-
-			predecessor->val_ptr = to_delete->val_ptr;
-			to_delete->val_ptr = tmp;			
-		};
-
-		void _erase_1_or_no_child(_node *to_delete) {
-			_node *parent = to_delete->parent;
-			_node *replacing_node = (to_delete->left ? to_delete->left : to_delete->right);
-			bool double_black = (to_delete->color == BLACK && (replacing_node == NULL || replacing_node->color == BLACK));
-			
-			// std::cout << "parent = " << parent->val_ptr->first << "\nto_delete = " << to_delete->val_ptr->first << "\nreplacing_node = " << (replacing_node ? replacing_node->val_ptr->first : 0) << std::endl;
-			// if (double_black)
-			// 	std::cout << "double black" << std::endl;
-
-			if (to_delete == _root)
-			{
-				_root = replacing_node;
-				replacing_node->parent = _root;
-				replacing_node->color = BLACK;
-				return;
-			}
-			if (to_delete == _begin)
-				((_begin->right) ? (_begin = _begin->right) : (_begin = _begin->parent));
-			
-			_remove_node_from_tree(to_delete); //bridge between parent and replacing node
-			_delete_node(to_delete);
-			
-			if (double_black)
-				_balance_erase(replacing_node, parent);
-			else if (replacing_node)
-				replacing_node->color = BLACK;
-		};
 		
 		void erase (iterator position) {
-			// std::cout << "\n========================================================" << std::endl;
-			// std::cout << "Erasing = " << position->first << std::endl;
 			_node *to_delete = _convert_iterator_to_node(_root, position);
 
-			
 			if (to_delete == _end)
 				return;
 				
-			if (to_delete->right && to_delete->left) //to_delete has 2 childs 
+			if (to_delete->right && to_delete->left)
 			{
 				_node *predecessor = _get_predecessor(to_delete);
-				// std::cout << "Erased node has 2 childs - predecessor = " << predecessor->val_ptr->first << std::endl;
 				_swap_values(predecessor, to_delete);
 				_erase_1_or_no_child(predecessor);
 			}
 			else
 				_erase_1_or_no_child(to_delete);
 		};
-		//once done remove unused function like erase_node_2_childs
 
 		size_type erase (const key_type& k) {
 			iterator from_key = find(k);
@@ -532,7 +278,6 @@ namespace ft
 			
 			while (_comp(it->first, k) && it != _end)
 				it++;
-			//if it key is == to k then we need to go to next one
 			while (_comp(it->first, k) == false && _comp(k, it->first) == false)
 				return (++it);
 			return (it);
@@ -543,7 +288,6 @@ namespace ft
 			
 			while (_comp(it->first, k) && it != _end)
 				it++;
-			//if it key is == to k then we need to go to next one
 			while (_comp(it->first, k) == false && _comp(k, it->first) == false)
 				return (++it);
 			return (it);
@@ -617,21 +361,12 @@ namespace ft
 		}
 
 		void _left_rotate(_node *down) {
-			// std::cout << "down = " << down->val_ptr->first << std::endl;
-			// std::cout << "up = " << up->val_ptr->first << std::endl;
 			_node* up = down->right;
 			_node* switch_parent = up->left;
 			
 			if (down == _root) {
-				/*
-				std::cout << "DOWN->parent == ROOT " << (down->parent == _root ? "yes" : "no") << std::endl;
-				std::cout << "DOWN->parent == _end " << (down->parent == _end ? "yes" : "no") << std::endl;
-				std::cout << "DOWN->parent = " << down->parent->val_ptr->first << " down = " << down->val_ptr->first << std::endl;
-				*/
 				_root = up;
 				up->parent = _root;
-				//was not set like this before, was doing up->parent = down->parent; but seems like down->parent
-				//was not properly set to _root
 			}
 			else {
 				if (_is_on_right(down)) 
@@ -650,9 +385,6 @@ namespace ft
 		};
 
 		void _right_rotate(_node *down) {
-			// std::cout << "down = " << down->val_ptr->first << std::endl;
-			// std::cout << "up = " << up->val_ptr->first << std::endl;
-
 			_node* up = down->left;
 			_node* switch_parent = up->right;
 			
@@ -716,7 +448,6 @@ namespace ft
 			_node_alloc.construct(position, new_node);
 			if (position != _end)
 				_size++;
-
 		};
 
 		void	_insert_do_end_root_begin(_node *&current, const _node &new_node) {
@@ -732,7 +463,6 @@ namespace ft
 			}
 			if (is_root) {
 				_root = current;
-				//if root then current->parent should be root, NOT _END
 				current->parent = _root;
 			}
 			if (is_begin)
@@ -742,16 +472,7 @@ namespace ft
 		pair<iterator,bool>	_insert_from_root(const value_type& val, _node *&current, _node *&parent) {
 			if (current == _end || current == NULL) {
 				_insert_do_end_root_begin(current, _node(val, parent));
-				//BALANCE TREE - beware to not change current for return value
-				// std::cout << "before " << current->val_ptr->first << std::endl;
-				// print_tree();
-				
-				//PROBLEM WITH BALANCE INSERTION HERE, WILL NOT SET BEGIN PROPERLY AT SOME POINT
 				_balance_insertion(current, current->parent, current->parent->parent);
-
-				// print_tree();
-				// std::cout << "\n\n" << std::endl;
-				// std::cout << "after " << current->val_ptr->first << std::endl;
 				return (make_pair(iterator(current), true));
 			}
 			if (_val_comp(val, *current->val_ptr))
@@ -761,8 +482,189 @@ namespace ft
 			return (make_pair(iterator(current), false)); //keys are same
 		};
 
+		//-------------------------------------------------------------------------------------
+		//ERASE
 
+		_node *_convert_iterator_to_node(_node *current, const iterator &position) {
+			if (current == _end || current == NULL)
+				return (_end);
+			if (_val_comp(*current->val_ptr, *position))
+				return (_convert_iterator_to_node(current->right, position));
+			if (_val_comp(*position, *current->val_ptr))
+				return (_convert_iterator_to_node(current->left, position));
+			return (current);
+		};
+
+		_node **_get_parent_ptr(_node const *to_delete) {
+			if (to_delete == _root)
+				return (&_root);
+				
+			_node *parent = to_delete->parent;
+			
+			if (parent->left == to_delete)
+				return (&parent->left);
+			return (&parent->right);
+		};
 		
+		_node *_get_child_ptr(_node const *to_delete) {
+			if (to_delete->left)
+				return (to_delete->left);
+			return (to_delete->right);
+		};
+
+		_node *_get_predecessor(_node const *to_delete) {
+			_node *next_smaller = to_delete->left;
+
+			while (next_smaller && next_smaller->right)
+				next_smaller = next_smaller->right;
+			return (next_smaller);
+		};
+		
+		//if node has 1 or no child
+		void _delete_node_from_tree(_node *to_remove) {
+			_node **bridge_from = _get_parent_ptr(to_remove);
+			_node *bridge_to = _get_child_ptr(to_remove);
+
+			*bridge_from = bridge_to;
+			if (bridge_to != NULL)
+				bridge_to->parent = to_remove->parent;
+			_delete_node(to_remove);
+		};		
+
+		_node *_get_sibling(_node *current, _node *parent) {
+			if (parent->left == current)
+				return (parent->right);
+			return (parent->left);
+		};
+
+		bool _is_on_right(_node *child) {
+			if (child->parent->right == child)
+				return true;
+			return false;
+		};
+
+		bool _is_on_left(_node *child) {
+			if (child->parent->left == child)
+				return true;
+			return false;
+		};
+
+		bool _childs_are_black(_node *sibling) {
+			if ((sibling->left == NULL || sibling->left->color == BLACK)
+			&& (sibling->right == NULL || sibling->right->color == BLACK))
+				return true;
+			return false;
+		};
+		
+		_node *_inner_child(_node *sibling) {
+			if (_is_on_left(sibling))
+				return (sibling->right);
+			return (sibling->left);
+		};
+
+		_node *_outer_child(_node *sibling) {
+			if (_is_on_left(sibling))
+				return (sibling->left);
+			return (sibling->right);
+		};
+
+		bool _outer_child_is_black(_node *sibling) {
+			if (_is_on_right(sibling) && (sibling->right == NULL || sibling->right->color == BLACK))
+				return true;
+			if (_is_on_left(sibling) && (sibling->left == NULL || sibling->left->color == BLACK))
+				return true;
+			return false;			
+		};
+
+		bool _outer_child_is_red(_node *sibling) {
+			if (_is_on_right(sibling) && sibling->right && sibling->right->color == RED)
+				return true;
+			if (_is_on_left(sibling) && sibling->left && sibling->left->color == RED)
+				return true;
+			return false;
+		};
+
+		void _balance_erase(_node *current, _node *parent) {
+			if (current == _root) {
+				current->color = BLACK;
+				return;
+			}
+			
+			_node *sibling = _get_sibling(current, parent);
+			
+			if (sibling == NULL)
+				_balance_erase(parent, parent->parent);
+			else if (sibling->color == RED)
+			{
+				sibling->color = BLACK;
+				parent->color = RED;
+				if (_is_on_right(sibling))
+					_left_rotate(parent);
+				else
+					_right_rotate(parent);
+				_balance_erase(current, parent);
+			}
+			else //sibling is black
+			{
+				if (_childs_are_black(sibling)) {
+					sibling->color = RED;
+					if (parent->color == BLACK)
+						_balance_erase(parent, parent->parent);
+					else
+						parent->color = BLACK;
+				}
+				else if (_outer_child_is_black(sibling)) 
+				{
+					_switch_color(sibling, _inner_child(sibling), NULL);
+					if (_is_on_right(sibling))
+						_right_rotate(sibling);
+					else
+						_left_rotate(sibling);
+					_balance_erase(current, parent);
+					
+				}
+				else if (_outer_child_is_red(sibling))
+				{
+					sibling->color = parent->color;
+					parent->color = _outer_child(sibling)->color = BLACK;
+					if (_is_on_right(sibling))
+						_left_rotate(parent);
+					else
+						_right_rotate(parent);
+				}
+			}
+		};
+		
+		void _swap_values(_node *predecessor, _node *to_delete) {
+			value_type		*tmp = predecessor->val_ptr;
+
+			predecessor->val_ptr = to_delete->val_ptr;
+			to_delete->val_ptr = tmp;			
+		};
+
+		void _erase_1_or_no_child(_node *to_delete) {
+			_node *parent = to_delete->parent;
+			_node *replacing_node = (to_delete->left ? to_delete->left : to_delete->right);
+			bool double_black = (to_delete->color == BLACK && (replacing_node == NULL || replacing_node->color == BLACK));
+
+			if (to_delete == _root)
+			{
+				_root = replacing_node;
+				replacing_node->parent = _root;
+				replacing_node->color = BLACK;
+				return;
+			}
+			if (to_delete == _begin)
+				((_begin->right) ? (_begin = _begin->right) : (_begin = _begin->parent));
+			
+			_delete_node_from_tree(to_delete);
+			
+			if (double_black)
+				_balance_erase(replacing_node, parent);
+			else if (replacing_node)
+				replacing_node->color = BLACK;
+		};
+
 		//-------------------------------------------------------------------------------------
 		//CLEAR DELETE COPY SWAP
 		void	_clear_tree(_node *current) {
@@ -774,7 +676,6 @@ namespace ft
 		}
 		
 		void _delete_node(_node *&node_to_destroy) {
-			// std::cout << "deleting " << node_to_destroy->val_ptr->first << std::endl;
 			_alloc.destroy((node_to_destroy)->val_ptr);
 			_alloc.deallocate((node_to_destroy)->val_ptr, 1);
 			_node_alloc.destroy(node_to_destroy);
@@ -856,7 +757,6 @@ namespace ft
 		
 		void _print_tree(_node *root, Trunk *prev, bool is_left, _node *end)
 		{
-			// std::cout << "Printing tree" << std::endl;
 			if (root == NULL || root == end) {
 				return;
 			}

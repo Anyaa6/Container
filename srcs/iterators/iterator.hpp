@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   iterator.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ariane <ariane@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 11:36:32 by ariane            #+#    #+#             */
-/*   Updated: 2022/04/29 12:19:03 by ariane           ###   ########.fr       */
+/*   Updated: 2022/05/30 15:48:23 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,9 @@
 
 namespace ft {
 
-struct random_access_iterator_tag {}; //possible d'utiliser ceux de base aussi
-struct bidirectional_iterator_tag {}; //possible d'utiliser ceux de base aussi
+struct random_access_iterator_tag {};
+struct bidirectional_iterator_tag {};
 
-//iterator est une interface pour definir ce qu'est un iterateur
 template <class Category, class T, class Distance = ptrdiff_t,
           class Pointer = T*, class Reference = T&>
 struct iterator {
@@ -29,9 +28,6 @@ struct iterator {
     typedef Category  iterator_category;
   };
   
-//<class Iterator> est un placeholder donc l'utilisateur pourrait mettre n'importe quoi
-//comme iterator_traits<double> MAIS ne fonctionnera pas au compilateur car 
-//double::difference_type n'existe pas donc va nous empecher de faire n'imp
 template <class Iterator>
 class iterator_traits
 {
@@ -44,18 +40,6 @@ class iterator_traits
     typedef typename Iterator::iterator_category iterator_category;
 };
 
-//SPECIALISATION DE SYNTAXE DU DESSOUS : CLASSE TEMPLATE SUR POINTEUR
-//https://www.learncpp.com/cpp-tutorial/partial-template-specialization-for-pointers/
-//donc dès qu'on envoit un iterator_traits<POINTEUR> alors ira en bas
-
-//iterator_traits fait le lien entre iterateurs et pointeurs, afin de pouvoir
-//les utiliser de maniere quasi interchangeable
-//https://forum.hardware.fr/hfr/Programmation/C-2/conception-iterator-introduction-sujet_63686_1.htm
-//iterator_traits nous permet d'obtenir les types a utiliser pour difference_type, pointer, iterator_cat etc
-//selon si on lui envoi un pointeur ou un iterateur, va permettre d'unifier le tout en ayant un seul
-//difference_type, iterator_cat etc...
-
-// ft::iterator_traits<int *>
 template <class T>
 class iterator_traits<T*>
 {
