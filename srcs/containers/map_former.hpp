@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:21 by abonnel           #+#    #+#             */
-/*   Updated: 2022/05/30 15:07:23 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/05/30 13:14:27 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -361,13 +361,39 @@ namespace ft
 			std::cout << "BALANCE ERASE" << std::endl;
 			// this->print_tree();
 			
-			// if current == RED ??
-			//ou current == _root then color in BLACK and exit
+			// if current == RED ou current == _root then color in BLACK and exit
 			if (current == _root) {
 				// std::cout << "current is root" << std::endl;
 				current->color = BLACK;
 				return;
 			}
+			/*
+			if (current && current->color == RED) { //remnove if current if previous condition current == NULL
+				// std::cout << "current = " << current->val_ptr->first << std::endl;
+				// std::cout << "current is red or root" << std::endl;
+				current->color = BLACK;
+				// std::cout << "AFTER" << std::endl;
+				return;
+			}
+			*/
+			
+			// std::cout << "ENTERS BALANCING" << std::endl;
+			// if (current)
+				// std::cout << "current = " << current->val_ptr->first << std::endl;
+			// else
+				// std::cout << "current = NULL"<< std::endl;
+// 
+			// if (parent)
+				// std::cout << " parent = " << parent->val_ptr->first << std::endl;
+			// else
+				// std::cout << "parent = NULL"<< std::endl;
+			
+			//https://www.geeksforgeeks.org/red-black-tree-set-3-delete-2/?ref=lbp
+			//https://www.codesdope.com/course/data-structures-red-black-trees-deletion/
+			//https://www.youtube.com/watch?v=BIflee1rLDY
+
+			//https://www.youtube.com/watch?v=_ybZCHNSFOY
+			
 			
 			//if no sibling then recurse on PARENT (if parent is red, becomes black and exit, else is a double black)
 			// parent->color = BLACK;???
@@ -377,6 +403,12 @@ namespace ft
 				_balance_erase(parent, parent->parent);
 			}
 			
+			//case 1 : sibling == RED
+				//PARENT takes SIBLING COLOR == RED && SIBLING becomes black
+				//move sibling UP 	
+				//	-> if sibling is on the right of parent then left rotate PARENT
+				//	-> if sibling is on the left of parent then right rotate PARENT
+				//recursive on CURRENT (will lead to cases where SIBLING == BLACK)
 			else if (sibling->color == RED)
 			{
 				std::cout << "Case SIBLING is RED and = " << sibling->val_ptr->first << std::endl;
@@ -392,6 +424,9 @@ namespace ft
 			else //sibling is black
 			{
 				std::cout << "Cases SIBLING is BLACK and = " << sibling->val_ptr->first << std::endl;
+				//case 2 : if (CHILDRENS are both BLACK)
+					//SWITCH colors of SIBLING && PARENT
+					//recursive on PARENT (if became red then will be colored black at begin and exit)
 				if (_childs_are_black(sibling)) {
 					std::cout << "Subcase : BOTH CHILDS ARE BLACK" << std::endl;
 					sibling->color = RED;
@@ -400,6 +435,12 @@ namespace ft
 					else
 						parent->color = BLACK;
 				}
+				//case 3 : else if (OUTER CHILD IS BLACK) == TRIANGLE for nodes of interest
+					//SWITCH color of SIBLING and it's INNER CHILD
+					//move sibling DOWN	and away from CURRENT
+					//	-> if sibling is on the right of parent then right rotate SIBLING
+					//	-> if sibling is on the left of parent then left rotate SIBLING
+					// recursive on current (will go to case 4)
 				else if (_outer_child_is_black(sibling)) 
 				{
 					std::cout << "Subcase : OUTER CHILD IS BLACK" << std::endl;
@@ -411,6 +452,12 @@ namespace ft
 					_balance_erase(current, parent);
 					
 				}
+				//case 4 : else if (OUTER CHILD IS RED) == LINE for nodes of interest
+					//SIBLING take color of PARENT and PARENT + OUTER CHILD becomes BLACK
+					//move sibling UP 	
+					//	-> if sibling is on the right of parent then left rotate PARENT
+					//	-> if sibling is on the left of parent then right rotate PARENT
+					//TERMINAL SITUATION
 				else if (_outer_child_is_red(sibling))
 				{
 					std::cout << "Subcase : OUTER CHILD IS RED" << std::endl;
@@ -424,62 +471,66 @@ namespace ft
 			}
 		};
 		
-		void _swap_values(_node *predecessor, _node *to_delete) {
-			value_type		*tmp = predecessor->val_ptr;
-
-			predecessor->val_ptr = to_delete->val_ptr;
-			to_delete->val_ptr = tmp;			
-		};
-
-		void _erase_1_or_no_child(_node *to_delete) {
-			_node *parent = to_delete->parent;
-			_node *replacing_node = (to_delete->left ? to_delete->left : to_delete->right);
-			bool double_black = (to_delete->color == BLACK && (replacing_node == NULL || replacing_node->color == BLACK));
-			
-			std::cout << "parent = " << parent->val_ptr->first << "\nto_delete = " << to_delete->val_ptr->first << "\nreplacing_node = " << (replacing_node ? replacing_node->val_ptr->first : 0) << std::endl;
-			if (double_black)
-				std::cout << "double black" << std::endl;
-
-			if (to_delete == _root)
-			{
-				_root = replacing_node;
-				replacing_node->parent = _root;
-				replacing_node->color = BLACK;
-				return;
-			}
-			
-			_remove_node_from_tree(to_delete); //bridge between parent and replacing node
-			_delete_node(to_delete);
-			
-			if (double_black)
-				_balance_erase(replacing_node, parent);
-			else if (replacing_node)
-				replacing_node->color = BLACK;
-		};
 		
 		void erase (iterator position) {
+			// std::cout << "========================================================" << std::endl;
 			std::cout << "\n========================================================" << std::endl;
 			std::cout << "Erasing = " << position->first << std::endl;
+			// this->print_tree();
 			_node *to_delete = _convert_iterator_to_node(_root, position);
-
+			_node *replacing_node = NULL;
+			_node *to_delete_parent = to_delete->parent;
+			bool to_delete_color = to_delete->color;
+			bool deleting_root = false;
 			
 			if (to_delete == _end)
 				return;
-				
-			if (to_delete->right && to_delete->left) //to_delete has 2 childs 
-			{
-				_node *predecessor = _get_predecessor(to_delete);
-				std::cout << "Erased node has 2 childs - predecessor = " << predecessor->val_ptr->first << std::endl;
-				_swap_values(predecessor, to_delete);
-				_erase_1_or_no_child(predecessor);
+
+			if (to_delete == _root) {
+				deleting_root = true;
+				// std::cout << "deleting ROOT - DOWN" << std::endl;
 			}
+				
+			if (to_delete->right && to_delete->left)
+				replacing_node = _erase_node_2_childs(to_delete);
 			else {
 				if (to_delete == _begin)
 					((_begin->right) ? (_begin = _begin->right) : (_begin = _begin->parent));
-				_erase_1_or_no_child(to_delete);
+				replacing_node = _remove_node_from_tree(to_delete);
+				_delete_node(to_delete);
+			}
+			
+			if (deleting_root) {
+				_root = replacing_node;
+				if (replacing_node)
+					replacing_node->parent = _root;
+			}
+			
+			//if replacing_node is red then will be changed to black and exit
+			//so only case where rebalancing happens is if delete and replacing are black
+			// if (replacing_node)
+			std::cout << "replacing node = " << (replacing_node ? (replacing_node->val_ptr->first) : (0)) << std::endl;
+			// if (to_delete_parent)
+				// std::cout << "to_delete_parent node = " << to_delete_parent->val_ptr->first << std::endl;
+			//check when deleting the only node existing
+			print_tree();
+
+			//A CHANGER ??
+			if (to_delete_color == BLACK) {
+				if (replacing_node && replacing_node->color == RED) {
+					std::cout << "Replacing Node is RED - becomes black and exit" << std::endl;
+					replacing_node->color = BLACK;
+				}
+				else {
+					std::cout << "Balancing - to_delete is black AND replace is BLACK" << std::endl;
+					//!! TO DELETE PARENT IS NOT OK
+					_balance_erase(replacing_node, replacing_node->parent);
+					// _balance_erase(replacing_node, to_delete_parent);
+					(void)to_delete_parent;
+					//BEWARE IF REPLACING NODE HAS LEFT CHILD
+				}
 			}
 		};
-		//once done remove unused function like erase_node_2_childs
 
 		size_type erase (const key_type& k) {
 			iterator from_key = find(k);
@@ -898,4 +949,104 @@ namespace ft
 };
 
 }
+
+/* BROUILLON INSERT
+
+	// if (_root == _end){ //at beginning
+		// _construct_node(current, _node(val, parent));
+		// current->right = _end;
+		// _end->parent = current;
+		// _root = current;
+		// return (make_pair(iterator(current), true));
+	// }
+	// if (current == NULL) {
+		// _construct_node(current, _node(val, parent));
+		// return (make_pair(iterator(current), true));
+	// }
+	// if (current == _end) {//beginning or when leaf at outmost right
+		// _construct_node(current, _node(val, parent));
+		// current->right = _end;
+		// _end->parent = current;
+		// return (make_pair(iterator(current), true));
+	// }
+
+	
+//!!! When going before begin() shoudl segfault so ROOT should have a random value for parent OR should just go to NULL
+void _insert_node_at(_node **position, _node *parent, const value_type &val){
+	_construct_node(position, _node(val, parent));
+	//Handle _end : if position was end, then added node and end have same parent
+	if (parent == _end->parent) {
+		std::cout << "parent = end" << std::endl;
+		(*position)->right = _end;
+		// (*position)->parent = _root; //??
+		_end->parent = *position;
+	}
+	//Handle _begin
+	if (_begin == NULL || _val_comp(*(*position)->val_ptr, *_begin->val_ptr))
+		_begin = *position;
+	// std::cout << "Value when just inserting : " << (*position)->val_ptr->first << std::endl;
+};
+
+//ISSUE WITH LINKING NODES TO ONE ANOTHER
+pair<iterator,bool>	_insert(const value_type& val, _node *current, _node *parent) {
+	if (current == _end || current == NULL) {
+		_insert_node_at(&current, parent, val);
+		// std::cout << "Value when out of function : " << current->val_ptr->first << std::endl;
+		//balance
+		return (make_pair(iterator(current), true));
+	}
+	std::cout << "LOOKS FOR LEAF" << std::endl;
+	if (_val_comp(val, *current->val_ptr)) //insert to the left
+		return (_insert(val, current->left, current));
+	else if (_val_comp(*current->val_ptr, val)) //insert to the right
+		return (_insert(val, current->right, current));
+	else //keys are same
+		return (make_pair(iterator(current), false));
+};
+*/
+
+		/*
+		void _balance_insertion(_node *current, _node *parent, _node *grandparent) {
+			//if added node is root then color it in black
+			if (_root == current)
+				current->color = BLACK;
+			//if parent is RED -> violation
+ 			else if (parent->color == RED)
+			{
+				bool uncle_color = _get_uncle_color(parent, grandparent);
+				std::cout << "For current = " << current->val_ptr->first << " with color = " << (current->color == RED ? "RED" : "BLACK") << "\nuncle_color = " << (uncle_color == RED ? "RED\n" : "BLACK\n") << std::endl;
+				
+				//if uncle is also red do recoloring and then set GRANDPARENT
+				//as the node to be checked for violations recursively
+				if (uncle_color == RED){
+					_switch_color(grandparent, grandparent->left, grandparent->right);
+					_balance_insertion(grandparent, grandparent->parent, grandparent->parent->parent);
+				}
+				//if uncle is black
+				else if (uncle_color == BLACK) {
+					int node_alignement = _nodes_alignement(current, parent, grandparent);
+					//if line shape then rotate GRANDPARENT to the opposite side of node so that parent becomes top 
+					//and recolor PARENT and GRANDPARENT
+					if (node_alignement <= LINE) {
+						std::cout << "LINE" << std::endl;
+						if (node_alignement == LINE_RIGHT)
+							_left_rotate(grandparent, parent, parent->left);
+						if (node_alignement == LINE_LEFT)
+							_right_rotate(grandparent, parent, parent->right);
+						_switch_color(grandparent, parent, NULL);
+					}
+					//if triangle formation then rotate PARENT to the opposite side of node so that becomes line shape, with PARENT
+					//being now the VIOLATING node, so call balancing recursively on HIM/PARENT
+					else if (node_alignement >= TRIANGLE) {
+						std::cout << "TRIANGLE" << std::endl;
+						if (node_alignement == TRIANGLE_RIGHT)
+							_right_rotate(parent, current, current->right);
+						if (node_alignement == TRIANGLE_LEFT)
+							_left_rotate(parent, current, current->left);
+						_balance_insertion(parent, parent->parent, parent->parent->parent);
+					}
+				}				
+			}
+		};*/
+		
 #endif //MAP_HPP
