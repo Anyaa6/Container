@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 12:35:23 by abonnel           #+#    #+#             */
-/*   Updated: 2022/05/30 15:41:53 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/05/30 16:49:08 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,12 @@ struct node {
 	node(){};
 
 	~node(){};
+
+	/*
+	key_type get_key() {
+		return (val_ptr->first);
+	};
+	*/
 };
 
 }

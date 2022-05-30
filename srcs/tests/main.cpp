@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/05/30 15:34:44 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/05/30 16:48:34 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,81 +39,7 @@ int main()
 {
 	std::cout << TESTING << std::endl;
 	//--------------------------------------
-	//tester les retours de insert avec et sans balancing pour voir si current modifié
-	//utiliser random pour add randomnumbers 
-
-	srand (time(NULL));
-	ft::map<int, int>		balance_test;
-
-
-	/*
-	for (int i = 0; i < 150; i += 2)
-		balance_test.insert(ft::make_pair(i, i));
-
-	balance_test.insert(ft::make_pair(99,99));
-	balance_test.print_tree();
-
-	balance_test.erase(102);
-	balance_test.print_tree();
-	balance_test.erase(130);
-	balance_test.print_tree();
-	*/
-
-	/*
-	//delete _begin to see what happens
-	balance_test.insert(ft::make_pair(-2, -2+2));
-	balance_test.insert(ft::make_pair(1, 2+2));
-	balance_test.insert(ft::make_pair(2, 2+2));
-	balance_test.erase(-2);
-
-	// for (ft::map<int, int>::iterator it = balance_test.begin(); it != balance_test.end(); it++)
-	// 	std::cout << it->first << " " << it->second << std::endl;
-	*/
-	
-	std::cout << "\nAdding : " << std::endl;
-	for (int i = 0; i < NUMBER_OF_RANDOM; i++) {
-		int random = rand() % NUMBER_OF_RANDOM;
-		std::cout << random << " ";
-		balance_test.insert(ft::make_pair(random, random + 2));
-	}
-	std::cout << std::endl;
-	
-	balance_test.print_tree();
-	// for (ft::map<int, int>::iterator it = balance_test.begin(); it != balance_test.end(); it++)
-	// 	std::cout << it->first << " " << it->second << std::endl;
-	
-	std::cout << "\nErasing : " << std::endl;
-	int erased_nodes = 0;
-	for (int i = 0; i < NUMBER_OF_RANDOM; i++) {
-		int random = rand() % NUMBER_OF_RANDOM;
-		// std::cout << "ERASE " << random << std::endl;
-		if (balance_test.erase(random) == 1) {
-			std::cout << random << " ";
-			erased_nodes++;
-		}
-	}
-	std::cout << std::endl;
-
-	balance_test.print_tree();
-	// for (ft::map<int, int>::iterator it = balance_test.begin(); it != balance_test.end(); it++)
-	// 	std::cout << it->first << " " << it->second << std::endl;
-	std::cout << "\nNumber of erased nodes = " << erased_nodes << std::endl;
-
-	std::cout << "\nAdding : " << std::endl;
-	for (int i = 0; i < 10; i++) {
-		int random = rand() % NUMBER_OF_RANDOM;
-		std::cout << random << " ";
-		balance_test.insert(ft::make_pair(random, random + 2));
-	}
-	std::cout << std::endl;
-	
-	balance_test.print_tree();
-	// for (ft::map<int, int>::iterator it = balance_test.begin(); it != balance_test.end(); it++)
-	// 	std::cout << it->first << " " << it->second << std::endl;
-
-	std::cout << "Nodes added" << std::endl;
-
-	std::cout << "Exiting main" << std::endl;
+	//WRITE TESTS WITH FT here 
 
 	return 0;
 }

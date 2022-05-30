@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:21 by abonnel           #+#    #+#             */
-/*   Updated: 2022/05/30 15:46:05 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/05/30 16:49:45 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -300,10 +300,10 @@ namespace ft
 			return (ft::make_pair(lower_bound(k), upper_bound(k)));
 		};
 
-		//TO DELEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEETE
+		/*
 		void print_tree() {
 			_print_tree(_root, NULL, false, _end);}
-
+		*/
 	
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++		
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++		
@@ -733,6 +733,8 @@ namespace ft
 		
 		//-------------------------------------------------------------------------------------
 		//print tree
+		
+		/*
 		struct Trunk
 		{
 			Trunk 		*prev;
@@ -792,8 +794,7 @@ namespace ft
 			_print_tree(root->left, trunk, false, end);
 			delete	trunk;
 		}
-
-
+		*/
 };
 
 }
