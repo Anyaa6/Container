@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/05/30 15:05:16 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/05/30 15:18:59 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 #include "tester_class.hpp"
-#define NUMBER_OF_RANDOM 100
+#define NUMBER_OF_RANDOM 200
 
 int main()
 {
@@ -86,10 +86,11 @@ int main()
 	int erased_nodes = 0;
 	for (int i = 0; i < NUMBER_OF_RANDOM; i++) {
 		int random = rand() % NUMBER_OF_RANDOM;
-		std::cout << random << " ";
 		// std::cout << "ERASE " << random << std::endl;
-		if (balance_test.erase(random) == 1)
+		if (balance_test.erase(random) == 1) {
+			std::cout << random << " ";
 			erased_nodes++;
+		}
 	}
 	std::cout << std::endl;
 
@@ -101,7 +102,7 @@ int main()
 	std::cout << "\nAdding : " << std::endl;
 	for (int i = 0; i < 10; i++) {
 		int random = rand() % NUMBER_OF_RANDOM;
-		std::cout << random << " " << std::endl;
+		std::cout << random << " ";
 		balance_test.insert(ft::make_pair(random, random + 2));
 	}
 	std::cout << std::endl;

@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:21 by abonnel           #+#    #+#             */
-/*   Updated: 2022/05/30 15:07:23 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/05/30 15:22:48 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -295,7 +295,7 @@ namespace ft
 			_node *replaces_deleted = _get_predecessor(to_delete);
 			_node *balance_from = NULL;
 			
-			std::cout << "predecessor = " << replaces_deleted->val_ptr->first << std::endl;
+			// std::cout << "predecessor = " << replaces_deleted->val_ptr->first << std::endl;
 			balance_from = _remove_node_from_tree(replaces_deleted);
 			_replace_node(to_delete, replaces_deleted, bridge_from);
 			_delete_node(to_delete);
@@ -358,7 +358,7 @@ namespace ft
 
 		//SEEMS LIKE THERE IS ISSUE WHEN CURRENT GETS TO ROOT, DOES NOT BALANCE ?
 		void _balance_erase(_node *current, _node *parent) {
-			std::cout << "BALANCE ERASE" << std::endl;
+			// std::cout << "BALANCE ERASE" << std::endl;
 			// this->print_tree();
 			
 			// if current == RED ??
@@ -373,13 +373,13 @@ namespace ft
 			// parent->color = BLACK;???
 			_node *sibling = _get_sibling(current, parent);
 			if (sibling == NULL) {
-				std::cout << "Case : no sibling" << std::endl;
+				// std::cout << "Case : no sibling" << std::endl;
 				_balance_erase(parent, parent->parent);
 			}
 			
 			else if (sibling->color == RED)
 			{
-				std::cout << "Case SIBLING is RED and = " << sibling->val_ptr->first << std::endl;
+				// std::cout << "Case SIBLING is RED and = " << sibling->val_ptr->first << std::endl;
 				//EXCHANGE P AND S COLOR ?? OR S->BLACK and P->red
 				sibling->color = BLACK;
 				parent->color = RED;
@@ -391,9 +391,9 @@ namespace ft
 			}
 			else //sibling is black
 			{
-				std::cout << "Cases SIBLING is BLACK and = " << sibling->val_ptr->first << std::endl;
+				// std::cout << "Cases SIBLING is BLACK and = " << sibling->val_ptr->first << std::endl;
 				if (_childs_are_black(sibling)) {
-					std::cout << "Subcase : BOTH CHILDS ARE BLACK" << std::endl;
+					// std::cout << "Subcase : BOTH CHILDS ARE BLACK" << std::endl;
 					sibling->color = RED;
 					if (parent->color == BLACK)
 						_balance_erase(parent, parent->parent);
@@ -402,7 +402,7 @@ namespace ft
 				}
 				else if (_outer_child_is_black(sibling)) 
 				{
-					std::cout << "Subcase : OUTER CHILD IS BLACK" << std::endl;
+					// std::cout << "Subcase : OUTER CHILD IS BLACK" << std::endl;
 					_switch_color(sibling, _inner_child(sibling), NULL);
 					if (_is_on_right(sibling))
 						_right_rotate(sibling);
@@ -413,7 +413,7 @@ namespace ft
 				}
 				else if (_outer_child_is_red(sibling))
 				{
-					std::cout << "Subcase : OUTER CHILD IS RED" << std::endl;
+					// std::cout << "Subcase : OUTER CHILD IS RED" << std::endl;
 					sibling->color = parent->color;
 					parent->color = _outer_child(sibling)->color = BLACK;
 					if (_is_on_right(sibling))
@@ -436,9 +436,9 @@ namespace ft
 			_node *replacing_node = (to_delete->left ? to_delete->left : to_delete->right);
 			bool double_black = (to_delete->color == BLACK && (replacing_node == NULL || replacing_node->color == BLACK));
 			
-			std::cout << "parent = " << parent->val_ptr->first << "\nto_delete = " << to_delete->val_ptr->first << "\nreplacing_node = " << (replacing_node ? replacing_node->val_ptr->first : 0) << std::endl;
-			if (double_black)
-				std::cout << "double black" << std::endl;
+			// std::cout << "parent = " << parent->val_ptr->first << "\nto_delete = " << to_delete->val_ptr->first << "\nreplacing_node = " << (replacing_node ? replacing_node->val_ptr->first : 0) << std::endl;
+			// if (double_black)
+			// 	std::cout << "double black" << std::endl;
 
 			if (to_delete == _root)
 			{
@@ -447,6 +447,8 @@ namespace ft
 				replacing_node->color = BLACK;
 				return;
 			}
+			if (to_delete == _begin)
+				((_begin->right) ? (_begin = _begin->right) : (_begin = _begin->parent));
 			
 			_remove_node_from_tree(to_delete); //bridge between parent and replacing node
 			_delete_node(to_delete);
@@ -458,8 +460,8 @@ namespace ft
 		};
 		
 		void erase (iterator position) {
-			std::cout << "\n========================================================" << std::endl;
-			std::cout << "Erasing = " << position->first << std::endl;
+			// std::cout << "\n========================================================" << std::endl;
+			// std::cout << "Erasing = " << position->first << std::endl;
 			_node *to_delete = _convert_iterator_to_node(_root, position);
 
 			
@@ -469,15 +471,12 @@ namespace ft
 			if (to_delete->right && to_delete->left) //to_delete has 2 childs 
 			{
 				_node *predecessor = _get_predecessor(to_delete);
-				std::cout << "Erased node has 2 childs - predecessor = " << predecessor->val_ptr->first << std::endl;
+				// std::cout << "Erased node has 2 childs - predecessor = " << predecessor->val_ptr->first << std::endl;
 				_swap_values(predecessor, to_delete);
 				_erase_1_or_no_child(predecessor);
 			}
-			else {
-				if (to_delete == _begin)
-					((_begin->right) ? (_begin = _begin->right) : (_begin = _begin->parent));
+			else
 				_erase_1_or_no_child(to_delete);
-			}
 		};
 		//once done remove unused function like erase_node_2_childs
 
