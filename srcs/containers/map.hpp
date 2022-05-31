@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:21 by abonnel           #+#    #+#             */
-/*   Updated: 2022/05/30 16:49:45 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/05/31 10:35:41 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,10 @@ namespace ft
 			return std::numeric_limits<difference_type>::max();
 		};
 			
+		void _swap_ptr(map &x, map &y) {
+			x = y;
+		};
+		
 		void swap (map& x) {
 			map tmp;
 
@@ -696,10 +700,6 @@ namespace ft
 			x._end = y._end;
 			x._begin = y._begin;
 			x._size = y._size;
-			x._alloc = y._alloc;
-			x._node_alloc = y._node_alloc;
-			x._comp = y._comp;
-			x._val_comp = y._val_comp;
 		};
 
 		void _set_to_zero(map *tmp) {

@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:08:39 by                   #+#    #+#             */
-/*   Updated: 2022/05/30 16:48:34 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/05/31 10:47:23 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,5 +41,18 @@ int main()
 	//--------------------------------------
 	//WRITE TESTS WITH FT here 
 
+	ft::vector<int>		vec(5, 2);
+	ft::vector<int>::iterator it = vec.begin();
+	ft::vector<int>::const_iterator it_const = vec.begin();
+
+	for (; it_const != vec.end(); it_const++)
+		std::cout << *it << std::endl;
+	it_const = vec.begin();
+	if (it == it_const)
+		std::cout << "iterator are same" << std::endl;
+
+
+
+	
 	return 0;
 }

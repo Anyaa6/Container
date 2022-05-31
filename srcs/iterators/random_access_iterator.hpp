@@ -6,7 +6,7 @@
 /*   By: abonnel <abonnel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 14:57:33 by abonnel           #+#    #+#             */
-/*   Updated: 2022/04/19 15:40:51 by abonnel          ###   ########.fr       */
+/*   Updated: 2022/05/31 10:53:37 by abonnel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ namespace ft
 {
 
 template <typename T>
-class random_access_iterator : public ft::iterator<ft::random_access_iterator_tag, T>
+class random_access_iterator : virtual public iterator_traits< iterator<random_access_iterator_tag, T> >
 {
 	public : 
 		typedef typename random_access_iterator::difference_type		difference_type;
@@ -44,6 +44,10 @@ class random_access_iterator : public ft::iterator<ft::random_access_iterator_ta
 		random_access_iterator & operator=(random_access_iterator const &rhs){
 			_p = rhs._p;
 			return *this;};
+			
+		template <typename Iter>
+		random_access_iterator( random_access_iterator<Iter> const &src) : _p(src.base()){};
+		
 		~random_access_iterator(){};
 		
 		//Equality && inequality && compare
@@ -95,6 +99,10 @@ class random_access_iterator : public ft::iterator<ft::random_access_iterator_ta
 
 		//operator []
 		value_type operator[](int const &index) const {return _p[index];};
+
+		pointer base() const {
+			return (_p);
+		};
 
 	protected :
 		pointer		_p;
